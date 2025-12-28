@@ -1,5 +1,5 @@
 {
-  "title": "คอลเลกชัน MTG",
+  "title": "สมุดสะสมการ์ดของฉัน",
   "subtitle": "คอลเลกชันการ์ด Magic: The Gathering",
   "matches": "รายการ",
   "searchPlaceholder": "ค้นหาด้วยชื่อการ์ด...",
@@ -27,5 +27,14 @@
   "colorFilter": "กรองสี",
   "orderBy": "เรียงตาม",
   "sortName": "ชื่อ",
-  "sortPrice": "ราคา"
+  "sortPrice": "ราคา",
+  "signIn": "เข้าสู่ระบบ",
+  "signUp": "ลงทะเบียน",
+  "dontHaveAccount": "ยังไม่มีบัญชี?",
+  "alreadyHaveAccount": "มีบัญชีอยู่แล้ว?",
+  "createAccount": "สร้างบัญชี",
+  "email": "ที่อยู่อีเมล",
+  "password": "รหัสผ่าน",
+  "username": "ชื่อผู้ใช้",
+  "registrationSuccess": "การลงทะเบียนเสร็จสมบูรณ์! กรุณาเข้าสู่ระบบ"
 }

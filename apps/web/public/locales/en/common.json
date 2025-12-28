@@ -1,5 +1,5 @@
 {
-  "title": "MTG Collection",
+  "title": "My Trade Binder",
   "subtitle": "Magic: The Gathering Collection",
   "matches": "Matches",
   "searchPlaceholder": "Search by card name...",
@@ -27,5 +27,14 @@
   "colorFilter": "Color Filter",
   "orderBy": "Order By",
   "sortName": "NAME",
-  "sortPrice": "PRICE"
+  "sortPrice": "PRICE",
+  "signIn": "Sign in",
+  "signUp": "Sign up",
+  "dontHaveAccount": "Don't have an account?",
+  "alreadyHaveAccount": "Already have an account?",
+  "createAccount": "Create account",
+  "email": "Email address",
+  "password": "Password",
+  "username": "Username",
+  "registrationSuccess": "Registration successful! Please sign in."
 }

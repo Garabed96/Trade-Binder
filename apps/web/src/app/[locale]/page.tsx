@@ -5,6 +5,7 @@ import { trpc } from '@/src/utils/trpc';
 import { useTranslation } from 'react-i18next';
 import { Navbar } from '@/src/components/Navbar';
 import { FilterBar } from '@/src/components/FilterBar';
+import { Library, Layers, Star } from 'lucide-react';
 
 export default function Home() {
   const { t } = useTranslation(['common']);
@@ -121,9 +122,9 @@ export default function Home() {
 
                 {/* Overlay on hover */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                   <p className="text-white text-[10px] font-bold uppercase tracking-widest truncate w-full">
-                     {card.set_name}
-                   </p>
+                  <p className="text-white text-[10px] font-bold uppercase tracking-widest truncate w-full">
+                    {card.set_name}
+                  </p>
                 </div>
               </div>
 
@@ -147,6 +148,42 @@ export default function Home() {
                     {card.set_code}
                   </span>
                 </div>
+
+                {/* Card Options Row */}
+                <div className="flex items-center gap-1.5 pt-3 mt-3 border-t border-slate-100 dark:border-slate-800">
+                  <button
+                    title="Add to Binder"
+                    className="flex-1 py-1.5 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all active:scale-95 shadow-sm gap-1"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log('Add to Binder:', card.id);
+                    }}
+                  >
+                    <Library className="w-3 h-3" />
+                    <span className="text-[8px] font-black uppercase tracking-tighter">Binder</span>
+                  </button>
+                  <button
+                    title="Add to Deck"
+                    className="flex-1 py-1.5 flex items-center justify-center bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg transition-all active:scale-95 border border-slate-300 dark:border-slate-600 shadow-sm gap-1"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log('Add to Deck:', card.id);
+                    }}
+                  >
+                    <Layers className="w-3 h-3" />
+                    <span className="text-[8px] font-black uppercase tracking-tighter">Deck</span>
+                  </button>
+                  <button
+                    title="Add to Wishlist"
+                    className="px-2.5 py-1.5 flex items-center justify-center bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg transition-all active:scale-95 border border-slate-300 dark:border-slate-600 shadow-sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log('Add to Wishlist:', card.id);
+                    }}
+                  >
+                    <Star className="w-3 h-3 fill-current text-yellow-500" />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -154,8 +191,10 @@ export default function Home() {
 
         {isLoading && (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
-             <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
-             <p className="font-black text-slate-400 uppercase tracking-widest animate-pulse">{t('searching')}</p>
+            <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+            <p className="font-black text-slate-400 uppercase tracking-widest animate-pulse">
+              {t('searching')}
+            </p>
           </div>
         )}
 
