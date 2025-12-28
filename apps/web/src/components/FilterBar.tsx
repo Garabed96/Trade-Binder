@@ -63,7 +63,7 @@ export function FilterBar({
           {/* Rarity Filter */}
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
-              Rarity
+              {t('rarity')}
             </label>
             <select
               className="px-4 py-2 rounded-xl border border-slate-200/60 dark:border-slate-700/60 bg-white/50 dark:bg-slate-800/50 dark:text-slate-200 text-xs font-bold outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all shadow-sm appearance-none cursor-pointer"
@@ -81,7 +81,7 @@ export function FilterBar({
           {/* Color Filter */}
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
-              Colors
+              {t('colors')}
             </label>
             <div className="flex gap-2">
               {colorMap.map((c) => (
@@ -104,7 +104,7 @@ export function FilterBar({
           {/* Sorting */}
           <div className="flex-1 flex flex-col gap-1.5 items-end">
             <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mr-1">
-              Sort
+              {t('sort')}
             </label>
             <div className="flex p-1 bg-slate-100/50 dark:bg-slate-950/30 rounded-xl border border-slate-200/60 dark:border-slate-800/60 shadow-inner">
               <button

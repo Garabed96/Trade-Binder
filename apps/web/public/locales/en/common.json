@@ -28,6 +28,9 @@
   "orderBy": "Order By",
   "sortName": "NAME",
   "sortPrice": "PRICE",
+  "rarity": "Rarity",
+  "colors": "Colors",
+  "sort": "Sort",
   "signIn": "Sign in",
   "signUp": "Sign up",
   "dontHaveAccount": "Don't have an account?",
@@ -36,5 +39,7 @@
   "email": "Email address",
   "password": "Password",
   "username": "Username",
-  "registrationSuccess": "Registration successful! Please sign in."
+  "registrationSuccess": "Registration successful! Please sign in.",
+  "signedInAs": "Signed in as",
+  "signOut": "Sign out"
 }

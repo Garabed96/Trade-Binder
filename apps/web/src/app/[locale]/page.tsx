@@ -138,7 +138,7 @@ export default function Home() {
                   )}
                   {card.rarity === 'rare' && (
                     <span className="bg-yellow-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase shadow-lg ring-1 ring-white/20">
-                      Rare
+                      {t('rarityRare')}
                     </span>
                   )}
                 </div>
