@@ -2,8 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { trpc } from '@/src/utils/trpc';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '@/src/components/LanguageSwitcher';
 
 export default function Home() {
+  const { t } = useTranslation(['common']);
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [rarity, setRarity] = useState<string>('');
@@ -18,7 +21,7 @@ export default function Home() {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(inputValue);
-      setPage(1); // Reset to page 1 on search change
+      setPage(1);
     }, 300);
     return () => clearTimeout(handler);
   }, [inputValue]);
@@ -44,37 +47,37 @@ export default function Home() {
 
   const toggleSort = (field: 'name' | 'price_usd') => {
     if (orderBy === field) {
-      // If already sorting by this field, just flip the direction
       setOrderDir(orderDir === 'ASC' ? 'DESC' : 'ASC');
     } else {
-      // If switching to a new field, set it and default to ASC (or DESC for price)
       setOrderBy(field);
       setOrderDir(field === 'price_usd' ? 'DESC' : 'ASC');
     }
   };
 
   const colorMap = [
-    { code: 'W', label: 'White', color: 'bg-[#f9faf4] border-[#d3d3d3] text-[#a09050]' },
-    { code: 'U', label: 'Blue', color: 'bg-[#e1f5fe] border-[#29b6f6] text-[#0277bd]' },
-    { code: 'B', label: 'Black', color: 'bg-[#eceff1] border-[#455a64] text-[#263238]' },
-    { code: 'R', label: 'Red', color: 'bg-[#ffebee] border-[#ef5350] text-[#c62828]' },
-    { code: 'G', label: 'Green', color: 'bg-[#e8f5e9] border-[#66bb6a] text-[#2e7d32]' },
+    { code: 'W', label: t('colorWhite'), color: 'bg-[#f9faf4] border-[#d3d3d3] text-[#a09050]' },
+    { code: 'U', label: t('colorBlue'), color: 'bg-[#e1f5fe] border-[#29b6f6] text-[#0277bd]' },
+    { code: 'B', label: t('colorBlack'), color: 'bg-[#eceff1] border-[#455a64] text-[#263238]' },
+    { code: 'R', label: t('colorRed'), color: 'bg-[#ffebee] border-[#ef5350] text-[#c62828]' },
+    { code: 'G', label: t('colorGreen'), color: 'bg-[#e8f5e9] border-[#66bb6a] text-[#2e7d32]' },
   ];
 
   return (
     <main className="min-h-screen bg-slate-50 p-6 md:p-12 max-w-7xl mx-auto">
       <header className="mb-10 space-y-6">
+        <LanguageSwitcher />
+
         {/* Title Section */}
         <div className="flex justify-between items-end">
           <div>
             <h1 className="text-5xl font-extrabold tracking-tighter text-slate-900">
-              Trade-Binder
+              {t('title')}
             </h1>
-            <p className="text-slate-500 mt-1 font-medium">Magic: The Gathering Collection</p>
+            <p className="text-slate-500 mt-1 font-medium">{t('subtitle')}</p>
           </div>
           {data && (
             <div className="text-sm font-bold text-slate-400 uppercase tracking-widest bg-white px-4 py-2 rounded-lg border border-slate-200">
-              {data.totalCount.toLocaleString()} Matches
+              {data.totalCount.toLocaleString()} {t('matches')}
             </div>
           )}
         </div>
@@ -84,7 +87,7 @@ export default function Home() {
           <div className="relative flex-1 group">
             <input
               type="text"
-              placeholder="Search by card name..."
+              placeholder={t('searchPlaceholder')}
               className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-transparent bg-white shadow-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-lg font-medium"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
@@ -102,11 +105,11 @@ export default function Home() {
               setPage(1);
             }}
           >
-            <option value="">All Rarities</option>
-            <option value="common">Common</option>
-            <option value="uncommon">Uncommon</option>
-            <option value="rare">Rare</option>
-            <option value="mythic">Mythic</option>
+            <option value="">{t('allRarities')}</option>
+            <option value="common">{t('rarityCommon')}</option>
+            <option value="uncommon">{t('rarityUncommon')}</option>
+            <option value="rare">{t('rarityRare')}</option>
+            <option value="mythic">{t('rarityMythic')}</option>
           </select>
         </div>
 
@@ -116,7 +119,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-500 uppercase tracking-tighter ml-1">
-                Expansion Set
+                {t('expansionSet')}
               </label>
               <select
                 className="w-full md:w-64 px-4 py-2.5 rounded-xl border border-slate-200 bg-white font-semibold text-slate-700 outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
@@ -126,7 +129,7 @@ export default function Home() {
                   setPage(1);
                 }}
               >
-                <option value="">All Sets</option>
+                <option value="">{t('allSets')}</option>
                 {sets.data?.map((s) => (
                   <option key={s.code} value={s.code}>
                     {s.name}
@@ -137,7 +140,7 @@ export default function Home() {
 
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-500 uppercase tracking-tighter ml-1">
-                Color Filter
+                {t('colorFilter')}
               </label>
               <div className="flex gap-2">
                 {colorMap.map((c) => (
@@ -161,7 +164,7 @@ export default function Home() {
           {/* Right: Sorting Controls */}
           <div className="space-y-2">
             <label className="text-[10px] font-black text-slate-500 uppercase tracking-tighter ml-1 lg:text-right block">
-              Order By
+              {t('orderBy')}
             </label>
             <div className="flex p-1 bg-white rounded-xl border border-slate-200 shadow-sm">
               <button
@@ -172,7 +175,7 @@ export default function Home() {
                     : 'text-slate-500 hover:bg-slate-50'
                 }`}
               >
-                NAME {orderBy === 'name' && (orderDir === 'ASC' ? '↑' : '↓')}
+                {t('sortName')} {orderBy === 'name' && (orderDir === 'ASC' ? '↑' : '↓')}
               </button>
               <button
                 onClick={() => toggleSort('price_usd')}
@@ -182,7 +185,7 @@ export default function Home() {
                     : 'text-slate-500 hover:bg-slate-50'
                 }`}
               >
-                PRICE {orderBy === 'price_usd' && (orderDir === 'ASC' ? '↑' : '↓')}
+                {t('sortPrice')} {orderBy === 'price_usd' && (orderDir === 'ASC' ? '↑' : '↓')}
               </button>
             </div>
           </div>
@@ -213,7 +216,7 @@ export default function Home() {
               )}
               {card.rarity === 'mythic' && (
                 <span className="absolute top-2 right-2 bg-orange-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
-                  Mythic
+                  {t('mythic')}
                 </span>
               )}
             </div>
@@ -235,10 +238,13 @@ export default function Home() {
         ))}
       </div>
 
-      {isLoading && <p className="text-center py-10">Searching the archives...</p>}
+      {isLoading && <p className="text-center py-10">{t('searching')}</p>}
       {inputValue.length >= 3 && data?.cards.length === 0 && (
-        <p className="text-center py-10 text-gray-500">No cards found matching "{inputValue}"</p>
+        <p className="text-center py-10 text-gray-500">
+          {t('noResults')} "{inputValue}"
+        </p>
       )}
+
       {/* Pagination Controls */}
       {data && data.totalPages > 1 && (
         <div className="mt-12 flex items-center justify-center gap-4">
@@ -247,17 +253,17 @@ export default function Home() {
             onClick={() => setPage((p) => p - 1)}
             className="px-4 py-2 border rounded-lg disabled:opacity-30 hover:bg-slate-50"
           >
-            Previous
+            {t('previous')}
           </button>
           <span className="font-medium text-slate-700">
-            Page {page} of {data.totalPages}
+            {t('pageOf', { page, total: data.totalPages })}
           </span>
           <button
             disabled={page === data.totalPages}
             onClick={() => setPage((p) => p + 1)}
             className="px-4 py-2 border rounded-lg disabled:opacity-30 hover:bg-slate-50"
           >
-            Next
+            {t('next')}
           </button>
         </div>
       )}

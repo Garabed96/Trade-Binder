@@ -2,11 +2,18 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink } from '@trpc/client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { I18nextProvider } from 'react-i18next';
+import i18n from '@/src/i18n';
 import { trpc } from '@/src/utils/trpc';
 
-export default function Providers({ children }: { children: React.ReactNode }) {
-  // Use state to ensure QueryClient is only created once on the client
+export default function Providers({
+  children,
+  locale,
+}: {
+  children: React.ReactNode;
+  locale: string;
+}) {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
     trpc.createClient({
@@ -18,9 +25,21 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     }),
   );
 
+  // Synchronize i18n with the locale prop
+  useEffect(() => {
+    if (i18n.language !== locale) {
+      console.log('Changing language from', i18n.language, 'to', locale);
+      i18n.changeLanguage(locale).then(() => {
+        console.log('Language changed successfully to:', i18n.language);
+      });
+    }
+  }, [locale]);
+
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+      </QueryClientProvider>
     </trpc.Provider>
   );
 }

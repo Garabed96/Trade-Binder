@@ -1,0 +1,31 @@
+{
+  "title": "คอลเลกชัน MTG",
+  "subtitle": "คอลเลกชันการ์ด Magic: The Gathering",
+  "matches": "รายการ",
+  "searchPlaceholder": "ค้นหาด้วยชื่อการ์ด...",
+  "searching": "กำลังค้นหา...",
+  "noResults": "ไม่พบผลลัพธ์สำหรับ",
+  "mythic": "มิธิค",
+  "previous": "ก่อนหน้า",
+  "next": "ถัดไป",
+  "pageOf": "หน้า {{page}} จาก {{total}}",
+
+  "allRarities": "ความหายากทั้งหมด",
+  "rarityCommon": "ธรรมดา",
+  "rarityUncommon": "ไม่ธรรมดา",
+  "rarityRare": "หายาก",
+  "rarityMythic": "มิธิค",
+
+  "colorWhite": "ขาว",
+  "colorBlue": "น้ำเงิน",
+  "colorBlack": "ดำ",
+  "colorRed": "แดง",
+  "colorGreen": "เขียว",
+
+  "expansionSet": "เซ็ตขยาย",
+  "allSets": "เซ็ตทั้งหมด",
+  "colorFilter": "กรองสี",
+  "orderBy": "เรียงตาม",
+  "sortName": "ชื่อ",
+  "sortPrice": "ราคา"
+}

@@ -1,0 +1,31 @@
+{
+  "title": "MTG Collection",
+  "subtitle": "Magic: The Gathering Collection",
+  "matches": "Matches",
+  "searchPlaceholder": "Search by card name...",
+  "searching": "Searching...",
+  "noResults": "No results found for",
+  "mythic": "Mythic",
+  "previous": "Previous",
+  "next": "Next",
+  "pageOf": "Page {{page}} of {{total}}",
+
+  "allRarities": "All Rarities",
+  "rarityCommon": "Common",
+  "rarityUncommon": "Uncommon",
+  "rarityRare": "Rare",
+  "rarityMythic": "Mythic",
+
+  "colorWhite": "White",
+  "colorBlue": "Blue",
+  "colorBlack": "Black",
+  "colorRed": "Red",
+  "colorGreen": "Green",
+
+  "expansionSet": "Expansion Set",
+  "allSets": "All Sets",
+  "colorFilter": "Color Filter",
+  "orderBy": "Order By",
+  "sortName": "NAME",
+  "sortPrice": "PRICE"
+}
