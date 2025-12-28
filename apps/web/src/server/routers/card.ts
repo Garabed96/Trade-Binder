@@ -102,4 +102,27 @@ export const cardRouter = router({
         totalPages: Math.ceil(countResult.total / limit),
       };
     }),
+
+  fuzzySearch: publicProcedure
+    .input(z.object({ query: z.string().min(3) }))
+    .query(async ({ input }) => {
+      return await pool.any(sql.type(
+        z.object({
+          id: z.string(),
+          name: z.string(),
+          image_uri_small: z.string().nullable(),
+          set_name: z.string(),
+          set_code: z.string(),
+        }),
+      )`
+        SELECT 
+          p.id, d.name, p.image_uri_small, s.name as set_name, p.set_code
+        FROM card_designs d
+        JOIN card_printings p ON d.oracle_id = p.design_id
+        JOIN card_sets s ON p.set_code = s.code
+        WHERE d.name ILIKE ${'%' + input.query + '%'}
+        ORDER BY d.name ASC
+        LIMIT 10
+      `);
+    }),
 });
