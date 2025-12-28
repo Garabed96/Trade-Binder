@@ -66,15 +66,15 @@ export function FuzzySearchBar({ inputValue, setInputValue }: FuzzySearchBarProp
           }}
           onFocus={() => setIsOpen(true)}
           placeholder={t('searchPlaceholder')}
-          className="w-full pl-12 pr-12 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-inner focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm font-medium dark:text-white"
+          className="w-full pl-12 pr-12 py-3 bg-white/50 dark:bg-slate-900/50 border border-slate-200/60 dark:border-slate-700/60 rounded-2xl shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all text-sm font-bold dark:text-white backdrop-blur-sm"
         />
 
         {inputValue && (
           <button
             onClick={handleClear}
-            className="absolute inset-y-0 right-0 pr-4 flex items-center hover:bg-slate-100 dark:hover:bg-slate-700 rounded-r-xl transition-colors"
+            className="absolute inset-y-0 right-0 pr-4 flex items-center hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-r-2xl transition-colors group/clear"
           >
-            <X className="h-5 w-5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" />
+            <X className="h-5 w-5 text-slate-400 group-hover/clear:text-slate-600 dark:group-hover/clear:text-slate-200 transition-colors" />
           </button>
         )}
 

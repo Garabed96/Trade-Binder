@@ -45,28 +45,31 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-transparent">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
       <Navbar minimal />
       <div className="flex-1 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md space-y-8 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+        <div className="w-full max-w-md space-y-8 bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl p-10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-200/50 dark:border-slate-800/50">
           <div>
-            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <h2 className="mt-6 text-center text-4xl font-black tracking-tight text-slate-900 dark:text-white">
               {t('signIn')}
             </h2>
+            <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-400 font-medium">
+              Welcome back to your collection
+            </p>
           </div>
 
           <div className="mt-8 space-y-6">
             {registered && (
-              <div className="rounded-md bg-green-50 dark:bg-green-900/30 p-4">
-                <div className="text-sm text-green-700 dark:text-green-400">
+              <div className="rounded-2xl bg-green-500/10 border border-green-500/20 p-4">
+                <div className="text-sm text-green-600 dark:text-green-400 font-bold text-center">
                   {t('registrationSuccess')}
                 </div>
               </div>
             )}
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={() => signIn('discord', { callbackUrl: `/${locale}` })}
-                className="flex w-full items-center justify-center gap-3 rounded-md bg-[#5865F2] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#4752C4] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5865F2]"
+                className="flex items-center justify-center gap-2 rounded-2xl bg-[#5865F2] px-4 py-3 text-xs font-black text-white shadow-lg shadow-blue-500/20 hover:bg-[#4752C4] hover:-translate-y-0.5 transition-all active:scale-95"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993.023.03.063.037.085.028a19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
@@ -75,7 +78,7 @@ export default function LoginPage() {
               </button>
               <button
                 onClick={() => signIn('google', { callbackUrl: `/${locale}` })}
-                className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:ring-transparent dark:bg-gray-700 dark:text-white dark:ring-gray-600 dark:hover:bg-gray-600"
+                className="flex items-center justify-center gap-2 rounded-2xl bg-white dark:bg-slate-800 px-4 py-3 text-xs font-black text-slate-900 dark:text-white shadow-lg border border-slate-200 dark:border-slate-700 hover:-translate-y-0.5 transition-all active:scale-95"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path
@@ -101,23 +104,25 @@ export default function LoginPage() {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                <div className="w-full border-t border-slate-200 dark:border-slate-800"></div>
               </div>
-              <div className="relative flex justify-center text-sm font-medium leading-6">
-                <span className="bg-white dark:bg-gray-800 px-6 text-gray-900 dark:text-gray-400">
-                  Or continue with
+              <div className="relative flex justify-center text-xs font-black uppercase tracking-widest leading-6">
+                <span className="bg-white dark:bg-[#0f172a] px-4 text-slate-400">
+                  Or use credentials
                 </span>
               </div>
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               {error && (
-                <div className="rounded-md bg-red-50 dark:bg-red-900/30 p-4">
-                  <div className="text-sm text-red-700 dark:text-red-400">{error}</div>
+                <div className="rounded-2xl bg-red-500/10 border border-red-500/20 p-4">
+                  <div className="text-sm text-red-600 dark:text-red-400 font-bold text-center">
+                    {error}
+                  </div>
                 </div>
               )}
-              <div className="rounded-md shadow-sm -space-y-px">
-                <div>
+              <div className="space-y-4">
+                <div className="relative group">
                   <input
                     id="email-address"
                     name="email"
@@ -126,11 +131,11 @@ export default function LoginPage() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:bg-gray-700"
+                    className="block w-full px-5 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-bold text-sm"
                     placeholder={t('email')}
                   />
                 </div>
-                <div>
+                <div className="relative group">
                   <input
                     id="password"
                     name="password"
@@ -139,7 +144,7 @@ export default function LoginPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 text-gray-900 dark:text-white rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm dark:bg-gray-700"
+                    className="block w-full px-5 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-bold text-sm"
                     placeholder={t('password')}
                   />
                 </div>
@@ -149,7 +154,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                  className="group relative w-full flex justify-center py-4 px-4 bg-blue-600 hover:bg-blue-500 text-white text-sm font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 disabled:translate-y-0"
                 >
                   {loading ? 'Signing in...' : t('signIn')}
                 </button>
@@ -158,7 +163,7 @@ export default function LoginPage() {
               <div className="text-center">
                 <Link
                   href={`/${locale}/register`}
-                  className="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+                  className="text-xs font-black uppercase tracking-widest text-blue-600 hover:text-blue-500 dark:text-blue-400 transition-colors"
                 >
                   {t('dontHaveAccount')} {t('signUp')}
                 </Link>

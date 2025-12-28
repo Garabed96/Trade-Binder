@@ -38,16 +38,16 @@ export function FilterBar({
   ];
 
   return (
-    <div className="sticky top-20 z-40 w-full bg-slate-50/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 py-3 shadow-sm">
+    <div className="sticky top-20 z-40 w-full bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/50 py-4 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-center gap-4 md:gap-8">
+        <div className="flex flex-wrap items-center gap-6">
           {/* Sets Filter */}
-          <div className="flex items-center gap-2">
-            <label className="hidden lg:block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-tighter">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
               {t('expansionSet')}
             </label>
             <select
-              className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500 shadow-sm min-w-[140px]"
+              className="px-4 py-2 rounded-xl border border-slate-200/60 dark:border-slate-700/60 bg-white/50 dark:bg-slate-800/50 dark:text-slate-200 text-xs font-bold outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all shadow-sm min-w-[180px] appearance-none cursor-pointer"
               value={setCode}
               onChange={(e) => setSetCode(e.target.value)}
             >
@@ -61,12 +61,12 @@ export function FilterBar({
           </div>
 
           {/* Rarity Filter */}
-          <div className="flex items-center gap-2">
-            <label className="hidden lg:block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-tighter">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
               Rarity
             </label>
             <select
-              className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 dark:text-white text-xs font-bold outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
+              className="px-4 py-2 rounded-xl border border-slate-200/60 dark:border-slate-700/60 bg-white/50 dark:bg-slate-800/50 dark:text-slate-200 text-xs font-bold outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/50 transition-all shadow-sm appearance-none cursor-pointer"
               value={rarity}
               onChange={(e) => setRarity(e.target.value)}
             >
@@ -79,19 +79,19 @@ export function FilterBar({
           </div>
 
           {/* Color Filter */}
-          <div className="flex items-center gap-2">
-            <label className="hidden lg:block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-tighter">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">
               Colors
             </label>
-            <div className="flex gap-1.5">
+            <div className="flex gap-2">
               {colorMap.map((c) => (
                 <button
                   key={c.code}
                   onClick={() => toggleColor(c.code)}
-                  className={`w-8 h-8 rounded-lg border transition-all flex items-center justify-center font-black text-[10px] shadow-sm ${
+                  className={`w-9 h-9 rounded-xl border transition-all flex items-center justify-center font-black text-[10px] shadow-sm active:scale-90 ${
                     selectedColors.includes(c.code)
-                      ? `${c.color} scale-105 border-current`
-                      : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-300 dark:text-slate-500 hover:border-slate-300 dark:hover:border-slate-600'
+                      ? `${c.color} scale-105 border-current ring-4 ring-current/10`
+                      : 'bg-white/50 dark:bg-slate-800/50 border-slate-200/60 dark:border-slate-700/60 text-slate-400 dark:text-slate-500 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-white dark:hover:bg-slate-800'
                   }`}
                   title={c.label}
                 >
@@ -102,27 +102,27 @@ export function FilterBar({
           </div>
 
           {/* Sorting */}
-          <div className="flex-1 flex justify-end items-center gap-2">
-            <label className="hidden lg:block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-tighter">
+          <div className="flex-1 flex flex-col gap-1.5 items-end">
+            <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mr-1">
               Sort
             </label>
-            <div className="flex p-0.5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+            <div className="flex p-1 bg-slate-100/50 dark:bg-slate-950/30 rounded-xl border border-slate-200/60 dark:border-slate-800/60 shadow-inner">
               <button
                 onClick={() => toggleSort('name')}
-                className={`px-3 py-1 rounded-md text-[10px] font-black transition-all ${
+                className={`px-4 py-1.5 rounded-lg text-[10px] font-black transition-all ${
                   orderBy === 'name'
-                    ? 'bg-slate-900 dark:bg-slate-200 dark:text-slate-900 text-white'
-                    : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    ? 'bg-white dark:bg-slate-800 dark:text-blue-400 text-blue-600 shadow-sm ring-1 ring-slate-200/50 dark:ring-slate-700/50'
+                    : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
                 }`}
               >
                 {t('sortName')} {orderBy === 'name' && (orderDir === 'ASC' ? '↑' : '↓')}
               </button>
               <button
                 onClick={() => toggleSort('price_usd')}
-                className={`px-3 py-1 rounded-md text-[10px] font-black transition-all ${
+                className={`px-4 py-1.5 rounded-lg text-[10px] font-black transition-all ${
                   orderBy === 'price_usd'
-                    ? 'bg-slate-900 dark:bg-slate-200 dark:text-slate-900 text-white'
-                    : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    ? 'bg-white dark:bg-slate-800 dark:text-blue-400 text-blue-600 shadow-sm ring-1 ring-slate-200/50 dark:ring-slate-700/50'
+                    : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
                 }`}
               >
                 {t('sortPrice')} {orderBy === 'price_usd' && (orderDir === 'ASC' ? '↑' : '↓')}

@@ -90,14 +90,14 @@ export default function Home() {
           {data?.cards.map((card) => (
             <div
               key={card.id}
-              className="group relative flex flex-col bg-white dark:bg-slate-900/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-2xl dark:hover:shadow-blue-500/20 hover:-translate-y-2 transition-all duration-500 cursor-pointer shadow-lg"
+              className="group relative flex flex-col bg-white dark:bg-slate-900/40 backdrop-blur-md rounded-2xl overflow-hidden border border-slate-200/60 dark:border-slate-800/60 hover:border-blue-500/50 dark:hover:border-blue-400/50 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] dark:hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)] hover:-translate-y-1.5 transition-all duration-500 cursor-pointer shadow-sm"
             >
-              <div className="aspect-[2.5/3.5] relative overflow-hidden bg-slate-100 dark:bg-slate-800">
+              <div className="aspect-[2.5/3.5] relative overflow-hidden bg-slate-100 dark:bg-slate-950">
                 {card.image_uri_normal ? (
                   <img
                     src={card.image_uri_normal}
                     alt={card.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     loading="lazy"
                   />
                 ) : (
@@ -107,81 +107,83 @@ export default function Home() {
                 )}
 
                 {/* Card Badges */}
-                <div className="absolute top-2 right-2 flex flex-col gap-1">
+                <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5">
                   {card.rarity === 'mythic' && (
-                    <span className="bg-orange-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase shadow-lg">
+                    <span className="bg-orange-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase shadow-lg ring-1 ring-white/20">
                       {t('mythic')}
                     </span>
                   )}
                   {card.rarity === 'rare' && (
-                    <span className="bg-yellow-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase shadow-lg">
+                    <span className="bg-yellow-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase shadow-lg ring-1 ring-white/20">
                       Rare
                     </span>
                   )}
                 </div>
 
                 {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <p className="text-white text-[10px] font-bold uppercase tracking-widest truncate w-full">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                  <p className="text-white text-[10px] font-black uppercase tracking-widest truncate w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                     {card.set_name}
                   </p>
                 </div>
               </div>
 
-              <div className="p-4 space-y-1 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm flex-1 flex flex-col justify-between">
-                <div>
+              <div className="p-4 space-y-3 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm flex-1 flex flex-col">
+                <div className="space-y-1">
                   <h3
-                    className="font-bold text-slate-900 dark:text-white truncate text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+                    className="font-bold text-slate-900 dark:text-slate-100 truncate text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
                     title={card.name}
                   >
                     {card.name}
                   </h3>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-tighter truncate">
-                    {card.set_name}
-                  </p>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase px-1.5 py-0.5 bg-slate-100/80 dark:bg-slate-800/80 rounded-md">
+                      {card.set_code}
+                    </span>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-tighter truncate">
+                      {card.set_name}
+                    </p>
+                  </div>
                 </div>
-                <div className="pt-3 flex justify-between items-center border-t border-slate-100 dark:border-slate-800 mt-2">
-                  <span className="text-blue-600 dark:text-blue-400 font-black text-sm">
+
+                <div className="pt-2 flex justify-between items-center border-t border-slate-100/50 dark:border-slate-800/50">
+                  <span className="text-blue-600 dark:text-blue-400 font-black text-base tracking-tight">
                     {card.price_usd ? `$${card.price_usd.toFixed(2)}` : '—'}
-                  </span>
-                  <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded">
-                    {card.set_code}
                   </span>
                 </div>
 
                 {/* Card Options Row */}
-                <div className="flex items-center gap-1.5 pt-3 mt-3 border-t border-slate-100 dark:border-slate-800">
+                <div className="flex items-center gap-2 pt-1">
                   <button
                     title="Add to Binder"
-                    className="flex-1 py-1.5 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all active:scale-95 shadow-sm gap-1"
+                    className="flex-1 h-9 flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition-all active:scale-95 shadow-md shadow-blue-500/20 gap-1.5"
                     onClick={(e) => {
                       e.stopPropagation();
                       console.log('Add to Binder:', card.id);
                     }}
                   >
-                    <Library className="w-3 h-3" />
-                    <span className="text-[8px] font-black uppercase tracking-tighter">Binder</span>
+                    <Library className="w-3.5 h-3.5" />
+                    <span className="text-[9px] font-black uppercase tracking-wider">Binder</span>
                   </button>
                   <button
                     title="Add to Deck"
-                    className="flex-1 py-1.5 flex items-center justify-center bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg transition-all active:scale-95 border border-slate-300 dark:border-slate-600 shadow-sm gap-1"
+                    className="h-9 w-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl transition-all active:scale-95 border border-slate-200/50 dark:border-slate-700/50 shadow-sm"
                     onClick={(e) => {
                       e.stopPropagation();
                       console.log('Add to Deck:', card.id);
                     }}
                   >
-                    <Layers className="w-3 h-3" />
-                    <span className="text-[8px] font-black uppercase tracking-tighter">Deck</span>
+                    <Layers className="w-3.5 h-3.5" />
                   </button>
                   <button
                     title="Add to Wishlist"
-                    className="px-2.5 py-1.5 flex items-center justify-center bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg transition-all active:scale-95 border border-slate-300 dark:border-slate-600 shadow-sm"
+                    className="h-9 w-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl transition-all active:scale-95 border border-slate-200/50 dark:border-slate-700/50 shadow-sm"
                     onClick={(e) => {
                       e.stopPropagation();
                       console.log('Add to Wishlist:', card.id);
                     }}
                   >
-                    <Star className="w-3 h-3 fill-current text-yellow-500" />
+                    <Star className="w-3.5 h-3.5 fill-current text-yellow-500" />
                   </button>
                 </div>
               </div>
