@@ -14,10 +14,26 @@ export const cardRouter = router({
     `);
   }),
 
+  getLatestSet: publicProcedure.query(async () => {
+    return await pool.maybeOne(sql.type(
+      z.object({
+        code: z.string(),
+        name: z.string(),
+        released_at: z.string().nullable(),
+      }),
+    )`
+      SELECT code, name, released_at::text 
+      FROM card_sets 
+      WHERE released_at <= NOW()
+      ORDER BY released_at DESC 
+      LIMIT 1
+    `);
+  }),
+
   search: publicProcedure
     .input(
       z.object({
-        query: z.string().min(3),
+        query: z.string().optional(),
         rarity: z.string().optional(),
         set_code: z.string().optional(),
         colors: z.array(z.string()).optional(),

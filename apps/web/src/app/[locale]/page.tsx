@@ -29,9 +29,18 @@ export default function Home() {
   }, [inputValue]);
 
   const sets = trpc.card.listSets.useQuery();
+  const latestSet = trpc.card.getLatestSet.useQuery();
+
+  // Set default set to latest if no search/set is selected
+  useEffect(() => {
+    if (latestSet.data && !setCode && !inputValue && !rarity && selectedColors.length === 0) {
+      setSetCode(latestSet.data.code);
+    }
+  }, [latestSet.data, setCode, inputValue, rarity, selectedColors.length]);
+
   const { data, isLoading, isFetching } = trpc.card.search.useQuery(
     {
-      query: debouncedSearch,
+      query: debouncedSearch || undefined,
       set_code: setCode || undefined,
       rarity: rarity || undefined,
       colors: selectedColors,
@@ -39,7 +48,10 @@ export default function Home() {
       orderDir,
       page,
     },
-    { enabled: debouncedSearch.length >= 3 || setCode !== '', placeholderData: (prev) => prev },
+    {
+      enabled: true, // Always enabled now
+      placeholderData: (prev) => prev,
+    },
   );
 
   const toggleColor = (c: string) => {
@@ -83,6 +95,17 @@ export default function Home() {
       />
 
       <main className="p-6 md:p-12 max-w-7xl mx-auto">
+        {/* Latest Set Indicator */}
+        {!debouncedSearch && setCode === latestSet.data?.code && (
+          <div className="mb-8 flex items-center gap-3">
+            <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
+              Latest Release:{' '}
+              <span className="text-slate-900 dark:text-white ml-1">{latestSet.data?.name}</span>
+            </h2>
+          </div>
+        )}
+
         {/* Card Grid */}
         <div
           className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 transition-opacity duration-300 ${isFetching ? 'opacity-40' : 'opacity-100'}`}
