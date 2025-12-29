@@ -144,4 +144,30 @@ export const cardRouter = router({
           LIMIT 5
       `);
   }),
+
+  getById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
+    return await pool.maybeOne(sql.type(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        set_name: z.string(),
+        set_code: z.string(),
+        rarity: z.string(),
+        image_uri_normal: z.string().nullable(),
+        price_usd: z.number().nullable(),
+        oracle_text: z.string().nullable(),
+        type_line: z.string().nullable(),
+        mana_cost: z.string().nullable(),
+      }),
+    )`
+      SELECT
+        p.id, d.name, s.name as set_name, p.set_code,
+        p.rarity, p.image_uri_normal, p.price_usd,
+        d.oracle_text, d.type_line, d.mana_cost
+      FROM card_designs d
+             JOIN card_printings p ON d.oracle_id = p.design_id
+             JOIN card_sets s ON p.set_code = s.code
+      WHERE p.id = ${input.id}
+    `);
+  }),
 });
