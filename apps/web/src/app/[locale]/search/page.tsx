@@ -7,9 +7,11 @@ import { FilterBar } from '@/src/components/FilterBar';
 import { Library, Layers, Star } from 'lucide-react';
 import Image from 'next/image';
 import { useSearch } from '@/src/context/SearchContext';
+import { useRouter } from 'next/navigation';
 
 export default function SearchPage() {
   const { t } = useTranslation(['common']);
+  const router = useRouter();
   const { query, setTotalMatches } = useSearch();
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [rarity, setRarity] = useState<string>('');
@@ -113,6 +115,7 @@ export default function SearchPage() {
           {data?.cards.map((card) => (
             <div
               key={card.id}
+              onClick={() => router.push(`/cards/${card.id}`)}
               className="group relative flex flex-col bg-white dark:bg-slate-900/40 backdrop-blur-md rounded-2xl overflow-hidden border border-slate-200/60 dark:border-slate-800/60 hover:border-blue-500/50 dark:hover:border-blue-400/50 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] dark:hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)] hover:-translate-y-1.5 transition-all duration-500 cursor-pointer shadow-sm"
             >
               <div className="aspect-[2.5/3.5] relative overflow-hidden bg-slate-100 dark:bg-slate-950">
