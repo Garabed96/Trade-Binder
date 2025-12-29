@@ -8,6 +8,7 @@ import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
 import i18n from '@/src/i18n';
 import { trpc } from '@/src/utils/trpc';
+import { SearchProvider } from '@/src/context/SearchContext';
 
 export default function Providers({
   children,
@@ -42,7 +43,9 @@ export default function Providers({
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
-            <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+            <I18nextProvider i18n={i18n}>
+              <SearchProvider>{children}</SearchProvider>
+            </I18nextProvider>
           </QueryClientProvider>
         </trpc.Provider>
       </ThemeProvider>

@@ -1,5 +1,9 @@
 {
   "title": "สมุดสะสมการ์ดของฉัน",
+  "navMarketplace": "ตลาด",
+  "navSearch": "ค้นหา",
+  "navBinder": "สมุดการ์ดของฉัน",
+  "navProfile": "โปรไฟล์",
   "subtitle": "คอลเลกชันการ์ด Magic: The Gathering",
   "matches": "รายการ",
   "searchPlaceholder": "ค้นหาด้วยชื่อการ์ด...",
