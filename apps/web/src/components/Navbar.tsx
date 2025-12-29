@@ -59,13 +59,13 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
                   icon={<Library className="w-4 h-4" />}
                   label={t('navBinder')}
                 />
-                {session && (
-                  <NavLink
-                    href={`/${locale}/profile`}
-                    icon={<UserCircle className="w-4 h-4" />}
-                    label={t('navProfile')}
-                  />
-                )}
+                {/*{session && (*/}
+                {/*  <NavLink*/}
+                {/*    href={`/${locale}/profile`}*/}
+                {/*    icon={<UserCircle className="w-4 h-4" />}*/}
+                {/*    label={t('navProfile')}*/}
+                {/*  />*/}
+                {/*)}*/}
               </div>
 
               {/* Enhanced Search Bar (Row 2 on Mobile) - Now with more space */}
