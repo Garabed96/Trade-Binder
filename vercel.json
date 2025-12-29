@@ -4,5 +4,12 @@
   "installCommand": "pnpm install",
   "framework": "nextjs",
 
-  "crons": []
+  "crons": [],
+
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "staging": false
+    }
+  }
 }
