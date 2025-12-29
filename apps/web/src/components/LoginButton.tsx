@@ -16,13 +16,13 @@ export function LoginButton() {
   if (session) {
     return (
       <div className="flex items-center gap-3 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md p-1.5 pr-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 shadow-sm group/user">
-        <Link href={`/${locale}/profile`} className="relative">
+        <Link href={`/${locale}/profile`} className="relative w-9 h-9">
           {session.user?.image ? (
             <Image
               fill
               src={session.user.image}
               alt={session.user.name || ''}
-              className="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-700 object-cover shadow-sm group-hover/user:scale-105 transition-transform duration-300"
+              className="rounded-xl border border-slate-200 dark:border-slate-700 object-cover shadow-sm group-hover/user:scale-105 transition-transform duration-300"
             />
           ) : (
             <div className="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
@@ -33,10 +33,7 @@ export function LoginButton() {
         </Link>
 
         <Link href={`/${locale}/profile`} className="flex flex-col min-w-0 cursor-pointer">
-          <span className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest leading-none">
-            {t('signedInAs')}
-          </span>
-          <span className="text-[11px] font-bold text-slate-900 dark:text-white truncate max-w-[100px] mt-0.5">
+          <span className="text-[11px] font-bold text-slate-900 dark:text-white truncate max-w-[100px]">
             {session.user?.name || session.user?.email}
           </span>
         </Link>

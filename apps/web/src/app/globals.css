@@ -4,142 +4,261 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --radius: 0.75rem;
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+
+    /* MTG Light Theme */
+    --mtg-light-bg: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+    --mtg-card-light: linear-gradient(to bottom right, #ffffff, #f1f5f9);
+    --mtg-border-light: linear-gradient(90deg, #d4af37, #ffd700, #daa520);
 }
 
 .dark {
-  /* MTG Inspired Dark Mode - deep teals/purples/charcoal with gradients */
-  --background: oklch(0.145 0 0); /* Deepest blue/black */
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --accent: oklch(0.269 0 0);
-  --mtg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #020617 100%);
-  --card-gradient: linear-gradient(to bottom right, #1e293b, #0f172a);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+    /* MTG Inspired Dark Mode - Rich mystical colors */
+    --background: oklch(0.09 0.02 264); /* Deep mystical blue-black */
+    --foreground: oklch(0.95 0.01 60); /* Warm off-white */
+    --card: oklch(0.15 0.03 260); /* Slightly lighter blue-black */
+    --card-foreground: oklch(0.95 0.01 60);
+    --primary: oklch(0.85 0.08 45); /* Golden amber */
+    --primary-foreground: oklch(0.1 0.02 264);
+    --accent: oklch(0.2 0.04 260);
+    --accent-foreground: oklch(0.95 0.01 60);
+    --popover: oklch(0.15 0.03 260);
+    --popover-foreground: oklch(0.95 0.01 60);
+    --secondary: oklch(0.2 0.04 260);
+    --secondary-foreground: oklch(0.95 0.01 60);
+    --muted: oklch(0.25 0.02 260);
+    --muted-foreground: oklch(0.7 0.01 260);
+    --destructive: oklch(0.6 0.2 25); /* Rich red */
+    --border: oklch(0.3 0.02 260);
+    --input: oklch(0.18 0.03 260);
+    --ring: oklch(0.75 0.08 45); /* Golden ring */
+
+    /* MTG Dark gradients */
+    --mtg-gradient: radial-gradient(ellipse at top, #1e1b4b 0%, #0f172a 50%, #020617 100%);
+    --mtg-card-gradient: linear-gradient(145deg, #1e293b 0%, #0f172a 50%, #1e1b4b 100%);
+    --mtg-border-gradient: linear-gradient(90deg, #d4af37, #ffd700, #f59e0b, #d97706);
+    --mtg-accent-gradient: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+
+    --chart-1: oklch(0.6 0.2 280); /* Purple */
+    --chart-2: oklch(0.65 0.15 200); /* Teal */
+    --chart-3: oklch(0.7 0.18 45); /* Gold */
+    --chart-4: oklch(0.55 0.22 340); /* Magenta */
+    --chart-5: oklch(0.6 0.2 25); /* Red-orange */
+
+    --sidebar: oklch(0.15 0.03 260);
+    --sidebar-foreground: oklch(0.95 0.01 60);
+    --sidebar-primary: oklch(0.75 0.08 45);
+    --sidebar-primary-foreground: oklch(0.1 0.02 264);
+    --sidebar-accent: oklch(0.2 0.04 260);
+    --sidebar-accent-foreground: oklch(0.95 0.01 60);
+    --sidebar-border: oklch(0.3 0.02 260);
+    --sidebar-ring: oklch(0.75 0.08 45);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --bg-mtg: var(--mtg-gradient);
-  --bg-card-gradient: var(--card-gradient);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --bg-mtg: var(--mtg-gradient);
+    --bg-card-gradient: var(--mtg-card-gradient);
+    --bg-mtg-light: var(--mtg-light-bg);
+    --bg-card-light: var(--mtg-card-light);
+    --border-mtg: var(--mtg-border-gradient);
+    --bg-mtg-accent: var(--mtg-accent-gradient);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --radius-2xl: calc(var(--radius) + 8px);
+    --radius-3xl: calc(var(--radius) + 12px);
+    --radius-4xl: calc(var(--radius) + 16px);
 }
 
+/* Body styling with MTG theming */
 body {
-  background-color: var(--background);
-  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 100vh;
+    background-color: var(--background);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 100vh;
+}
+
+/* Light mode MTG styling */
+body:not(.dark) {
+    background: var(--mtg-light-bg);
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+/* Dark mode MTG styling */
+.dark body {
+    background: var(--mtg-gradient);
+    background-attachment: fixed;
+    background-size: cover;
+    position: relative;
+}
+
+/* Add some mystical particle effects */
+.dark body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+            radial-gradient(circle at 25% 25%, rgba(120, 119, 198, 0.1) 0%, transparent 25%),
+            radial-gradient(circle at 75% 75%, rgba(255, 215, 0, 0.05) 0%, transparent 25%),
+            radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+    animation: mysticalGlow 20s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes mysticalGlow {
+    0% {
+        opacity: 0.3;
+        transform: scale(1) rotate(0deg);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(1.1) rotate(180deg);
+    }
+    100% {
+        opacity: 0.3;
+        transform: scale(1) rotate(360deg);
+    }
+}
+
+/* Custom scrollbar for MTG theme */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #d4af37, #ffd700);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #ffd700, #f59e0b);
+}
+
+.dark ::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.3);
 }
 
 @utility pb-safe {
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-.dark body {
-  background-color: var(--background);
-  background-image: var(--mtg-gradient);
-  background-attachment: fixed;
-  background-size: cover;
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+
+    /* MTG-inspired card styling */
+    .mtg-card {
+        @apply bg-card-gradient border border-mtg rounded-2xl shadow-2xl shadow-indigo-900/20;
+        background: var(--mtg-card-gradient);
+        border-image: var(--mtg-border-gradient) 1;
+        position: relative;
+    }
+
+    .mtg-card::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: var(--mtg-border-gradient);
+        border-radius: inherit;
+        z-index: -1;
+    }
+
+    /* Golden text effect for titles */
+    .mtg-title {
+        @apply bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent font-black;
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+
+    /* Mystical button styling */
+    .mtg-button {
+        @apply bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold py-3 px-6 rounded-xl;
+        @apply shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/40;
+        @apply transform hover:scale-105 active:scale-95 transition-all duration-300;
+        background-size: 200% 200%;
+        animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
 }
