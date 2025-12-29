@@ -34,9 +34,10 @@ export const authOptions: NextAuthOptions = {
             email: z.string(),
             username: z.string(),
             password_hash: z.string().nullable(),
+            registration_complete: z.boolean(),
           }),
         )`
-          SELECT id, email, username, password_hash
+          SELECT id, email, username, password_hash, registration_complete
           FROM users
           WHERE email = ${credentials.email}
         `);
@@ -55,6 +56,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           email: user.email,
           name: user.username,
+          registration_complete: user.registration_complete,
         };
       },
     }),
@@ -103,13 +105,20 @@ export const authOptions: NextAuthOptions = {
       if (user && user.email) {
         console.log('JWT Initial Sign-in:', { email: user.email });
         try {
-          // Fetch the DB user ID for this email
-          const dbUser = await pool.maybeOne(sql.type(z.object({ id: z.string() }))`
-            SELECT id FROM users WHERE email = ${user.email}
+          // Fetch the DB user ID and registration_complete status for this email
+          const dbUser = await pool.maybeOne(sql.type(
+            z.object({ id: z.string(), registration_complete: z.boolean() }),
+          )`
+            SELECT id, registration_complete FROM users WHERE email = ${user.email}
           `);
           if (dbUser) {
-            console.log('Mapping DB ID to JWT:', dbUser.id);
+            console.log(
+              'Mapping DB ID and registration status to JWT:',
+              dbUser.id,
+              dbUser.registration_complete,
+            );
             token.sub = dbUser.id;
+            token.registration_complete = dbUser.registration_complete;
           } else {
             console.warn('DB user not found during JWT generation for:', user.email);
           }
@@ -125,6 +134,9 @@ export const authOptions: NextAuthOptions = {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         session.user.id = token.sub;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        session.user.registration_complete = token.registration_complete;
       }
       return session;
     },

@@ -1,5 +1,6 @@
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from '@/src/server/routers/_app';
+import { createContext } from '@/src/server/trpc';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,7 +9,7 @@ const handler = (req: Request) =>
     endpoint: '/api/trpc',
     req,
     router: appRouter,
-    createContext: () => ({}), // We'll add auth/session context here later
+    createContext,
   });
 
 export { handler as GET, handler as POST };
