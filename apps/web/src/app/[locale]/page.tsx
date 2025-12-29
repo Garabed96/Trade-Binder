@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Navbar } from '@/src/components/Navbar';
 import { FilterBar } from '@/src/components/FilterBar';
 import { Library, Layers, Star } from 'lucide-react';
+import Image from 'next/image';
 
 export default function Home() {
   const { t } = useTranslation(['common']);
@@ -32,16 +33,15 @@ export default function Home() {
   const latestSet = trpc.card.getLatestSet.useQuery();
 
   // Set default set to latest if no search/set is selected
-  useEffect(() => {
-    if (latestSet.data && !setCode && !inputValue && !rarity && selectedColors.length === 0) {
-      setSetCode(latestSet.data.code);
-    }
-  }, [latestSet.data, setCode, inputValue, rarity, selectedColors.length]);
+  const effectiveSetCode =
+    !setCode && !inputValue && !rarity && selectedColors.length === 0
+      ? latestSet.data?.code
+      : setCode;
 
   const { data, isLoading, isFetching } = trpc.card.search.useQuery(
     {
       query: debouncedSearch || undefined,
-      set_code: setCode || undefined,
+      set_code: effectiveSetCode || undefined,
       rarity: rarity || undefined,
       colors: selectedColors,
       orderBy,
@@ -49,7 +49,7 @@ export default function Home() {
       page,
     },
     {
-      enabled: true, // Always enabled now
+      enabled: !!latestSet.data || !!setCode || !!debouncedSearch,
       placeholderData: (prev) => prev,
     },
   );
@@ -117,7 +117,8 @@ export default function Home() {
             >
               <div className="aspect-[2.5/3.5] relative overflow-hidden bg-slate-100 dark:bg-slate-950">
                 {card.image_uri_normal ? (
-                  <img
+                  <Image
+                    fill
                     src={card.image_uri_normal}
                     alt={card.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
@@ -225,7 +226,7 @@ export default function Home() {
 
         {debouncedSearch.length >= 3 && data?.cards.length === 0 && (
           <p className="text-center py-10 text-gray-500 dark:text-slate-400">
-            {t('noResults')} "{debouncedSearch}"
+            {`${t('noResults')} ${debouncedSearch}`}
           </p>
         )}
 

@@ -2,8 +2,8 @@ import { NextAuthOptions } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { pool, sql } from '../server/db';
-import bcrypt from 'bcryptjs';
+// import { pool, sql } from '../server/db';
+// import bcrypt from 'bcryptjs';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -62,7 +62,8 @@ export const authOptions: NextAuthOptions = {
     signIn: '/login',
   },
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
+      // async signIn({ user, account, profile }) {
       console.log('SignIn Callback:', { provider: account?.provider, email: user.email });
       return true;
       /*
@@ -95,7 +96,8 @@ export const authOptions: NextAuthOptions = {
       return true;
       */
     },
-    async jwt({ token, user, account }) {
+    // async jwt({ token, user, account }) {
+    async jwt({ token }) {
       /*
       if (user) {
         console.log('JWT Initial Sign-in:', { email: user.email });
@@ -120,7 +122,8 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       console.log('Session Callback:', { tokenSub: token.sub });
       if (session.user && token.sub) {
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         session.user.id = token.sub;
       }
       return session;

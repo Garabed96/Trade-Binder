@@ -1,11 +1,12 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { useRouter, usePathname } from 'next/navigation';
+// import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export function LanguageSwitcher() {
   const { i18n } = useTranslation();
-  const router = useRouter();
+  // const router = useRouter();
   const pathname = usePathname();
 
   const toggleLanguage = () => {
