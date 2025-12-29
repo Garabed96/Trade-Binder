@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 // import { useRouter, usePathname } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 
-export function LanguageSwitcher() {
+export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   const { i18n } = useTranslation();
   // const router = useRouter();
   const pathname = usePathname();
@@ -38,7 +38,15 @@ export function LanguageSwitcher() {
       onClick={toggleLanguage}
       className="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm"
     >
-      {i18n.language === 'en' ? '🇬🇧 EN' : '🇹🇭 TH'}
+      {compact
+        ? // Mobile: Text only
+          i18n.language === 'en'
+          ? 'EN'
+          : 'TH'
+        : // Desktop: Flag + Text
+          i18n.language === 'en'
+          ? '🇬🇧 EN'
+          : '🇹🇭 TH'}
     </button>
   );
 }
