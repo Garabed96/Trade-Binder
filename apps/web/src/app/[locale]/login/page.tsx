@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
-import { Navbar } from '@/src/components/Navbar';
 
 export default function LoginPage() {
   const { t } = useTranslation(['common']);

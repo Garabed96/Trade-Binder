@@ -7,13 +7,13 @@ import { ThemeToggle } from './ThemeToggle';
 import { FuzzySearchBar } from './FuzzySearchBar';
 import { useParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Store, Library, UserCircle, Sparkles } from 'lucide-react';
+import { Store, Library, Sparkles } from 'lucide-react';
 import { useSearch } from '@/src/context/SearchContext';
-import { useSession } from 'next-auth/react';
+// import { useSession } from 'next-auth/react';
 
 export function Navbar({ minimal = false }: { minimal?: boolean }) {
   const { t } = useTranslation(['common']);
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const params = useParams();
   const locale = (params?.locale as string) || 'en';
   const { query, setQuery, totalMatches } = useSearch();

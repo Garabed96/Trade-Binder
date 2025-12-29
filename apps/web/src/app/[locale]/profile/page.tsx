@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '@/src/utils/trpc';
 import { useSession } from 'next-auth/react';
@@ -18,23 +18,23 @@ export default function ProfilePage() {
   });
   const updateProfile = trpc.user.updateProfile.useMutation();
 
-  const [username, setUsername] = useState('');
-  const [bio, setBio] = useState('');
-  const [locationName, setLocationName] = useState('');
-  const [coords, setCoords] = useState<{ lat: number | null; lng: number | null }>({
-    lat: null,
-    lng: null,
-  });
+  // Track which fields have been edited by the user
+  const [editedFields, setEditedFields] = useState<{
+    username?: string;
+    bio?: string;
+    locationName?: string;
+    coords?: { lat: number | null; lng: number | null };
+  }>({});
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  useEffect(() => {
-    if (user) {
-      setUsername(user.username || '');
-      setBio(user.bio || '');
-      setLocationName(user.location_name || '');
-      setCoords({ lat: user.latitude, lng: user.longitude });
-    }
-  }, [user]);
+  // Use edited values if available, otherwise fall back to user data
+  const username = editedFields.username ?? user?.username ?? '';
+  const bio = editedFields.bio ?? user?.bio ?? '';
+  const locationName = editedFields.locationName ?? user?.location_name ?? '';
+  const coords = editedFields.coords ?? {
+    lat: user?.latitude ?? null,
+    lng: user?.longitude ?? null,
+  };
 
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
@@ -44,10 +44,13 @@ export default function ProfilePage() {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setCoords({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
+        setEditedFields((prev) => ({
+          ...prev,
+          coords: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
+        }));
         setMessage({ type: 'success', text: 'Location captured!' });
       },
       () => {
@@ -69,8 +72,10 @@ export default function ProfilePage() {
         longitude: coords.lng,
       });
       setMessage({ type: 'success', text: 'Profile updated successfully!' });
+      // Clear edited fields since they're now saved
+      setEditedFields({});
       await refetch();
-      await updateSession(); // Refresh session to update registration_complete status
+      await updateSession();
     } catch (err) {
       setMessage({
         type: 'error',
@@ -100,6 +105,7 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-8">
+      {/* ... existing JSX for header ... */}
       <div className="mb-8">
         <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-3">
           <User className="w-10 h-10 text-blue-600" />
@@ -114,6 +120,7 @@ export default function ProfilePage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
+        {/* ... existing message display ... */}
         {message && (
           <div
             className={`p-4 rounded-2xl border flex items-center gap-3 ${
@@ -141,7 +148,7 @@ export default function ProfilePage() {
               <input
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => setEditedFields((prev) => ({ ...prev, username: e.target.value }))}
                 className="w-full px-5 py-4 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-2xl text-slate-900 dark:text-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-bold"
                 required
               />
@@ -154,7 +161,7 @@ export default function ProfilePage() {
               </label>
               <textarea
                 value={bio}
-                onChange={(e) => setBio(e.target.value)}
+                onChange={(e) => setEditedFields((prev) => ({ ...prev, bio: e.target.value }))}
                 rows={4}
                 className="w-full px-5 py-4 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-2xl text-slate-900 dark:text-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-bold"
                 placeholder={t('bioPlaceholder', 'Tell us about your collection...')}
@@ -171,7 +178,9 @@ export default function ProfilePage() {
               <input
                 type="text"
                 value={locationName}
-                onChange={(e) => setLocationName(e.target.value)}
+                onChange={(e) =>
+                  setEditedFields((prev) => ({ ...prev, locationName: e.target.value }))
+                }
                 placeholder={t('locationPlaceholder', 'City, Country')}
                 className="w-full px-5 py-4 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-2xl text-slate-900 dark:text-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-bold"
               />
@@ -195,10 +204,10 @@ export default function ProfilePage() {
             <div className="pt-4">
               <button
                 type="submit"
-                disabled={updateProfile.isLoading}
+                disabled={updateProfile.isPending}
                 className="w-full flex items-center justify-center py-5 px-4 bg-blue-600 hover:bg-blue-500 text-white text-sm font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5 active:scale-95 disabled:opacity-50"
               >
-                {updateProfile.isLoading
+                {updateProfile.isPending
                   ? t('saving', 'Saving...')
                   : t('saveProfile', 'Save & Complete Registration')}
               </button>
@@ -209,6 +218,8 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+// ... rest of component (AlertCircle function) stays the same ...
 
 function AlertCircle(props: React.SVGProps<SVGSVGElement>) {
   return (
