@@ -1,10 +1,11 @@
 'use client';
 
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { LogIn, LogOut, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import Image from 'next/image';
 
 export function LoginButton() {
   const { data: session } = useSession();
@@ -17,7 +18,8 @@ export function LoginButton() {
       <div className="flex items-center gap-3 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md p-1.5 pr-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 shadow-sm group/user">
         <div className="relative">
           {session.user?.image ? (
-            <img
+            <Image
+              fill
               src={session.user.image}
               alt={session.user.name || ''}
               className="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-700 object-cover shadow-sm group-hover/user:scale-105 transition-transform duration-300"

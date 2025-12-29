@@ -5,6 +5,110 @@ import { createPool, sql } from 'slonik';
 import fs from 'node:fs';
 import path from 'node:path';
 
+// TODO: This needs to be refactored (GN)
+
+// Type definitions for Scryfall API responses
+// interface ScryfallBulkData {
+//   data: Array<{
+//     type: string;
+//     name: string;
+//     download_uri: string;
+//     size: number;
+//   }>;
+// }
+
+// interface ScryfallCardFace {
+//   name?: string;
+//   mana_cost?: string;
+//   type_line?: string;
+//   oracle_text?: string;
+//   power?: string;
+//   toughness?: string;
+//   loyalty?: string;
+//   colors?: string[];
+//   image_uris?: Record<string, string>;
+// }
+
+// interface ScryfallCard {
+//   id: string;
+//   oracle_id?: string;
+//   name?: string;
+//   set?: string;
+//   set_name?: string;
+//   set_type?: string;
+//   released_at?: string;
+//   mana_cost?: string;
+//   type_line?: string;
+//   oracle_text?: string;
+//   cmc?: number;
+//   reserved?: boolean;
+//   keywords?: string[];
+//   colors?: string[];
+//   collector_number?: string;
+//   rarity?: string;
+//   image_uris?: {
+//     normal?: string;
+//     [key: string]: string | undefined;
+//   };
+//   prices?: {
+//     usd?: string;
+//     [key: string]: string | undefined;
+//   };
+//   artist?: string;
+//   flavor_text?: string;
+//   frame?: string;
+//   border_color?: string;
+//   finishes?: string[];
+//   card_faces?: ScryfallCardFace[];
+// }
+
+interface SetData {
+  code: string;
+  name: string;
+  set_type: string | null;
+  released_at: string | null;
+}
+
+interface DesignData {
+  oracle_id: string;
+  name: string;
+  mana_cost: string | null;
+  type_line: string | null;
+  oracle_text: string | null;
+  cmc: number;
+  reserved: boolean;
+  keywords: string[];
+}
+
+interface PrintingData {
+  id: string;
+  design_id: string;
+  set_code: string;
+  collector_number: string;
+  rarity: string;
+  image_uri_normal: string | null;
+  price_usd: number | null;
+  artist: string | null;
+  flavor_text: string | null;
+  frame: string | null;
+  border_color: string | null;
+  is_foil_available: boolean;
+  is_nonfoil_available: boolean;
+}
+
+interface FaceData {
+  printing_id: string;
+  face_number: number;
+  name: string;
+  mana_cost: string | null;
+  type_line: string | null;
+  oracle_text: string | null;
+  power: string | null;
+  toughness: string | null;
+  loyalty: string | null;
+  image_uris: string | null;
+}
+
 const DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL) {
   throw new Error('DATABASE_URL environment variable is not set');
@@ -41,7 +145,7 @@ async function getCachedOrFetchCards() {
   console.log('Fetching bulk data list from Scryfall API...');
   const bulkDataResponse = await fetch('https://api.scryfall.com/bulk-data');
   const bulkData = await bulkDataResponse.json();
-  const defaultCards = bulkData.data.find((d: any) => d.type === 'default_cards');
+  const defaultCards = bulkData.data.find((d: { type: string }) => d.type === 'default_cards');
 
   if (!defaultCards) {
     throw new Error('Could not find default_cards bulk data');
@@ -74,11 +178,11 @@ async function importCards() {
     console.log(`Found ${cards.length} card objects. Processing...\n`);
 
     // Step 1: Collect unique Sets, Designs, and Colors
-    const setsMap = new Map<string, any>();
-    const designsMap = new Map<string, any>();
+    const setsMap = new Map<string, SetData>();
+    const designsMap = new Map<string, DesignData>();
     const colorsMap = new Map<string, string[]>();
-    const printingsArray: any[] = [];
-    const facesArray: any[] = [];
+    const printingsArray: PrintingData[] = [];
+    const facesArray: FaceData[] = [];
 
     for (const card of cards) {
       if (!card.oracle_id || !card.id) continue;
@@ -97,7 +201,9 @@ async function importCards() {
       if (!designsMap.has(card.oracle_id)) {
         let colors = card.colors || [];
         if (!card.colors && card.card_faces) {
-          colors = Array.from(new Set(card.card_faces.flatMap((f: any) => f.colors || [])));
+          colors = Array.from(
+            new Set(card.card_faces.flatMap((f: { colors: string[] }) => f.colors || [])),
+          );
         }
 
         designsMap.set(card.oracle_id, {
@@ -133,7 +239,7 @@ async function importCards() {
 
       // 4. Track Card Faces
       if (card.card_faces && card.card_faces.length > 0) {
-        card.card_faces.forEach((face: any, index: number) => {
+        card.card_faces.forEach((face: FaceData, index: number) => {
           facesArray.push({
             printing_id: card.id,
             face_number: index,
@@ -252,7 +358,7 @@ async function importCards() {
 
     // Step 4: Insert Design Colors
     console.log('Inserting design colors...');
-    const designColorsArray: any[] = [];
+    const designColorsArray: Array<[string, string]> = [];
     for (const [designId, colors] of colorsMap.entries()) {
       for (const color of colors) {
         designColorsArray.push([designId, color]);

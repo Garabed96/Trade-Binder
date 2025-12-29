@@ -28,8 +28,11 @@ export default function RegisterPage() {
     try {
       await createUser.mutateAsync({ username, email, password });
       router.push(`/${locale}/login?registered=true`);
-    } catch (err: any) {
-      setError(err.message || 'An error occurred. Please try again.');
+    } catch (err: unknown) {
+      // Narrowing the type to access .message safely
+      const errorMessage =
+        err instanceof Error ? err.message : 'An error occurred. Please try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

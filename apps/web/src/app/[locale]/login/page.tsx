@@ -38,7 +38,8 @@ export default function LoginPage() {
         router.push(`/${locale}`);
       }
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(`${t('common:error_occurred')} ${errorMessage}`);
     } finally {
       setLoading(false);
     }
