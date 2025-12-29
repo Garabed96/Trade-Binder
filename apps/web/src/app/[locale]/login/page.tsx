@@ -47,7 +47,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-transparent">
-      <Navbar minimal />
       <div className="flex-1 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8 bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl p-10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-200/50 dark:border-slate-800/50">
           <div>
