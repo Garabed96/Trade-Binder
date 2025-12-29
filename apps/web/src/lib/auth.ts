@@ -27,6 +27,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        /*
         const user = (await pool.maybeOne(sql.typeAlias('user')`
           SELECT id, email, username, password_hash
           FROM users
@@ -48,6 +49,8 @@ export const authOptions: NextAuthOptions = {
           email: user.email,
           name: user.username,
         };
+        */
+        return null;
       },
     }),
   ],
@@ -61,6 +64,8 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       console.log('SignIn Callback:', { provider: account?.provider, email: user.email });
+      return true;
+      /*
       if (account?.provider === 'credentials') return true;
 
       // Handle OAuth users: persistence to DB
@@ -88,18 +93,20 @@ export const authOptions: NextAuthOptions = {
         return false;
       }
       return true;
+      */
     },
     async jwt({ token, user, account }) {
+      /*
       if (user) {
         console.log('JWT Initial Sign-in:', { email: user.email });
         try {
           // Fetch the DB user ID for this email
           const dbUser = await pool.maybeOne(sql.typeAlias('user')`
-            SELECT id FROM users WHERE email = ${user.email}
+            SELECT id FROM users WHERE email = ${user?.email}
           `);
           if (dbUser) {
             console.log('Mapping DB ID to JWT:', dbUser.id);
-            token.sub = dbUser.id;
+            token.sub = dbUser?.id;
           } else {
             console.warn('DB user not found during JWT generation for:', user.email);
           }
@@ -107,6 +114,7 @@ export const authOptions: NextAuthOptions = {
           console.error('Error in jwt callback:', error);
         }
       }
+      */
       return token;
     },
     async session({ session, token }) {
