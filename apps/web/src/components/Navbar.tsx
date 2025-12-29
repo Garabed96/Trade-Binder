@@ -7,9 +7,11 @@ import { ThemeToggle } from './ThemeToggle';
 import { FuzzySearchBar } from './FuzzySearchBar';
 import { useParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Store, Library, Sparkles } from 'lucide-react';
+import { Store, Library } from 'lucide-react';
 import { useSearch } from '@/src/context/SearchContext';
+import Image from 'next/image';
 // import { useSession } from 'next-auth/react';
+import logo from '@/public/my-trade-binder.png';
 
 export function Navbar({ minimal = false }: { minimal?: boolean }) {
   const { t } = useTranslation(['common']);
@@ -25,9 +27,15 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
           {/* Row 1: Logo & Toggles */}
           <div className="flex items-center justify-between w-full md:w-auto">
             <Link href={`/${locale}`} className="group flex items-center gap-3">
-              <div className="relative w-10 h-10 bg-gradient-to-br from-amber-500 via-orange-500 to-red-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-amber-500/30 group-hover:scale-105 transition-all duration-300 border border-amber-400/30">
-                <Sparkles className="w-5 h-5" />
-                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative w-12 h-12 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+                <Image
+                  src={logo}
+                  alt="My Trade Binder Logo"
+                  width={48}
+                  height={48}
+                  className="object-contain rounded-full"
+                  priority
+                />
               </div>
               <h1 className="text-xl font-black tracking-tighter bg-gradient-to-r from-amber-300 via-orange-200 to-amber-100 bg-clip-text text-transparent group-hover:from-amber-200 group-hover:via-orange-100 group-hover:to-white transition-all duration-300 hidden sm:block md:hidden lg:block">
                 {t('title')}
