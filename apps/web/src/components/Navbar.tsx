@@ -45,11 +45,15 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
             {/* Mobile Toggles & Login */}
             <div className="flex md:hidden items-center gap-2">
               <div className="flex items-center gap-1 bg-slate-800/60 dark:bg-slate-900/60 backdrop-blur-sm p-1.5 rounded-xl border border-slate-600/30 dark:border-slate-700/50">
-                <LanguageSwitcher />
+                <LanguageSwitcher compact={true} />
                 <div className="w-px h-4 bg-slate-500 dark:bg-slate-600 mx-1" />
                 <ThemeToggle />
               </div>
-              {!minimal && <LoginButton />}
+              {!minimal && (
+                <div className="bg-slate-800/60 dark:bg-slate-900/60 backdrop-blur-sm p-1.5 rounded-xl border border-slate-600/30 dark:border-slate-700/50">
+                  <LoginButton />
+                </div>
+              )}
             </div>
           </div>
 
@@ -76,14 +80,18 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
                 {/*)}*/}
               </div>
 
-              {/* Enhanced Search Bar (Row 2 on Mobile) - Now with more space */}
-              <div className="mt-4 md:mt-0 w-full md:flex-1 md:max-w-2xl md:mx-6 relative">
-                <FuzzySearchBar inputValue={query} setInputValue={setQuery} />
-                {totalMatches > 0 && (
-                  <div className="absolute right-4 top-2.5 px-2 py-0.5 rounded-md text-[10px] font-black text-amber-300 bg-slate-800/80 dark:bg-slate-900/80 border border-amber-500/30 pointer-events-none z-10 shadow-sm">
-                    {totalMatches.toLocaleString()}
+              {/* Enhanced Search Bar (Row 2 on Mobile) - Now matches the toggle styling */}
+              <div className="mt-4 md:mt-0 w-full md:flex-1 md:max-w-2xl md:mx-6">
+                <div className="bg-slate-800/60 dark:bg-slate-900/60 backdrop-blur-sm p-1.5 rounded-xl border border-slate-600/30 dark:border-slate-700/50">
+                  <div className="relative">
+                    <FuzzySearchBar inputValue={query} setInputValue={setQuery} />
+                    {totalMatches > 0 && (
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 rounded-md text-[10px] font-black text-amber-300 bg-slate-800/80 dark:bg-slate-900/80 border border-amber-500/30 pointer-events-none z-10 shadow-sm">
+                        {totalMatches.toLocaleString()}
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </>
           )}
@@ -91,11 +99,15 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
           {/* Desktop Toggles */}
           <div className="hidden md:flex items-center gap-3">
             <div className="flex items-center gap-1 bg-slate-800/60 dark:bg-slate-900/60 backdrop-blur-sm p-1.5 rounded-xl border border-slate-600/30 dark:border-slate-700/50">
-              <LanguageSwitcher />
+              <LanguageSwitcher compact={false} />
               <div className="w-px h-4 bg-slate-500 dark:bg-slate-600 mx-1" />
               <ThemeToggle />
             </div>
-            {!minimal && <LoginButton />}
+            {!minimal && (
+              <div className="bg-slate-800/60 dark:bg-slate-900/60 backdrop-blur-sm p-1.5 rounded-xl border border-slate-600/30 dark:border-slate-700/50">
+                <LoginButton />
+              </div>
+            )}
           </div>
         </div>
       </div>
