@@ -10,6 +10,7 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID!,
       clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+      authorization: { params: { scope: 'identify email' } },
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,

@@ -53,7 +53,10 @@ export function FuzzySearchBar({ inputValue, setInputValue }: FuzzySearchBarProp
     <div ref={searchRef} className="relative w-full max-w-2xl mx-auto">
       {/* Search Input */}
       <div className="relative group">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        <div
+          className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+          suppressHydrationWarning
+        >
           <Search className="h-5 w-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" />
         </div>
 

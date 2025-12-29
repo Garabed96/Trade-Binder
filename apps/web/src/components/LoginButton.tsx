@@ -54,6 +54,7 @@ export function LoginButton() {
     <Link
       href={`/${locale}/login`}
       className="group relative flex items-center gap-2 bg-slate-900 dark:bg-white px-5 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-[0.15em] text-white dark:text-slate-900 shadow-lg shadow-slate-900/10 dark:shadow-white/10 hover:-translate-y-0.5 active:scale-95 transition-all overflow-hidden"
+      suppressHydrationWarning
     >
       <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       <LogIn className="w-3.5 h-3.5 relative z-10 group-hover:rotate-12 transition-transform duration-300" />

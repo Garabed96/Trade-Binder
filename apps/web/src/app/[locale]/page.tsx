@@ -69,7 +69,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-transparent">
+    <div className="min-h-screen bg-background dark:bg-transparent">
       <Navbar
         inputValue={inputValue}
         setInputValue={setInputValue}

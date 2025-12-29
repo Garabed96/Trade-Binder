@@ -23,7 +23,7 @@ export default async function RootLayout({
   const validLocale = locale || 'en';
 
   return (
-    <html lang={validLocale}>
+    <html lang={validLocale} suppressHydrationWarning>
       <body className={inter.className}>
         <Providers locale={validLocale}>{children}</Providers>
       </body>
