@@ -2,8 +2,9 @@ import { NextAuthOptions } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-// import { pool, sql } from '../server/db';
-// import bcrypt from 'bcryptjs';
+import { pool, sql } from '../server/db';
+import bcrypt from 'bcryptjs';
+import { z } from 'zod';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -27,12 +28,19 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        /*
-        const user = (await pool.maybeOne(sql.typeAlias('user')`
-          SELECT id, email, username, password_hash
+        const user = await pool.maybeOne(sql.type(
+          z.object({
+            id: z.string(),
+            email: z.string(),
+            username: z.string(),
+            password_hash: z.string().nullable(),
+            registration_complete: z.boolean(),
+          }),
+        )`
+          SELECT id, email, username, password_hash, registration_complete
           FROM users
           WHERE email = ${credentials.email}
-        `)) as { id: string; email: string; username: string; password_hash: string } | null;
+        `);
 
         if (!user || !user.password_hash) {
           return null;
@@ -48,9 +56,8 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           email: user.email,
           name: user.username,
+          registration_complete: user.registration_complete,
         };
-        */
-        return null;
       },
     }),
   ],
@@ -63,24 +70,23 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user, account }) {
-      // async signIn({ user, account, profile }) {
       console.log('SignIn Callback:', { provider: account?.provider, email: user.email });
-      return true;
-      /*
+
       if (account?.provider === 'credentials') return true;
 
       // Handle OAuth users: persistence to DB
       if (user.email) {
         try {
-          const existingUser = await pool.maybeOne(sql.typeAlias('user')`
+          const existingUser = await pool.maybeOne(sql.type(z.object({ id: z.string() }))`
             SELECT id FROM users WHERE email = ${user.email}
           `);
 
           if (!existingUser) {
             console.log('Creating new OAuth user:', user.email);
-            await pool.query(sql.typeAlias('user')`
+            await pool.one(sql.type(z.object({ id: z.string() }))`
               INSERT INTO users (username, email)
               VALUES (${user.name || user.email.split('@')[0]}, ${user.email})
+              RETURNING id
             `);
           } else {
             console.log('Existing OAuth user found:', existingUser.id);
@@ -94,21 +100,25 @@ export const authOptions: NextAuthOptions = {
         return false;
       }
       return true;
-      */
     },
-    // async jwt({ token, user, account }) {
-    async jwt({ token }) {
-      /*
-      if (user) {
+    async jwt({ token, user }) {
+      if (user && user.email) {
         console.log('JWT Initial Sign-in:', { email: user.email });
         try {
-          // Fetch the DB user ID for this email
-          const dbUser = await pool.maybeOne(sql.typeAlias('user')`
-            SELECT id FROM users WHERE email = ${user?.email}
+          // Fetch the DB user ID and registration_complete status for this email
+          const dbUser = await pool.maybeOne(sql.type(
+            z.object({ id: z.string(), registration_complete: z.boolean() }),
+          )`
+            SELECT id, registration_complete FROM users WHERE email = ${user.email}
           `);
           if (dbUser) {
-            console.log('Mapping DB ID to JWT:', dbUser.id);
-            token.sub = dbUser?.id;
+            console.log(
+              'Mapping DB ID and registration status to JWT:',
+              dbUser.id,
+              dbUser.registration_complete,
+            );
+            token.sub = dbUser.id;
+            token.registration_complete = dbUser.registration_complete;
           } else {
             console.warn('DB user not found during JWT generation for:', user.email);
           }
@@ -116,7 +126,6 @@ export const authOptions: NextAuthOptions = {
           console.error('Error in jwt callback:', error);
         }
       }
-      */
       return token;
     },
     async session({ session, token }) {
@@ -125,6 +134,9 @@ export const authOptions: NextAuthOptions = {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         session.user.id = token.sub;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        session.user.registration_complete = token.registration_complete;
       }
       return session;
     },

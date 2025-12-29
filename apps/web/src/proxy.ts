@@ -1,11 +1,11 @@
-// middleware.ts
+// proxy.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const SUPPORTED_LOCALES = ['en', 'th'];
 const DEFAULT_LOCALE = 'en';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Check if locale is already in path
