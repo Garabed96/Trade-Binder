@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '../globals.css';
 import Providers from '../providers';
+import { Navbar } from '@/src/components/Navbar';
+import { MobileNav } from '@/src/components/MobileNav';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,7 +27,11 @@ export default async function RootLayout({
   return (
     <html lang={validLocale} suppressHydrationWarning>
       <body className={inter.className}>
-        <Providers locale={validLocale}>{children}</Providers>
+        <Providers locale={validLocale}>
+          <Navbar />
+          <main className="pb-20 md:pb-0">{children}</main>
+          <MobileNav />
+        </Providers>
       </body>
     </html>
   );

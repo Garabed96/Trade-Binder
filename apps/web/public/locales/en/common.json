@@ -1,5 +1,9 @@
 {
   "title": "My Trade Binder",
+  "navMarketplace": "Marketplace",
+  "navSearch": "Search",
+  "navBinder": "My Binder",
+  "navProfile": "Profile",
   "subtitle": "Magic: The Gathering Collection",
   "matches": "Matches",
   "searchPlaceholder": "Search by card name...",

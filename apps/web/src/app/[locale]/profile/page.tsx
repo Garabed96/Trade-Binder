@@ -1,0 +1,10 @@
+'use client';
+
+export default function ProfilePage() {
+  return (
+    <div className="p-8">
+      <h1 className="text-3xl font-bold">Profile</h1>
+      <p className="mt-4 text-slate-500">Your account settings and trading reputation.</p>
+    </div>
+  );
+}
