@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "turbo dev",
+    "dev": "./scripts/setup-db.sh && turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
     "type-check": "turbo type-check",
-    "clean": "turbo clean && rm -rf node_modules"
+    "clean": "turbo clean && rm -rf node_modules",
+    "setup-db": "./scripts/setup-db.sh"
   },
   "devDependencies": {
     "prettier": "^3.7.4",
