@@ -38,7 +38,7 @@ export default function BinderPageContent() {
     },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value as string;
     if (["personal", "trade", "sale"].includes(value)) {
       setType(value as "personal" | "trade" | "sale");
