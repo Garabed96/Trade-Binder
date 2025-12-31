@@ -10,7 +10,9 @@ export const cardRouter = router({
         name: z.string(),
       }),
     )`
-      SELECT code, name FROM card_sets ORDER BY name ASC
+      SELECT code, name
+      FROM card_sets
+      ORDER BY name ASC
     `);
   }),
 
@@ -22,11 +24,10 @@ export const cardRouter = router({
         released_at: z.string().nullable(),
       }),
     )`
-      SELECT code, name, released_at::text 
-      FROM card_sets 
+      SELECT code, name, released_at::text
+      FROM card_sets
       WHERE released_at <= NOW()
-      ORDER BY released_at DESC 
-      LIMIT 1
+      ORDER BY released_at DESC LIMIT 1
     `);
   }),
 
@@ -82,7 +83,7 @@ export const cardRouter = router({
 
       // 1. Fetch total count for pagination info
       const countResult = await pool.one(sql.type(z.object({ total: z.number() }))`
-        SELECT COUNT(*)::int as total
+        SELECT COUNT(*) ::int as total
         FROM card_designs d
                JOIN card_printings p ON d.oracle_id = p.design_id
           ${whereClause}
@@ -100,9 +101,13 @@ export const cardRouter = router({
           price_usd: z.number().nullable(),
         }),
       )`
-        SELECT
-          p.id, d.name, s.name as set_name, p.set_code,
-          p.rarity, p.image_uri_normal, p.price_usd
+        SELECT p.id,
+               d.name,
+               s.name as set_name,
+               p.set_code,
+               p.rarity,
+               p.image_uri_normal,
+               p.price_usd
         FROM card_designs d
                JOIN card_printings p ON d.oracle_id = p.design_id
                JOIN card_sets s ON p.set_code = s.code
@@ -126,20 +131,56 @@ export const cardRouter = router({
         z.object({
           id: z.string(),
           name: z.string(),
-          image_uri_small: z.string().nullable(),
+          image_uri_normal: z.string().nullable(),
           set_name: z.string(),
           set_code: z.string(),
           price_usd: z.number().nullable(),
         }),
       )`
-        SELECT 
-          p.id, d.name, p.image_uri_small, s.name as set_name, p.set_code, p.price_usd
+        SELECT p.id,
+               d.name,
+               p.image_uri_normal,
+               s.name as set_name,
+               p.set_code,
+               p.price_usd
         FROM card_designs d
-        JOIN card_printings p ON d.oracle_id = p.design_id
-        JOIN card_sets s ON p.set_code = s.code
+               JOIN card_printings p ON d.oracle_id = p.design_id
+               JOIN card_sets s ON p.set_code = s.code
         WHERE d.name ILIKE ${'%' + input.query + '%'}
         ORDER BY d.name ASC
-        LIMIT 5
+          LIMIT 5
       `);
     }),
+
+  getById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
+    return await pool.maybeOne(sql.type(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        set_name: z.string(),
+        set_code: z.string(),
+        rarity: z.string(),
+        image_uri_normal: z.string().nullable(),
+        price_usd: z.number().nullable(),
+        oracle_text: z.string().nullable(),
+        type_line: z.string().nullable(),
+        mana_cost: z.string().nullable(),
+      }),
+    )`
+      SELECT p.id,
+             d.name,
+             s.name as set_name,
+             p.set_code,
+             p.rarity,
+             p.image_uri_normal,
+             p.price_usd,
+             d.oracle_text,
+             d.type_line,
+             d.mana_cost
+      FROM card_designs d
+             JOIN card_printings p ON d.oracle_id = p.design_id
+             JOIN card_sets s ON p.set_code = s.code
+      WHERE p.id = ${input.id}
+    `);
+  }),
 });

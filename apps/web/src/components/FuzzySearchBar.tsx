@@ -35,11 +35,6 @@ export function FuzzySearchBar({ inputValue, setInputValue }: FuzzySearchBarProp
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleResultClick = (cardName: string) => {
-    setInputValue(cardName);
-    setIsOpen(false);
-  };
-
   const navigateToSearch = () => {
     setIsOpen(false);
     router.push(`/${locale}/search`);
@@ -49,6 +44,12 @@ export function FuzzySearchBar({ inputValue, setInputValue }: FuzzySearchBarProp
     if (e.key === 'Enter') {
       navigateToSearch();
     }
+  };
+
+  const handleResultClick = (cardId: string) => {
+    setIsOpen(false);
+    setInputValue(''); // optional but recommended UX
+    router.push(`/cards/${cardId}`);
   };
 
   const handleSearchIconClick = (e: React.MouseEvent) => {
@@ -105,14 +106,14 @@ export function FuzzySearchBar({ inputValue, setInputValue }: FuzzySearchBarProp
             <div className="py-2">
               {results.map((card) => (
                 <div
+                  onClick={() => handleResultClick(card.id)}
                   key={card.id}
-                  onClick={() => handleResultClick(card.name)}
                   className="flex items-center gap-4 px-4 py-3 hover:bg-slate-700/50 dark:hover:bg-slate-800/70 cursor-pointer transition-colors"
                 >
                   <div className="relative h-12 w-8 flex-shrink-0 bg-slate-700 dark:bg-slate-800 rounded overflow-hidden">
-                    {card.image_uri_small ? (
+                    {card.image_uri_normal ? (
                       <Image
-                        src={card.image_uri_small}
+                        src={card.image_uri_normal}
                         alt={card.name}
                         fill
                         className="object-cover"

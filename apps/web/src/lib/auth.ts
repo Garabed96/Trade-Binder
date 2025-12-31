@@ -1,10 +1,30 @@
-import { NextAuthOptions } from 'next-auth';
+import { NextAuthOptions, DefaultSession } from 'next-auth';
 import DiscordProvider from 'next-auth/providers/discord';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { pool, sql } from '../server/db';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string;
+      registration_complete: boolean;
+    } & DefaultSession['user'];
+  }
+
+  interface User {
+    id: string;
+    registration_complete: boolean;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    registration_complete: boolean;
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -131,11 +151,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       console.log('Session Callback:', { tokenSub: token.sub });
       if (session.user && token.sub) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
         session.user.id = token.sub;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
         session.user.registration_complete = token.registration_complete;
       }
       return session;
