@@ -5,7 +5,15 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"],
-      "env": ["DATABASE_URL", "NODE_ENV", "DISCORD_CLIENT_SECRET", "DISCORD_CLIENT_ID", "NEXTAUTH_SECRET"]
+      "env": [
+        "DATABASE_URL",
+        "NODE_ENV",
+        "DISCORD_CLIENT_SECRET",
+        "DISCORD_CLIENT_ID",
+        "NEXTAUTH_SECRET",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET"
+      ]
     },
     "dev": {
       "cache": false,
