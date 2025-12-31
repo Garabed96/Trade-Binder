@@ -8,11 +8,24 @@
     "lint": "turbo lint",
     "type-check": "turbo type-check",
     "clean": "turbo clean && rm -rf node_modules",
+    "prepare": "husky",
     "setup-db": "./scripts/setup-db.sh"
   },
   "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.7.4",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "turbo": "^2.7.2"
+  },
+  "lint-staged": {
+    "apps/web/**/*.{js,jsx,ts,tsx,mjs}": [
+      "prettier --write",
+      "eslint --fix --config apps/web/eslint.config.mjs"
+    ],
+    "*.{json,css,scss,md,html}": [
+      "prettier --write"
+    ]
   },
   "packageManager": "pnpm@9.15.0",
   "engines": {
