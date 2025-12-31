@@ -133,7 +133,7 @@ export function FuzzySearchBar({
           }}
           onKeyDown={handleKeyDown}
           placeholder={t("searchPlaceholder")}
-          className="w-full rounded-2xl border border-slate-600/30 bg-slate-800/40 py-3 pr-12 pl-12 text-sm font-bold text-slate-100 placeholder-slate-400 shadow-sm backdrop-blur-sm transition-all focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/50 focus:outline-none dark:border-slate-700/50 dark:bg-slate-900/60"
+          className="w-full rounded-2xl border border-slate-600/30 bg-slate-800/40 py-3 pr-12 pl-12 text-base font-bold text-slate-100 placeholder-slate-400 shadow-sm backdrop-blur-sm transition-all focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/50 focus:outline-none dark:border-slate-700/50 dark:bg-slate-900/60"
         />
 
         {isLoading && debouncedQuery.length >= 3 && (
