@@ -23,7 +23,7 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
   const pathname = usePathname();
   const isProfilePage = pathname?.endsWith("/profile");
   return (
-    <nav className="border-gradient-to-r z-50 w-full border-b bg-gradient-to-r from-amber-500/20 from-slate-900/90 via-emerald-500/20 via-indigo-900/80 to-blue-500/20 to-purple-900/90 shadow-lg shadow-indigo-900/20 backdrop-blur-xl md:sticky md:top-0 dark:from-slate-950/95 dark:via-indigo-950/90 dark:to-purple-950/95">
+    <nav className="border-gradient-to-r sticky z-[50] w-full border-b bg-gradient-to-r from-amber-500/20 from-slate-900/90 via-emerald-500/20 via-indigo-900/80 to-blue-500/20 to-purple-900/90 shadow-lg shadow-indigo-900/20 backdrop-blur-xl md:top-0 dark:from-slate-950/95 dark:via-indigo-950/90 dark:to-purple-950/95">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col justify-between py-4 md:h-20 md:flex-row md:items-center md:py-0">
           {/* Row 1: Logo & Toggles */}
@@ -84,7 +84,7 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
 
               {/* Enhanced Search Bar (Row 2 on Mobile) - Now matches the toggle styling */}
               <div
-                className={`mt-4 w-full md:mx-6 md:mt-0 md:max-w-2xl md:flex-1 ${isProfilePage ? "search-hide-mobile" : ""}`}
+                className={`z-[50] mt-4 w-full md:mx-6 md:mt-0 md:max-w-2xl md:flex-1 ${isProfilePage ? "search-hide-mobile" : ""}`}
               >
                 <div className="rounded-xl border border-slate-600/30 bg-slate-800/60 p-1.5 backdrop-blur-sm dark:border-slate-700/50 dark:bg-slate-900/60">
                   <div className="relative">
@@ -93,7 +93,7 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
                       setInputValue={setQuery}
                     />
                     {totalMatches > 0 && (
-                      <div className="pointer-events-none absolute top-1/2 right-2 z-10 -translate-y-1/2 rounded-md border border-amber-500/30 bg-slate-800/80 px-2 py-0.5 text-[10px] font-black text-amber-300 shadow-sm dark:bg-slate-900/80">
+                      <div className="pointer-events-none absolute top-1/2 right-2 z-[50] -translate-y-1/2 rounded-md border border-amber-500/30 bg-slate-800/80 px-2 py-0.5 text-[10px] font-black text-amber-300 shadow-sm dark:bg-slate-900/80">
                         {totalMatches.toLocaleString()}
                       </div>
                     )}

@@ -110,7 +110,7 @@ export function FuzzySearchBar({
       <div className="group relative">
         <button
           onClick={handleSearchIconClick}
-          className="absolute inset-y-0 left-0 z-20 flex cursor-pointer items-center pl-4 hover:bg-transparent"
+          className="absolute inset-y-0 left-0 z-[100] flex cursor-pointer items-center pl-4 hover:bg-transparent"
           type="button"
           aria-label="Search"
         >
@@ -137,14 +137,14 @@ export function FuzzySearchBar({
         />
 
         {isLoading && debouncedQuery.length >= 3 && (
-          <div className="absolute inset-y-0 right-0 z-10 flex items-center pr-4">
+          <div className="absolute inset-y-0 right-0 z-[100] flex items-center pr-4">
             <Loader2 className="h-4 w-4 animate-spin text-amber-400" />
           </div>
         )}
       </div>
 
       {showDropdown && (
-        <div className="absolute z-50 mt-2 max-h-[500px] w-full overflow-y-auto rounded-2xl border border-slate-600/50 bg-slate-800/95 shadow-2xl backdrop-blur-xl dark:border-slate-700/50 dark:bg-slate-900/95">
+        <div className="absolute z-[100] mt-2 max-h-[500px] w-full overflow-y-auto rounded-2xl border border-slate-600/50 bg-slate-800/95 shadow-2xl backdrop-blur-xl dark:border-slate-700/50 dark:bg-slate-900/95">
           {isLoading ? (
             <div className="p-8 text-center">
               <Loader2 className="mx-auto mb-2 h-8 w-8 animate-spin text-amber-400" />
