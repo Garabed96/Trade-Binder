@@ -16,7 +16,7 @@ A modern Magic: The Gathering marketplace and collection management platform whe
 - **Framework**: [Next.js 16](https://nextjs.org) with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **Database**: PostgreSQL with Slonik SQL 
+- **Database**: PostgreSQL with Slonik SQL
 - **API**: tRPC for type-safe API routes
 - **Card Data**: Scryfall API integration (Self-hosted, periodically refresh w/ their API)
 - **Package Manager**: pnpm
@@ -27,55 +27,77 @@ A modern Magic: The Gathering marketplace and collection management platform whe
 ### Prerequisites
 
 - Node.js 20+
-- pnpm 8+
-- PostgreSQL database
+- pnpm 9+
+- Docker (or Podman)
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/trade-binder.git
 cd trade-binder
 ```
 
 2. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
-3. Set up environment variables:
-```bash
-cp apps/web/.env.example apps/web/.env
-```
+3. Start developing:
 
-Edit `.env` and add your database connection string:
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/tradebinder"
-```
-
-4. Run database migrations:
-```bash
-pnpm migrate
-```
-
-5. Start the development server:
 ```bash
 pnpm dev
 ```
 
+That's it! The `pnpm dev` command will automatically:
+
+- Create a `.env` file with default database configuration (if it doesn't exist)
+- Start a PostgreSQL database in Docker
+- Run database migrations
+- Start the development server
+
 Open [http://localhost:3000](http://localhost:3000) to see your application.
+
+### Manual Database Setup
+
+If you need to set up the database separately:
+
+```bash
+pnpm setup-db    # Start database + run migrations
+```
+
+Or use the individual commands in `apps/web/`:
+
+```bash
+pnpm start-docker      # Start only the database container
+pnpm migrate           # Run migrations
+pnpm migrate:status    # Check migration status
+pnpm migrate:rollback  # Rollback last migration
+```
 
 ## Development
 
 ### Available Scripts
 
-- `pnpm dev` - Start development server
+**Root (monorepo):**
+
+- `pnpm dev` - Start database, run migrations, and start dev server
 - `pnpm build` - Build for production
-- `pnpm start` - Start production server
 - `pnpm lint` - Run ESLint
-- `pnpm migrate` - Push database schema changes
+- `pnpm setup-db` - Start database and run migrations only
+
+**Web app (`apps/web/`):**
+
+- `pnpm dev` - Start development server (without database setup)
+- `pnpm start-docker` - Start PostgreSQL container
+- `pnpm restart-docker` - Restart PostgreSQL container
+- `pnpm migrate` - Run database migrations
+- `pnpm import-cards` - Import card data from Scryfall
 
 ### Project Structure
+
 ```
 trade-binder/
 ├── apps/

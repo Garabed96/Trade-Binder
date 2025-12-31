@@ -1,6 +1,6 @@
-import { z } from 'zod';
-import { router, publicProcedure } from '@/src/server/trpc';
-import { pool, sql } from '@/src/server/db';
+import { z } from "zod";
+import { router, publicProcedure } from "@/src/server/trpc";
+import { pool, sql } from "@/src/server/db";
 
 export const cardRouter = router({
   listSets: publicProcedure.query(async () => {
@@ -8,7 +8,7 @@ export const cardRouter = router({
       z.object({
         code: z.string(),
         name: z.string(),
-      }),
+      })
     )`
       SELECT code, name
       FROM card_sets
@@ -22,7 +22,7 @@ export const cardRouter = router({
         code: z.string(),
         name: z.string(),
         released_at: z.string().nullable(),
-      }),
+      })
     )`
       SELECT code, name, released_at::text
       FROM card_sets
@@ -38,10 +38,10 @@ export const cardRouter = router({
         rarity: z.string().optional(),
         set_code: z.string().optional(),
         colors: z.array(z.string()).optional(),
-        orderBy: z.enum(['name', 'price_usd', 'released_at']).default('name'),
-        orderDir: z.enum(['ASC', 'DESC']).default('ASC'),
+        orderBy: z.enum(["name", "price_usd", "released_at"]).default("name"),
+        orderDir: z.enum(["ASC", "DESC"]).default("ASC"),
         page: z.number().default(1),
-      }),
+      })
     )
     .query(async ({ input }) => {
       const limit = 40;
@@ -50,7 +50,7 @@ export const cardRouter = router({
       const filters = []; // Start with an empty array
 
       if (input.query && input.query.trim().length >= 1) {
-        filters.push(sql.fragment`d.name ILIKE ${'%' + input.query + '%'}`);
+        filters.push(sql.fragment`d.name ILIKE ${"%" + input.query + "%"}`);
       }
 
       if (input.rarity) {
@@ -58,7 +58,9 @@ export const cardRouter = router({
       }
 
       if (input.set_code) {
-        filters.push(sql.fragment`p.set_code = ${input.set_code.toLowerCase()}`);
+        filters.push(
+          sql.fragment`p.set_code = ${input.set_code.toLowerCase()}`
+        );
       }
 
       // Color filtering via the intersection table
@@ -66,7 +68,7 @@ export const cardRouter = router({
         filters.push(sql.fragment`EXISTS (
           SELECT 1 FROM card_design_colors cdc 
           WHERE cdc.design_id = d.oracle_id 
-          AND cdc.color_id = ANY(${sql.array(input.colors, 'text')})
+          AND cdc.color_id = ANY(${sql.array(input.colors, "text")})
         )`);
       }
 
@@ -76,14 +78,17 @@ export const cardRouter = router({
           : sql.fragment``;
 
       const sortColumn =
-        input.orderBy === 'name'
-          ? sql.identifier(['d', 'name'])
-          : sql.identifier(['p', input.orderBy]);
-      const sortDir = input.orderDir === 'ASC' ? sql.fragment`ASC` : sql.fragment`DESC`;
+        input.orderBy === "name"
+          ? sql.identifier(["d", "name"])
+          : sql.identifier(["p", input.orderBy]);
+      const sortDir =
+        input.orderDir === "ASC" ? sql.fragment`ASC` : sql.fragment`DESC`;
 
       // 1. Fetch total count for pagination info
-      const countResult = await pool.one(sql.type(z.object({ total: z.number() }))`
-        SELECT COUNT(*) ::int as total
+      const countResult = await pool.one(sql.type(
+        z.object({ total: z.number() })
+      )`
+        SELECT COUNT(*)::int as total
         FROM card_designs d
                JOIN card_printings p ON d.oracle_id = p.design_id
           ${whereClause}
@@ -99,7 +104,7 @@ export const cardRouter = router({
           rarity: z.string(),
           image_uri_normal: z.string().nullable(),
           price_usd: z.number().nullable(),
-        }),
+        })
       )`
         SELECT p.id,
                d.name,
@@ -135,7 +140,7 @@ export const cardRouter = router({
           set_name: z.string(),
           set_code: z.string(),
           price_usd: z.number().nullable(),
-        }),
+        })
       )`
         SELECT p.id,
                d.name,
@@ -144,29 +149,31 @@ export const cardRouter = router({
                p.set_code,
                p.price_usd
         FROM card_designs d
-               JOIN card_printings p ON d.oracle_id = p.design_id
-               JOIN card_sets s ON p.set_code = s.code
-        WHERE d.name ILIKE ${'%' + input.query + '%'}
+        JOIN card_printings p ON d.oracle_id = p.design_id
+        JOIN card_sets s ON p.set_code = s.code
+        WHERE d.name ILIKE ${"%" + input.query + "%"}
         ORDER BY d.name ASC
-          LIMIT 5
+        LIMIT 5
       `);
     }),
 
-  getById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
-    return await pool.maybeOne(sql.type(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-        set_name: z.string(),
-        set_code: z.string(),
-        rarity: z.string(),
-        image_uri_normal: z.string().nullable(),
-        price_usd: z.number().nullable(),
-        oracle_text: z.string().nullable(),
-        type_line: z.string().nullable(),
-        mana_cost: z.string().nullable(),
-      }),
-    )`
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      return await pool.maybeOne(sql.type(
+        z.object({
+          id: z.string(),
+          name: z.string(),
+          set_name: z.string(),
+          set_code: z.string(),
+          rarity: z.string(),
+          image_uri_normal: z.string().nullable(),
+          price_usd: z.number().nullable(),
+          oracle_text: z.string().nullable(),
+          type_line: z.string().nullable(),
+          mana_cost: z.string().nullable(),
+        })
+      )`
       SELECT p.id,
              d.name,
              s.name as set_name,
@@ -182,5 +189,5 @@ export const cardRouter = router({
              JOIN card_sets s ON p.set_code = s.code
       WHERE p.id = ${input.id}
     `);
-  }),
+    }),
 });

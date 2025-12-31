@@ -1,26 +1,26 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { trpc } from '@/src/utils/trpc';
-import { useTranslation } from 'react-i18next';
-import { FilterBar } from '@/src/components/FilterBar';
-import { Library, Layers, Star } from 'lucide-react';
-import Image from 'next/image';
-import { useSearch } from '@/src/context/SearchContext';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from "react";
+import { trpc } from "@/src/utils/trpc";
+import { useTranslation } from "react-i18next";
+import { FilterBar } from "@/src/components/FilterBar";
+import { Library, Layers, Star } from "lucide-react";
+import Image from "next/image";
+import { useSearch } from "@/src/context/SearchContext";
+import { useRouter } from "next/navigation";
 
 export default function SearchPage() {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(["common"]);
   const { query, setTotalMatches } = useSearch();
   const router = useRouter();
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [rarity, setRarity] = useState<string>('');
-  const [setCode, setSetCode] = useState<string>('');
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [rarity, setRarity] = useState<string>("");
+  const [setCode, setSetCode] = useState<string>("");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
 
   // State for sorting
-  const [orderBy, setOrderBy] = useState<'name' | 'price_usd'>('name');
-  const [orderDir, setOrderDir] = useState<'ASC' | 'DESC'>('ASC');
+  const [orderBy, setOrderBy] = useState<"name" | "price_usd">("name");
+  const [orderDir, setOrderDir] = useState<"ASC" | "DESC">("ASC");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -36,7 +36,9 @@ export default function SearchPage() {
 
   // Set default set to latest if no search/set is selected
   const effectiveSetCode =
-    !setCode && !query && !rarity && selectedColors.length === 0 ? latestSet.data?.code : setCode;
+    !setCode && !query && !rarity && selectedColors.length === 0
+      ? latestSet.data?.code
+      : setCode;
 
   const { data, isLoading, isFetching } = trpc.card.search.useQuery(
     {
@@ -50,8 +52,8 @@ export default function SearchPage() {
     },
     {
       enabled: !!latestSet.data || !!setCode || !!debouncedSearch,
-      placeholderData: (prev) => prev,
-    },
+      placeholderData: prev => prev,
+    }
   );
 
   // Sync total matches to context for Navbar to display
@@ -62,29 +64,31 @@ export default function SearchPage() {
   }, [data?.totalCount, setTotalMatches]);
 
   const toggleColor = (c: string) => {
-    setSelectedColors((prev) => (prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c]));
+    setSelectedColors(prev =>
+      prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]
+    );
     setPage(1);
   };
 
-  const toggleSort = (field: 'name' | 'price_usd') => {
+  const toggleSort = (field: "name" | "price_usd") => {
     if (orderBy === field) {
-      setOrderDir(orderDir === 'ASC' ? 'DESC' : 'ASC');
+      setOrderDir(orderDir === "ASC" ? "DESC" : "ASC");
     } else {
       setOrderBy(field);
-      setOrderDir(field === 'price_usd' ? 'DESC' : 'ASC');
+      setOrderDir(field === "price_usd" ? "DESC" : "ASC");
     }
   };
 
   return (
-    <div className="min-h-screen bg-background dark:bg-transparent">
+    <div className="bg-background min-h-screen dark:bg-transparent">
       <FilterBar
         rarity={rarity}
-        setRarity={(val) => {
+        setRarity={val => {
           setRarity(val);
           setPage(1);
         }}
         setCode={setCode}
-        setSetCode={(val) => {
+        setSetCode={val => {
           setSetCode(val);
           setPage(1);
         }}
@@ -96,86 +100,88 @@ export default function SearchPage() {
         toggleSort={toggleSort}
       />
 
-      <main className="p-6 md:p-12 max-w-7xl mx-auto">
+      <main className="mx-auto max-w-7xl p-6 md:p-12">
         {/* Latest Set Indicator */}
         {!debouncedSearch && setCode === latestSet.data?.code && (
           <div className="mb-8 flex items-center gap-3">
-            <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">
-              Latest Release:{' '}
-              <span className="text-slate-900 dark:text-white ml-1">{latestSet.data?.name}</span>
+            <div className="h-2 w-2 animate-pulse rounded-full bg-blue-500" />
+            <h2 className="text-xs font-black tracking-[0.2em] text-slate-400 uppercase dark:text-slate-500">
+              Latest Release:{" "}
+              <span className="ml-1 text-slate-900 dark:text-white">
+                {latestSet.data?.name}
+              </span>
             </h2>
           </div>
         )}
 
         {/* Card Grid */}
         <div
-          className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 transition-opacity duration-300 ${isFetching ? 'opacity-40' : 'opacity-100'}`}
+          className={`grid grid-cols-2 gap-6 transition-opacity duration-300 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 ${isFetching ? "opacity-40" : "opacity-100"}`}
         >
-          {data?.cards.map((card) => (
+          {data?.cards.map(card => (
             <div
               onClick={() => router.push(`/cards/${card.id}`)}
               key={card.id}
-              className="group relative flex flex-col bg-white dark:bg-slate-900/40 backdrop-blur-md rounded-2xl overflow-hidden border border-slate-200/60 dark:border-slate-800/60 hover:border-blue-500/50 dark:hover:border-blue-400/50 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] dark:hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)] hover:-translate-y-1.5 transition-all duration-500 cursor-pointer shadow-sm"
+              className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm backdrop-blur-md transition-all duration-500 hover:-translate-y-1.5 hover:border-blue-500/50 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] dark:border-slate-800/60 dark:bg-slate-900/40 dark:hover:border-blue-400/50 dark:hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)]"
             >
-              <div className="aspect-[2.5/3.5] relative overflow-hidden bg-slate-100 dark:bg-slate-950">
+              <div className="relative aspect-[2.5/3.5] overflow-hidden bg-slate-100 dark:bg-slate-950">
                 {card.image_uri_normal ? (
                   <Image
                     fill
                     src={card.image_uri_normal}
                     alt={card.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                   />
                 ) : (
-                  <div className="flex items-center justify-center h-full p-4 text-center font-bold text-slate-400 uppercase tracking-tighter">
+                  <div className="flex h-full items-center justify-center p-4 text-center font-bold tracking-tighter text-slate-400 uppercase">
                     {card.name}
                   </div>
                 )}
 
                 {/* Card Badges */}
                 <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5">
-                  {card.rarity === 'mythic' && (
-                    <span className="bg-orange-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase shadow-lg ring-1 ring-white/20">
-                      {t('mythic')}
+                  {card.rarity === "mythic" && (
+                    <span className="rounded-full bg-orange-500 px-2 py-0.5 text-[9px] font-black text-white uppercase shadow-lg ring-1 ring-white/20">
+                      {t("mythic")}
                     </span>
                   )}
-                  {card.rarity === 'rare' && (
-                    <span className="bg-yellow-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase shadow-lg ring-1 ring-white/20">
-                      {t('rarityRare')}
+                  {card.rarity === "rare" && (
+                    <span className="rounded-full bg-yellow-500 px-2 py-0.5 text-[9px] font-black text-white uppercase shadow-lg ring-1 ring-white/20">
+                      {t("rarityRare")}
                     </span>
                   )}
                 </div>
 
                 {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  <p className="text-white text-[10px] font-black uppercase tracking-widest truncate w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                <div className="absolute inset-0 flex items-end bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <p className="w-full translate-y-2 transform truncate text-[10px] font-black tracking-widest text-white uppercase transition-transform duration-300 group-hover:translate-y-0">
                     {card.set_name}
                   </p>
                 </div>
               </div>
 
-              <div className="p-4 space-y-3 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm flex-1 flex flex-col">
+              <div className="flex flex-1 flex-col space-y-3 bg-white/50 p-4 backdrop-blur-sm dark:bg-slate-900/50">
                 <div className="space-y-1">
                   <h3
-                    className="font-bold text-slate-900 dark:text-slate-100 truncate text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+                    className="truncate text-sm font-bold text-slate-900 transition-colors group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-400"
                     title={card.name}
                   >
                     {card.name}
                   </h3>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase px-1.5 py-0.5 bg-slate-100/80 dark:bg-slate-800/80 rounded-md">
+                    <span className="rounded-md bg-slate-100/80 px-1.5 py-0.5 text-[10px] font-black text-slate-400 uppercase dark:bg-slate-800/80 dark:text-slate-500">
                       {card.set_code}
                     </span>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-tighter truncate">
+                    <p className="truncate text-[10px] font-bold tracking-tighter text-slate-500 uppercase dark:text-slate-400">
                       {card.set_name}
                     </p>
                   </div>
                 </div>
 
-                <div className="pt-2 flex justify-between items-center border-t border-slate-100/50 dark:border-slate-800/50">
-                  <span className="text-blue-600 dark:text-blue-400 font-black text-base tracking-tight">
-                    {card.price_usd ? `$${card.price_usd.toFixed(2)}` : '—'}
+                <div className="flex items-center justify-between border-t border-slate-100/50 pt-2 dark:border-slate-800/50">
+                  <span className="text-base font-black tracking-tight text-blue-600 dark:text-blue-400">
+                    {card.price_usd ? `$${card.price_usd.toFixed(2)}` : "—"}
                   </span>
                 </div>
 
@@ -183,34 +189,36 @@ export default function SearchPage() {
                 <div className="flex items-center gap-2 pt-1">
                   <button
                     title="Add to Binder"
-                    className="flex-1 h-9 flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition-all active:scale-95 shadow-md shadow-blue-500/20 gap-1.5"
-                    onClick={(e) => {
+                    className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-blue-600 text-white shadow-md shadow-blue-500/20 transition-all hover:bg-blue-500 active:scale-95"
+                    onClick={e => {
                       e.stopPropagation();
-                      console.log('Add to Binder:', card.id);
+                      console.log("Add to Binder:", card.id);
                     }}
                   >
-                    <Library className="w-3.5 h-3.5" />
-                    <span className="text-[9px] font-black uppercase tracking-wider">Binder</span>
+                    <Library className="h-3.5 w-3.5" />
+                    <span className="text-[9px] font-black tracking-wider uppercase">
+                      Binder
+                    </span>
                   </button>
                   <button
                     title="Add to Deck"
-                    className="h-9 w-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl transition-all active:scale-95 border border-slate-200/50 dark:border-slate-700/50 shadow-sm"
-                    onClick={(e) => {
+                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/50 bg-slate-100 text-slate-600 shadow-sm transition-all hover:bg-slate-200 active:scale-95 dark:border-slate-700/50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                    onClick={e => {
                       e.stopPropagation();
-                      console.log('Add to Deck:', card.id);
+                      console.log("Add to Deck:", card.id);
                     }}
                   >
-                    <Layers className="w-3.5 h-3.5" />
+                    <Layers className="h-3.5 w-3.5" />
                   </button>
                   <button
                     title="Add to Wishlist"
-                    className="h-9 w-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl transition-all active:scale-95 border border-slate-200/50 dark:border-slate-700/50 shadow-sm"
-                    onClick={(e) => {
+                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/50 bg-slate-100 text-slate-600 shadow-sm transition-all hover:bg-slate-200 active:scale-95 dark:border-slate-700/50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                    onClick={e => {
                       e.stopPropagation();
-                      console.log('Add to Wishlist:', card.id);
+                      console.log("Add to Wishlist:", card.id);
                     }}
                   >
-                    <Star className="w-3.5 h-3.5 fill-current text-yellow-500" />
+                    <Star className="h-3.5 w-3.5 fill-current text-yellow-500" />
                   </button>
                 </div>
               </div>
@@ -219,17 +227,17 @@ export default function SearchPage() {
         </div>
 
         {isLoading && (
-          <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
-            <p className="font-black text-slate-400 uppercase tracking-widest animate-pulse">
-              {t('searching')}
+          <div className="flex flex-col items-center justify-center gap-4 py-20">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500/20 border-t-blue-500"></div>
+            <p className="animate-pulse font-black tracking-widest text-slate-400 uppercase">
+              {t("searching")}
             </p>
           </div>
         )}
 
         {debouncedSearch.length >= 3 && data?.cards.length === 0 && (
-          <p className="text-center py-10 text-gray-500 dark:text-slate-400">
-            {`${t('noResults')} ${debouncedSearch}`}
+          <p className="py-10 text-center text-gray-500 dark:text-slate-400">
+            {`${t("noResults")} ${debouncedSearch}`}
           </p>
         )}
 
@@ -238,20 +246,20 @@ export default function SearchPage() {
           <div className="mt-12 flex items-center justify-center gap-4">
             <button
               disabled={page === 1}
-              onClick={() => setPage((p) => p - 1)}
-              className="px-4 py-2 border rounded-lg disabled:opacity-30 hover:bg-slate-50 dark:hover:bg-slate-800 dark:border-slate-700 dark:text-white transition-colors"
+              onClick={() => setPage(p => p - 1)}
+              className="rounded-lg border px-4 py-2 transition-colors hover:bg-slate-50 disabled:opacity-30 dark:border-slate-700 dark:text-white dark:hover:bg-slate-800"
             >
-              {t('previous')}
+              {t("previous")}
             </button>
-            <span className="font-bold text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">
-              {t('pageOf', { page, total: data.totalPages })}
+            <span className="text-xs font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
+              {t("pageOf", { page, total: data.totalPages })}
             </span>
             <button
               disabled={page === data.totalPages}
-              onClick={() => setPage((p) => p + 1)}
-              className="px-4 py-2 border rounded-lg disabled:opacity-30 hover:bg-slate-50 dark:hover:bg-slate-800 dark:border-slate-700 dark:text-white transition-colors"
+              onClick={() => setPage(p => p + 1)}
+              className="rounded-lg border px-4 py-2 transition-colors hover:bg-slate-50 disabled:opacity-30 dark:border-slate-700 dark:text-white dark:hover:bg-slate-800"
             >
-              {t('next')}
+              {t("next")}
             </button>
           </div>
         )}

@@ -1,38 +1,81 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { Search, Loader2 } from 'lucide-react';
-import { trpc } from '@/src/utils/trpc';
-import { useTranslation } from 'react-i18next';
-import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { useState, useEffect, useRef } from "react";
+import { Search, Loader2, AlertCircle } from "lucide-react";
+import { trpc } from "@/src/utils/trpc";
+import { useTranslation } from "react-i18next";
+import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface FuzzySearchBarProps {
   inputValue: string;
   setInputValue: (value: string) => void;
 }
 
-export function FuzzySearchBar({ inputValue, setInputValue }: FuzzySearchBarProps) {
-  const { t } = useTranslation(['common']);
+export function FuzzySearchBar({
+  inputValue,
+  setInputValue,
+}: FuzzySearchBarProps) {
+  const { t } = useTranslation(["common"]);
   const [isOpen, setIsOpen] = useState(false);
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const params = useParams();
-  const locale = (params?.locale as string) || 'en';
+  const locale = (params?.locale as string) || "en";
 
-  const { data: results, isFetching: isLoading } = trpc.card.fuzzySearch.useQuery(
-    { query: inputValue },
-    { enabled: inputValue.length >= 3 && isOpen },
+  // Debounce the search query to avoid too many requests
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(inputValue);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [inputValue]);
+
+  const {
+    data: results,
+    isFetching: isLoading,
+    error,
+    isError,
+  } = trpc.card.fuzzySearch.useQuery(
+    { query: debouncedQuery },
+    {
+      enabled: debouncedQuery.length >= 3,
+      retry: 1,
+      staleTime: 300,
+      refetchOnWindowFocus: false,
+    }
   );
+
+  // Debug logs
+  useEffect(() => {
+    if (debouncedQuery.length >= 3) {
+      console.log("🔍 Fuzzy Search State:", {
+        inputValue,
+        debouncedQuery,
+        queryLength: debouncedQuery.length,
+        isOpen,
+        isLoading,
+        isError,
+        error: error?.message,
+        resultsCount: results?.length ?? 0,
+        results: results?.map(r => r.name),
+      });
+    }
+  }, [debouncedQuery, isOpen, isLoading, results, isError, error, inputValue]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const navigateToSearch = () => {
@@ -41,76 +84,93 @@ export function FuzzySearchBar({ inputValue, setInputValue }: FuzzySearchBarProp
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       navigateToSearch();
+    } else if (e.key === "Escape") {
+      setIsOpen(false);
     }
   };
 
   const handleResultClick = (cardId: string) => {
     setIsOpen(false);
-    setInputValue(''); // optional but recommended UX
+    setInputValue(""); // optional but recommended UX
     router.push(`/cards/${cardId}`);
   };
 
   const handleSearchIconClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('Search icon clicked!'); // Debug log
     navigateToSearch();
   };
 
-  const showDropdown = isOpen && inputValue.length >= 3;
+  const showDropdown = isOpen && debouncedQuery.length >= 3;
 
   return (
-    <div ref={searchRef} className="relative w-full max-w-2xl mx-auto">
-      <div className="relative group">
+    <div ref={searchRef} className="relative mx-auto w-full max-w-2xl">
+      <div className="group relative">
         <button
           onClick={handleSearchIconClick}
-          className="absolute inset-y-0 left-0 pl-4 flex items-center z-20 cursor-pointer hover:bg-transparent"
+          className="absolute inset-y-0 left-0 z-20 flex cursor-pointer items-center pl-4 hover:bg-transparent"
           type="button"
           aria-label="Search"
         >
-          <Search className="h-5 w-5 text-slate-300 group-focus-within:text-amber-400 hover:text-amber-300 transition-colors" />
+          <Search className="h-5 w-5 text-slate-300 transition-colors group-focus-within:text-amber-400 hover:text-amber-300" />
         </button>
 
         <input
           type="text"
           value={inputValue}
-          onChange={(e) => {
+          onChange={e => {
             setInputValue(e.target.value);
-            setIsOpen(true);
+            if (e.target.value.length >= 3) {
+              setIsOpen(true);
+            }
           }}
-          onFocus={() => setIsOpen(true)}
+          onFocus={() => {
+            if (inputValue.length >= 3) {
+              setIsOpen(true);
+            }
+          }}
           onKeyDown={handleKeyDown}
-          placeholder={t('searchPlaceholder')}
-          className="w-full pl-12 pr-12 py-3 bg-slate-800/40 dark:bg-slate-900/60 border border-slate-600/30 dark:border-slate-700/50 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400/50 focus:border-amber-400/50 transition-all text-sm font-bold text-slate-100 placeholder-slate-400 backdrop-blur-sm"
+          placeholder={t("searchPlaceholder")}
+          className="w-full rounded-2xl border border-slate-600/30 bg-slate-800/40 py-3 pr-12 pl-12 text-sm font-bold text-slate-100 placeholder-slate-400 shadow-sm backdrop-blur-sm transition-all focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/50 focus:outline-none dark:border-slate-700/50 dark:bg-slate-900/60"
         />
 
-        {isLoading && (
-          <div className="absolute inset-y-0 right-0 pr-4 flex items-center z-10">
-            <Loader2 className="h-4 w-4 text-amber-400 animate-spin" />
+        {isLoading && debouncedQuery.length >= 3 && (
+          <div className="absolute inset-y-0 right-0 z-10 flex items-center pr-4">
+            <Loader2 className="h-4 w-4 animate-spin text-amber-400" />
           </div>
         )}
       </div>
 
       {showDropdown && (
-        <div className="absolute z-50 w-full mt-2 bg-slate-800/95 dark:bg-slate-900/95 border border-slate-600/50 dark:border-slate-700/50 rounded-2xl shadow-2xl max-h-[500px] overflow-y-auto backdrop-blur-xl">
-          {isLoading && !results ? (
+        <div className="absolute z-50 mt-2 max-h-[500px] w-full overflow-y-auto rounded-2xl border border-slate-600/50 bg-slate-800/95 shadow-2xl backdrop-blur-xl dark:border-slate-700/50 dark:bg-slate-900/95">
+          {isLoading ? (
             <div className="p-8 text-center">
-              <Loader2 className="h-8 w-8 text-amber-400 animate-spin mx-auto mb-2" />
-              <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest animate-pulse">
-                {t('searching')}
+              <Loader2 className="mx-auto mb-2 h-8 w-8 animate-spin text-amber-400" />
+              <p className="animate-pulse text-[10px] font-bold tracking-widest text-slate-400 uppercase">
+                {t("searching")}
+              </p>
+            </div>
+          ) : isError ? (
+            <div className="p-8 text-center">
+              <AlertCircle className="mx-auto mb-2 h-8 w-8 text-red-400" />
+              <p className="mb-1 text-sm font-bold text-red-400">
+                Search Error
+              </p>
+              <p className="text-xs text-slate-400">
+                {error?.message || "Something went wrong"}
               </p>
             </div>
           ) : results && results.length > 0 ? (
             <div className="py-2">
-              {results.map((card) => (
+              {results.map(card => (
                 <div
                   onClick={() => handleResultClick(card.id)}
                   key={card.id}
-                  className="flex items-center gap-4 px-4 py-3 hover:bg-slate-700/50 dark:hover:bg-slate-800/70 cursor-pointer transition-colors"
+                  className="flex cursor-pointer items-center gap-4 px-4 py-3 transition-colors hover:bg-slate-700/50 dark:hover:bg-slate-800/70"
                 >
-                  <div className="relative h-12 w-8 flex-shrink-0 bg-slate-700 dark:bg-slate-800 rounded overflow-hidden">
+                  <div className="relative h-12 w-8 flex-shrink-0 overflow-hidden rounded bg-slate-700 dark:bg-slate-800">
                     {card.image_uri_normal ? (
                       <Image
                         src={card.image_uri_normal}
@@ -119,20 +179,20 @@ export function FuzzySearchBar({ inputValue, setInputValue }: FuzzySearchBarProp
                         className="object-cover"
                       />
                     ) : (
-                      <div className="h-full w-full flex items-center justify-center text-[8px] font-bold text-slate-400">
+                      <div className="flex h-full w-full items-center justify-center text-[8px] font-bold text-slate-400">
                         MTG
                       </div>
                     )}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-slate-100 dark:text-slate-100 truncate">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-bold text-slate-100 dark:text-slate-100">
                       {card.name}
                     </p>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-black text-amber-400 dark:text-amber-400 uppercase">
+                      <span className="text-[10px] font-black text-amber-400 uppercase dark:text-amber-400">
                         {card.set_code}
                       </span>
-                      <span className="text-[10px] text-slate-400 dark:text-slate-500 truncate">
+                      <span className="truncate text-[10px] text-slate-400 dark:text-slate-500">
                         {card.set_name}
                       </span>
                     </div>
@@ -145,22 +205,24 @@ export function FuzzySearchBar({ inputValue, setInputValue }: FuzzySearchBarProp
                 </div>
               ))}
             </div>
-          ) : (
+          ) : debouncedQuery.length >= 3 ? (
             <div className="p-8 text-center">
-              <p className="text-slate-400 dark:text-slate-400 text-sm">
-                {t('noResults')} &quot;{inputValue}&quot;
+              <p className="text-sm text-slate-400 dark:text-slate-400">
+                {t("noResults")} &quot;{debouncedQuery}&quot;
               </p>
             </div>
-          )}
+          ) : null}
 
-          <div className="border-t border-slate-600/50 dark:border-slate-700/50 px-4 py-3 bg-slate-700/30 dark:bg-slate-800/50">
-            <button
-              onClick={navigateToSearch}
-              className="text-xs text-amber-300 dark:text-amber-400 hover:text-amber-200 transition-colors font-bold uppercase tracking-widest"
-            >
-              View all results for &quot;{inputValue}&quot;
-            </button>
-          </div>
+          {results && results.length > 0 && (
+            <div className="border-t border-slate-600/50 bg-slate-700/30 px-4 py-3 dark:border-slate-700/50 dark:bg-slate-800/50">
+              <button
+                onClick={navigateToSearch}
+                className="text-xs font-bold tracking-widest text-amber-300 uppercase transition-colors hover:text-amber-200 dark:text-amber-400"
+              >
+                View all results for &quot;{debouncedQuery}&quot;
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
