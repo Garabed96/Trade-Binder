@@ -18,7 +18,14 @@ export const userRouter = router({
         bio: z.string().nullable(),
       }),
     )`
-      SELECT id, username, email, registration_complete, latitude, longitude, location_name, bio
+      SELECT id,
+             username,
+             email,
+             registration_complete,
+             latitude,
+             longitude,
+             location_name,
+             bio
       FROM users
       WHERE id = ${userId}
     `);
@@ -38,17 +45,186 @@ export const userRouter = router({
       const userId = (ctx.session.user as { id: string }).id;
       return await pool.one(sql.type(z.object({ id: z.string() }))`
         UPDATE users
-        SET 
-          username = ${input.username},
-          latitude = ${input.latitude},
-          longitude = ${input.longitude},
-          location_name = ${input.location_name},
-          bio = ${input.bio},
-          registration_complete = TRUE
-        WHERE id = ${userId}
-        RETURNING id
+        SET username              = ${input.username},
+            latitude              = ${input.latitude},
+            longitude             = ${input.longitude},
+            location_name         = ${input.location_name},
+            bio                   = ${input.bio},
+            registration_complete = TRUE
+        WHERE id = ${userId} RETURNING id
       `);
     }),
+
+  getMarketStats: protectedProcedure.query(async ({ ctx }) => {
+    const userId = (ctx.session.user as { id: string }).id;
+    const radiusKm = 50;
+
+    const outputSchema = z.object({
+      firstSaleDate: z.string().nullable(),
+      mostValuableCardSold: z
+        .object({
+          cardName: z.string(),
+          price: z.number(),
+          currency: z.string().nullable().optional(),
+        })
+        .nullable(),
+      mostValuableCardBought: z
+        .object({
+          cardName: z.string(),
+          price: z.number(),
+          currency: z.string().nullable().optional(),
+        })
+        .nullable(),
+      currentBinderValue: z.number().nullable(),
+      nearbyTraders: z
+        .object({
+          radiusKm: z.number(),
+          count: z.number(),
+          traders: z
+            .array(
+              z.object({
+                id: z.string(),
+                username: z.string(),
+                distanceKm: z.number(),
+              }),
+            )
+            .optional()
+            .nullable(),
+        })
+        .nullable(),
+    });
+
+    const me = await pool.one(
+      sql.type(
+        z.object({
+          latitude: z.number().nullable(),
+          longitude: z.number().nullable(),
+        }),
+      )`
+        SELECT latitude, longitude
+        FROM users
+        WHERE id = ${userId}
+      `,
+    );
+
+    const firstSale = await pool.maybeOne(
+      sql.type(z.object({ first_sale_date: z.string().nullable() }))`
+        SELECT MIN(uc.acquired_at) ::text as first_sale_date
+        FROM user_cards uc
+               JOIN binders b ON uc.binder_id = b.id
+        WHERE uc.user_id = ${userId}
+          AND b.type = 'sale'
+      `,
+    );
+
+    const mostSold = await pool.maybeOne(
+      sql.type(
+        z.object({
+          card_name: z.string(),
+          price: z.number(),
+        }),
+      )`
+        SELECT d.name as card_name, p.price_usd::float8 as price
+        FROM user_cards uc
+               JOIN binders b ON uc.binder_id = b.id
+               JOIN card_printings p ON uc.printing_id = p.id
+               JOIN card_designs d ON p.design_id = d.oracle_id
+        WHERE uc.user_id = ${userId}
+          AND b.type = 'sale'
+          AND p.price_usd IS NOT NULL
+        ORDER BY p.price_usd DESC LIMIT 1
+      `,
+    );
+
+    const mostBought = await pool.maybeOne(
+      sql.type(
+        z.object({
+          card_name: z.string(),
+          price: z.number(),
+        }),
+      )`
+        SELECT d.name as card_name, p.price_usd::float8 as price
+        FROM user_cards uc
+               LEFT JOIN binders b ON uc.binder_id = b.id
+               JOIN card_printings p ON uc.printing_id = p.id
+               JOIN card_designs d ON p.design_id = d.oracle_id
+        WHERE uc.user_id = ${userId}
+          AND (b.type IS NULL OR b.type <> 'sale')
+          AND p.price_usd IS NOT NULL
+        ORDER BY p.price_usd DESC LIMIT 1
+      `,
+    );
+
+    const binderValue = await pool.one(
+      sql.type(z.object({ total: z.number().nullable() }))`
+        SELECT COALESCE(SUM(p.price_usd), 0) ::float8 as total
+        FROM user_cards uc
+               JOIN card_printings p ON uc.printing_id = p.id
+        WHERE uc.user_id = ${userId}
+      `,
+    );
+
+    if (me.latitude == null || me.longitude == null) {
+      return outputSchema.parse({
+        firstSaleDate: firstSale?.first_sale_date ?? null,
+        mostValuableCardSold: mostSold
+          ? { cardName: mostSold.card_name, price: mostSold.price, currency: 'USD' }
+          : null,
+        mostValuableCardBought: mostBought
+          ? { cardName: mostBought.card_name, price: mostBought.price, currency: 'USD' }
+          : null,
+        currentBinderValue: binderValue.total,
+        nearbyTraders: { radiusKm, count: 0, traders: [] },
+      });
+    }
+
+    const traders = await pool.any(
+      sql.type(
+        z.object({
+          id: z.string(),
+          username: z.string(),
+          distance_km: z.number(),
+        }),
+      )`
+        SELECT u.id,
+               u.username,
+               (
+                 6371 * acos(
+                   cos(radians(${me.latitude})) * cos(radians(u.latitude)) *
+                   cos(radians(u.longitude) - radians(${me.longitude})) +
+                   sin(radians(${me.latitude})) * sin(radians(u.latitude))
+                        )
+                 ) ::float8 as distance_km
+        FROM users u
+        WHERE u.id <> ${userId}
+          AND u.latitude IS NOT NULL
+          AND u.longitude IS NOT NULL
+        ORDER BY distance_km ASC LIMIT 50
+      `,
+    );
+
+    const nearby = traders.filter((t) => t.distance_km <= radiusKm);
+
+    return outputSchema.parse({
+      firstSaleDate: firstSale?.first_sale_date ?? null,
+      mostValuableCardSold: mostSold
+        ? { cardName: mostSold.card_name, price: mostSold.price, currency: 'USD' }
+        : null,
+      mostValuableCardBought: mostBought
+        ? { cardName: mostBought.card_name, price: mostBought.price, currency: 'USD' }
+        : null,
+      currentBinderValue: binderValue.total,
+      nearbyTraders: {
+        radiusKm,
+        count: nearby.length,
+        traders: nearby.map((t) => ({
+          id: t.id,
+          username: t.username,
+          distanceKm: t.distance_km,
+        })),
+      },
+    });
+  }),
 
   list: publicProcedure.query(async () => {
     return await pool.any(sql.type(

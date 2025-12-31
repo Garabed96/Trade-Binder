@@ -4,7 +4,61 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { trpc } from '@/src/utils/trpc';
 import { useSession } from 'next-auth/react';
-import { MapPin, User, FileText, CheckCircle2 } from 'lucide-react';
+import {
+  MapPin,
+  User,
+  FileText,
+  CheckCircle2,
+  TrendingUp,
+  Calendar,
+  Tag,
+  ShoppingCart,
+  DollarSign,
+  Users,
+} from 'lucide-react';
+
+type MarketStatCard = {
+  cardName: string;
+  price: number;
+  currency?: string | null;
+};
+
+type NearbyTrader = {
+  id: string;
+  username: string;
+  distanceKm: number;
+};
+
+type MarketStats = {
+  firstSaleDate: string | null;
+  mostValuableCardSold: MarketStatCard | null;
+  mostValuableCardBought: MarketStatCard | null;
+  currentBinderValue: number | null;
+  nearbyTraders: {
+    radiusKm: number;
+    count: number;
+    traders?: NearbyTrader[] | null;
+  } | null;
+};
+
+function formatDate(value: string) {
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return value;
+  return d.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+  });
+}
+
+function formatCurrency(amount: number, currency?: string | null) {
+  const c = currency ?? 'USD';
+  try {
+    return new Intl.NumberFormat(undefined, { style: 'currency', currency: c }).format(amount);
+  } catch {
+    return `${amount.toFixed(2)} ${c}`;
+  }
+}
 
 export default function ProfilePage() {
   const { t } = useTranslation(['common']);
@@ -17,6 +71,13 @@ export default function ProfilePage() {
     enabled: !!session,
   });
   const updateProfile = trpc.user.updateProfile.useMutation();
+
+  const marketStatsQuery = trpc.user.getMarketStats.useQuery(undefined, {
+    enabled: !!session,
+  });
+
+  const marketStats = marketStatsQuery.data as MarketStats | undefined;
+  const [showNearbyTraders, setShowNearbyTraders] = useState(false);
 
   // Track which fields have been edited by the user
   const [editedFields, setEditedFields] = useState<{
@@ -215,6 +276,175 @@ export default function ProfilePage() {
           </div>
         </div>
       </form>
+
+      {/* Market Achievements */}
+      <section className="mt-10 space-y-6">
+        <div className="flex items-center gap-3">
+          <TrendingUp className="w-7 h-7 text-blue-600" />
+          <div>
+            <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+              {t('marketAchievementsTitle', 'Market Achievements')}
+            </h2>
+            <p className="mt-1 text-slate-500 dark:text-slate-400 font-medium">
+              {t('marketAchievementsSubtitle', 'Your trading stats, value, and local activity.')}
+            </p>
+          </div>
+        </div>
+
+        {marketStatsQuery.isLoading ? (
+          <div className="flex items-center justify-center min-h-[140px] rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          </div>
+        ) : !marketStats ? (
+          <div className="p-6 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50">
+            <p className="text-slate-500 dark:text-slate-400 font-medium">
+              {t(
+                'marketAchievementsEmpty',
+                'No market stats yet. Complete a few trades to start building achievements.',
+              )}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="p-6 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50">
+              <div className="flex items-center gap-3 mb-4">
+                <Calendar className="w-5 h-5 text-blue-600" />
+                <p className="text-xs font-black uppercase tracking-widest text-slate-400">
+                  {t('firstSaleDate', 'First Sale Date')}
+                </p>
+              </div>
+              <p className="text-2xl font-black text-slate-900 dark:text-white">
+                {marketStats.firstSaleDate
+                  ? formatDate(marketStats.firstSaleDate)
+                  : t('notAvailable', '—')}
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50">
+              <div className="flex items-center gap-3 mb-4">
+                <Tag className="w-5 h-5 text-blue-600" />
+                <p className="text-xs font-black uppercase tracking-widest text-slate-400">
+                  {t('mostValuableSold', 'Most Valuable Sold')}
+                </p>
+              </div>
+              <p className="text-lg font-black text-slate-900 dark:text-white leading-snug">
+                {marketStats.mostValuableCardSold?.cardName ?? t('notAvailable', '—')}
+              </p>
+              <p className="mt-2 text-2xl font-black text-emerald-600 dark:text-emerald-400">
+                {marketStats.mostValuableCardSold
+                  ? formatCurrency(
+                      marketStats.mostValuableCardSold.price,
+                      marketStats.mostValuableCardSold.currency,
+                    )
+                  : t('notAvailable', '—')}
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50">
+              <div className="flex items-center gap-3 mb-4">
+                <ShoppingCart className="w-5 h-5 text-blue-600" />
+                <p className="text-xs font-black uppercase tracking-widest text-slate-400">
+                  {t('mostValuableBought', 'Most Valuable Bought')}
+                </p>
+              </div>
+              <p className="text-lg font-black text-slate-900 dark:text-white leading-snug">
+                {marketStats.mostValuableCardBought?.cardName ?? t('notAvailable', '—')}
+              </p>
+              <p className="mt-2 text-2xl font-black text-slate-900 dark:text-white">
+                {marketStats.mostValuableCardBought
+                  ? formatCurrency(
+                      marketStats.mostValuableCardBought.price,
+                      marketStats.mostValuableCardBought.currency,
+                    )
+                  : t('notAvailable', '—')}
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50">
+              <div className="flex items-center gap-3 mb-4">
+                <DollarSign className="w-5 h-5 text-blue-600" />
+                <p className="text-xs font-black uppercase tracking-widest text-slate-400">
+                  {t('currentBinderValue', 'Current Binder Value')}
+                </p>
+              </div>
+              <p className="text-3xl font-black text-emerald-600 dark:text-emerald-400">
+                {typeof marketStats.currentBinderValue === 'number'
+                  ? formatCurrency(marketStats.currentBinderValue, 'USD')
+                  : t('notAvailable', '—')}
+              </p>
+              <p className="mt-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
+                {t('binderValueHint', 'Estimated market value of all cards in your binder.')}
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 md:col-span-2 xl:col-span-2">
+              <div className="flex items-center justify-between gap-6">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Users className="w-5 h-5 text-blue-600" />
+                    <p className="text-xs font-black uppercase tracking-widest text-slate-400">
+                      {t('nearbyTraders', 'Nearby Traders')}
+                    </p>
+                  </div>
+
+                  <p className="text-3xl font-black text-slate-900 dark:text-white">
+                    {marketStats.nearbyTraders?.count ?? 0}
+                    <span className="ml-2 text-sm font-black uppercase tracking-widest text-slate-400">
+                      {marketStats.nearbyTraders
+                        ? t('withinKm', 'within {{km}}km', {
+                            km: marketStats.nearbyTraders.radiusKm,
+                          })
+                        : t('withinKmFallback', 'near you')}
+                    </span>
+                  </p>
+                </div>
+
+                <div className="shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setShowNearbyTraders((v) => !v)}
+                    disabled={!marketStats.nearbyTraders?.traders?.length}
+                    className="flex items-center justify-center gap-2 py-3 px-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all disabled:opacity-50 disabled:hover:bg-slate-100 dark:disabled:hover:bg-slate-800"
+                  >
+                    {showNearbyTraders
+                      ? t('hideDetails', 'Hide Details')
+                      : t('viewDetails', 'View Details')}
+                  </button>
+                </div>
+              </div>
+
+              {showNearbyTraders && (
+                <div className="mt-5 pt-5 border-t border-slate-200 dark:border-slate-700/50">
+                  {marketStats.nearbyTraders?.traders?.length ? (
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {marketStats.nearbyTraders.traders.map((trader) => (
+                        <li
+                          key={trader.id}
+                          className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/30 border border-slate-200/70 dark:border-slate-700/40"
+                        >
+                          <p className="font-black text-slate-900 dark:text-white truncate">
+                            {trader.username}
+                          </p>
+                          <p className="text-xs font-black uppercase tracking-widest text-slate-400">
+                            {trader.distanceKm.toFixed(1)}km
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-slate-500 dark:text-slate-400 font-medium">
+                      {t(
+                        'nearbyTradersEmpty',
+                        'No nearby traders to display yet. Add your precise location to improve results.',
+                      )}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </section>
     </div>
   );
 }

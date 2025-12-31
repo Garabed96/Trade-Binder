@@ -12,8 +12,6 @@ export function RegistrationBanner() {
   const params = useParams();
   const locale = (params?.locale as string) || "en";
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-expect-error
   const isRegistered = session?.user?.registration_complete;
 
   if (!session || isRegistered) return null;

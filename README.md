@@ -16,7 +16,7 @@ A modern Magic: The Gathering marketplace and collection management platform whe
 - **Framework**: [Next.js 16](https://nextjs.org) with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **Database**: PostgreSQL with Slonik SQL 
+- **Database**: PostgreSQL with Slonik SQL
 - **API**: tRPC for type-safe API routes
 - **Card Data**: Scryfall API integration (Self-hosted, periodically refresh w/ their API)
 - **Package Manager**: pnpm
@@ -33,22 +33,26 @@ A modern Magic: The Gathering marketplace and collection management platform whe
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/trade-binder.git
 cd trade-binder
 ```
 
 2. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
 3. Start developing:
+
 ```bash
 pnpm dev
 ```
 
 That's it! The `pnpm dev` command will automatically:
+
 - Create a `.env` file with default database configuration (if it doesn't exist)
 - Start a PostgreSQL database in Docker
 - Run database migrations
@@ -65,6 +69,7 @@ pnpm setup-db    # Start database + run migrations
 ```
 
 Or use the individual commands in `apps/web/`:
+
 ```bash
 pnpm start-docker      # Start only the database container
 pnpm migrate           # Run migrations
@@ -77,12 +82,14 @@ pnpm migrate:rollback  # Rollback last migration
 ### Available Scripts
 
 **Root (monorepo):**
+
 - `pnpm dev` - Start database, run migrations, and start dev server
 - `pnpm build` - Build for production
 - `pnpm lint` - Run ESLint
 - `pnpm setup-db` - Start database and run migrations only
 
 **Web app (`apps/web/`):**
+
 - `pnpm dev` - Start development server (without database setup)
 - `pnpm start-docker` - Start PostgreSQL container
 - `pnpm restart-docker` - Restart PostgreSQL container
@@ -90,6 +97,7 @@ pnpm migrate:rollback  # Rollback last migration
 - `pnpm import-cards` - Import card data from Scryfall
 
 ### Project Structure
+
 ```
 trade-binder/
 ├── apps/
