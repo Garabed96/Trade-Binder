@@ -11,7 +11,12 @@
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  background: linear-gradient(
+    135deg,
+    #1e293b 0%,
+    /* Slate 800 (Dark Blue) */ #3b82f6 50%,
+    /* Blue 500 (Lighter Blue) */ #a855f7 100% /* Purple 500 */
+  );
   --foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { trpc } from "@/src/utils/trpc";
 import { useTranslation } from "react-i18next";
 import { FilterBar } from "@/src/components/FilterBar";
-import { Library, Layers, Star } from "lucide-react";
+import { Library, Star } from "lucide-react";
 import Image from "next/image";
 import { useSearch } from "@/src/context/SearchContext";
 import { useRouter } from "next/navigation";
@@ -80,7 +80,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="bg-background min-h-screen dark:bg-transparent">
+    <div className="min-h-screen bg-transparent">
       <FilterBar
         rarity={rarity}
         setRarity={val => {
@@ -122,9 +122,10 @@ export default function SearchPage() {
             <div
               onClick={() => router.push(`/cards/${card.id}`)}
               key={card.id}
-              className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-sm backdrop-blur-md transition-all duration-500 hover:-translate-y-1.5 hover:border-blue-500/50 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] dark:border-slate-800/60 dark:bg-slate-900/40 dark:hover:border-blue-400/50 dark:hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)]"
+              className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/40 bg-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1.5 hover:border-blue-500/50 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] dark:border-slate-800/60 dark:bg-slate-900/40"
             >
-              <div className="relative aspect-[2.5/3.5] overflow-hidden bg-slate-100 dark:bg-slate-950">
+              <div className="relative aspect-[2.5/3.5] overflow-hidden bg-slate-100/50 dark:bg-slate-950">
+                {" "}
                 {card.image_uri_normal ? (
                   <Image
                     fill
@@ -138,7 +139,6 @@ export default function SearchPage() {
                     {card.name}
                   </div>
                 )}
-
                 {/* Card Badges */}
                 <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5">
                   {card.rarity === "mythic" && (
@@ -152,7 +152,6 @@ export default function SearchPage() {
                     </span>
                   )}
                 </div>
-
                 {/* Overlay on hover */}
                 <div className="absolute inset-0 flex items-end bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <p className="w-full translate-y-2 transform truncate text-[10px] font-black tracking-widest text-white uppercase transition-transform duration-300 group-hover:translate-y-0">
@@ -161,7 +160,7 @@ export default function SearchPage() {
                 </div>
               </div>
 
-              <div className="flex flex-1 flex-col space-y-3 bg-white/50 p-4 backdrop-blur-sm dark:bg-slate-900/50">
+              <div className="flex flex-1 flex-col space-y-3 bg-gradient-to-b from-white/40 to-white/80 p-4 backdrop-blur-md dark:bg-slate-900/50 dark:from-transparent dark:to-transparent">
                 <div className="space-y-1">
                   <h3
                     className="truncate text-sm font-bold text-slate-900 transition-colors group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-400"
@@ -170,7 +169,7 @@ export default function SearchPage() {
                     {card.name}
                   </h3>
                   <div className="flex items-center gap-1.5">
-                    <span className="rounded-md bg-slate-100/80 px-1.5 py-0.5 text-[10px] font-black text-slate-400 uppercase dark:bg-slate-800/80 dark:text-slate-500">
+                    <span className="rounded-md bg-slate-200/50 px-1.5 py-0.5 text-[10px] font-black text-slate-500 uppercase dark:bg-slate-800/80 dark:text-slate-500">
                       {card.set_code}
                     </span>
                     <p className="truncate text-[10px] font-bold tracking-tighter text-slate-500 uppercase dark:text-slate-400">
@@ -189,7 +188,7 @@ export default function SearchPage() {
                 <div className="flex items-center gap-2 pt-1">
                   <button
                     title="Add to Binder"
-                    className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl bg-blue-600 text-white shadow-md shadow-blue-500/20 transition-all hover:bg-blue-500 active:scale-95"
+                    className="/* Light Mode: Vibrant Blue Glass */ /* Dark Mode: Electric Blue Glow */ flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl border border-blue-500/30 bg-blue-500/20 text-blue-700 shadow-lg shadow-blue-500/10 backdrop-blur-md transition-all duration-300 hover:bg-blue-500 hover:text-white hover:shadow-blue-500/40 active:scale-95 dark:border-blue-400/20 dark:bg-blue-500/10 dark:text-blue-400 dark:hover:bg-blue-500 dark:hover:text-white"
                     onClick={e => {
                       e.stopPropagation();
                       console.log("Add to Binder:", card.id);
@@ -200,25 +199,16 @@ export default function SearchPage() {
                       Binder
                     </span>
                   </button>
-                  <button
-                    title="Add to Deck"
-                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/50 bg-slate-100 text-slate-600 shadow-sm transition-all hover:bg-slate-200 active:scale-95 dark:border-slate-700/50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-                    onClick={e => {
-                      e.stopPropagation();
-                      console.log("Add to Deck:", card.id);
-                    }}
-                  >
-                    <Layers className="h-3.5 w-3.5" />
-                  </button>
+
                   <button
                     title="Add to Wishlist"
-                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200/50 bg-slate-100 text-slate-600 shadow-sm transition-all hover:bg-slate-200 active:scale-95 dark:border-slate-700/50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                    className="/* Glass Base: Light tint of amber/white */ /* Shadow and Glow */ /* Interaction */ flex h-9 w-9 items-center justify-center rounded-xl border border-white/40 bg-white/20 shadow-lg shadow-black/5 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-yellow-400/50 hover:bg-yellow-400/20 active:scale-90 dark:border-white/10 dark:bg-white/5 dark:hover:border-yellow-500/30 dark:hover:bg-yellow-500/10"
                     onClick={e => {
                       e.stopPropagation();
                       console.log("Add to Wishlist:", card.id);
                     }}
                   >
-                    <Star className="h-3.5 w-3.5 fill-current text-yellow-500" />
+                    <Star className="h-3.5 w-3.5 fill-current text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]" />
                   </button>
                 </div>
               </div>

@@ -29,12 +29,10 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
           {/* Row 1: Logo & Toggles */}
           <div className="flex w-full items-center justify-between md:w-auto">
             <Link href={`/${locale}`} className="group flex items-center gap-3">
-              <div className="relative flex h-12 w-12 items-center justify-center transition-all duration-300 group-hover:scale-110">
+              <div className="relative flex h-14 w-14 items-center justify-center transition-all duration-300 group-hover:scale-110">
                 <Image
                   src={logo}
                   alt="My Trade Binder Logo"
-                  width={48}
-                  height={48}
                   className="rounded-full object-contain"
                   priority
                 />

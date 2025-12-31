@@ -56,10 +56,10 @@ export function LoginButton() {
   return (
     <Link
       href={`/${locale}/login`}
-      className="group relative flex items-center gap-2 overflow-hidden rounded-2xl bg-slate-900 px-5 py-2.5 text-[10px] font-black tracking-[0.15em] text-white uppercase shadow-lg shadow-slate-900/10 transition-all hover:-translate-y-0.5 active:scale-95 dark:bg-white dark:text-slate-900 dark:shadow-white/10"
+      className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-r from-purple-400 to-amber-400 px-5 py-2.5 text-[10px] font-black tracking-[0.15em] text-slate-900 uppercase shadow-lg transition-all hover:-translate-y-0.5 hover:text-amber-900 hover:drop-shadow-[0_0_8px_rgba(251,191,36,0.8)] active:scale-95"
       suppressHydrationWarning
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-500 group-hover:animate-pulse group-hover:opacity-100" />
       <LogIn className="relative z-10 h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-12" />
       <span className="relative z-10">{t("signIn")}</span>
     </Link>
