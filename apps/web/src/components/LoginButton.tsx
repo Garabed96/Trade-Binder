@@ -37,7 +37,7 @@ export function LoginButton() {
           href={`/${locale}/profile`}
           className="flex min-w-0 cursor-pointer flex-col"
         >
-          <span className="max-w-[100px] truncate text-[11px] font-bold text-slate-900 dark:text-white">
+          <span className="hidden max-w-[100px] truncate text-[11px] font-bold text-slate-900 sm:inline sm:max-w-[150px] dark:text-white">
             {session.user?.name || session.user?.email}
           </span>
         </Link>
