@@ -1,7 +1,7 @@
-import { z } from 'zod';
-import { router, protectedProcedure, publicProcedure } from '@/src/server/trpc';
-import { pool, sql } from '@/src/server/db';
-import { TRPCError } from '@trpc/server';
+import { z } from "zod";
+import { router, protectedProcedure, publicProcedure } from "@/src/server/trpc";
+import { pool, sql } from "@/src/server/db";
+import { TRPCError } from "@trpc/server";
 
 export const binderRouter = router({
   create: protectedProcedure
@@ -9,9 +9,9 @@ export const binderRouter = router({
       z.object({
         name: z.string().min(1),
         description: z.string().optional(),
-        type: z.enum(['personal', 'trade', 'sale']).default('personal'),
+        type: z.enum(["personal", "trade", "sale"]).default("personal"),
         isPublic: z.boolean().default(false),
-      }),
+      })
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
@@ -20,7 +20,7 @@ export const binderRouter = router({
       const { count } = await pool.one(sql.type(
         z.object({
           count: z.number(),
-        }),
+        })
       )`
         SELECT COUNT(*) ::int AS count
         FROM binders
@@ -31,15 +31,16 @@ export const binderRouter = router({
       // Enforce limits
       if (count >= MAX_BINDERS) {
         throw new TRPCError({
-          code: 'FORBIDDEN',
-          message: 'Binder limit reached (free accounts can create up to 5 binders)',
+          code: "FORBIDDEN",
+          message:
+            "Binder limit reached (free accounts can create up to 5 binders)",
         });
       }
 
       return await pool.one(sql.type(
         z.object({
           id: z.string(),
-        }),
+        })
       )`
         INSERT INTO binders (user_id, name, description, type, is_public)
         VALUES (${userId}, ${input.name}, ${input.description || null}, ${input.type}, ${input.isPublic}) RETURNING id
@@ -57,7 +58,7 @@ export const binderRouter = router({
         type: z.string(),
         is_public: z.boolean(),
         card_count: z.number(),
-      }),
+      })
     )`
       SELECT b.id, b.name, b.description, b.type, b.is_public, COUNT(uc.id) ::int as card_count
       FROM binders b
@@ -90,7 +91,7 @@ export const binderRouter = router({
           description: z.string().nullable(),
           type: z.string(),
           is_public: z.boolean(),
-        }),
+        })
       )`
         SELECT id, name, description, type, is_public
         FROM binders
@@ -111,7 +112,7 @@ export const binderRouter = router({
           language: z.string(),
           set_name: z.string(),
           set_code: z.string(),
-        }),
+        })
       )`
         SELECT uc.id,
                uc.printing_id,
@@ -142,18 +143,21 @@ export const binderRouter = router({
         id: z.string().uuid(),
         name: z.string().optional(),
         description: z.string().optional(),
-        type: z.enum(['personal', 'trade', 'sale']).optional(),
+        type: z.enum(["personal", "trade", "sale"]).optional(),
         isPublic: z.boolean().optional(),
-      }),
+      })
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
       const updates = [];
-      if (input.name !== undefined) updates.push(sql.fragment`name = ${input.name}`);
+      if (input.name !== undefined)
+        updates.push(sql.fragment`name = ${input.name}`);
       if (input.description !== undefined)
         updates.push(sql.fragment`description = ${input.description}`);
-      if (input.type !== undefined) updates.push(sql.fragment`type = ${input.type}`);
-      if (input.isPublic !== undefined) updates.push(sql.fragment`is_public = ${input.isPublic}`);
+      if (input.type !== undefined)
+        updates.push(sql.fragment`type = ${input.type}`);
+      if (input.isPublic !== undefined)
+        updates.push(sql.fragment`is_public = ${input.isPublic}`);
 
       if (updates.length === 0) return { success: true };
 
@@ -185,7 +189,7 @@ export const binderRouter = router({
       z.object({
         userCardId: z.string().uuid(),
         binderId: z.string().uuid(),
-      }),
+      })
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
@@ -196,7 +200,7 @@ export const binderRouter = router({
         WHERE id = ${input.binderId}
           AND user_id = ${userId}
       `);
-      if (!binder) throw new Error('Binder not found or unauthorized');
+      if (!binder) throw new Error("Binder not found or unauthorized");
 
       await pool.query(sql.type(z.object({}))`
         UPDATE user_cards
@@ -205,6 +209,36 @@ export const binderRouter = router({
           AND user_id = ${userId}
       `);
       return { success: true };
+    }),
+
+  batchAssignCards: protectedProcedure
+    .input(
+      z.object({
+        userCardIds: z.array(z.string().uuid()),
+        binderId: z.string().uuid(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id;
+
+      const binder = await pool.maybeOne(sql.type(z.object({ id: z.string() }))`
+        SELECT id
+        FROM binders
+        WHERE id = ${input.binderId}
+          AND user_id = ${userId}
+      `);
+
+      if (!binder)
+        throw new TRPCError({ code: "NOT_FOUND", message: "Binder not found" });
+
+      await pool.query(sql.type(z.object({}))`
+        UPDATE user_cards
+        SET binder_id = ${input.binderId}
+        WHERE id = ANY (${input.userCardIds}::uuid[])
+          AND user_id = ${userId}
+      `);
+
+      return { success: true, updatedCount: input.userCardIds.length };
     }),
 
   unassignCard: protectedProcedure
@@ -220,17 +254,19 @@ export const binderRouter = router({
       return { success: true };
     }),
 
-  getPublic: publicProcedure.input(z.object({ id: z.string().uuid() })).query(async ({ input }) => {
-    const binder = await pool.maybeOne(sql.type(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-        description: z.string().nullable(),
-        type: z.string(),
-        user_id: z.string(),
-        username: z.string(),
-      }),
-    )`
+  getPublic: publicProcedure
+    .input(z.object({ id: z.string().uuid() }))
+    .query(async ({ input }) => {
+      const binder = await pool.maybeOne(sql.type(
+        z.object({
+          id: z.string(),
+          name: z.string(),
+          description: z.string().nullable(),
+          type: z.string(),
+          user_id: z.string(),
+          username: z.string(),
+        })
+      )`
       SELECT b.id, b.name, b.description, b.type, b.user_id, u.username
       FROM binders b
              JOIN users u ON b.user_id = u.id
@@ -238,21 +274,21 @@ export const binderRouter = router({
         AND b.is_public = TRUE
     `);
 
-    if (!binder) return null;
+      if (!binder) return null;
 
-    const cards = await pool.any(sql.type(
-      z.object({
-        id: z.string(),
-        printing_id: z.string(),
-        name: z.string(),
-        image_uri_normal: z.string().nullable(),
-        condition: z.string().nullable(),
-        is_foil: z.boolean(),
-        language: z.string(),
-        set_name: z.string(),
-        set_code: z.string(),
-      }),
-    )`
+      const cards = await pool.any(sql.type(
+        z.object({
+          id: z.string(),
+          printing_id: z.string(),
+          name: z.string(),
+          image_uri_normal: z.string().nullable(),
+          condition: z.string().nullable(),
+          is_foil: z.boolean(),
+          language: z.string(),
+          set_name: z.string(),
+          set_code: z.string(),
+        })
+      )`
       SELECT uc.id,
              uc.printing_id,
              d.name,
@@ -270,9 +306,9 @@ export const binderRouter = router({
       ORDER BY uc.acquired_at DESC
     `);
 
-    return {
-      ...binder,
-      cards,
-    };
-  }),
+      return {
+        ...binder,
+        cards,
+      };
+    }),
 });
