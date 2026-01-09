@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
-import { use } from "react";
-import { trpc } from "@/src/utils/trpc";
-import Image from "next/image";
-import { ChevronLeft, Library, Layers, Star } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { use, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { trpc } from '@/src/utils/trpc';
+import Image from 'next/image';
+import { ChevronLeft, Library, Layers, Star } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function CardDetailPage({
   params,
@@ -13,7 +14,54 @@ export default function CardDetailPage({
 }) {
   const { id } = use(params);
   const router = useRouter();
+  const { status } = useSession();
+  const [message, setMessage] = useState<string | null>(null);
+
   const { data: card, isLoading } = trpc.card.getById.useQuery({ id });
+  const { data: binderList } = trpc.binder.list.useQuery(undefined, {
+    enabled: status === 'authenticated',
+  });
+  const utils = trpc.useUtils();
+
+  const showMessage = (msg: string) => {
+    setMessage(msg);
+    setTimeout(() => setMessage(null), 3000);
+  };
+
+  const addToBinder = trpc.inventory.add.useMutation({
+    onSuccess: async () => {
+      const binderName =
+        binderList?.binders?.find(b => b.id === binderList.defaultBinderId)
+          ?.name || 'binder';
+      showMessage(`Card added to ${binderName}!`);
+      await utils.binder.list.invalidate();
+    },
+    onError: (err: { message: string }) => {
+      showMessage(`Error: ${err.message}`);
+    },
+  });
+
+  const handleAddToBinder = () => {
+    if (status !== 'authenticated') {
+      showMessage('Please sign in to add cards to your binder');
+      return;
+    }
+
+    if (!binderList?.defaultBinderId) {
+      showMessage('Please create a binder first');
+      router.push('/binders');
+      return;
+    }
+
+    if (!card) return;
+
+    addToBinder.mutate({
+      printingId: card.id,
+      binderId: binderList.defaultBinderId,
+      isFoil: false,
+      language: 'en',
+    });
+  };
 
   if (isLoading) {
     return (
@@ -28,8 +76,15 @@ export default function CardDetailPage({
   }
 
   return (
-    <div className="bg-background min-h-screen py-6 md:py-12">
-      <div className="container-default">
+    <div className="bg-background min-h-screen p-6 md:p-12">
+      {/* Toast Message */}
+      {message && (
+        <div className="fixed top-4 right-4 z-50 rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 shadow-xl">
+          <p className="text-sm text-slate-200">{message}</p>
+        </div>
+      )}
+
+      <div className="mx-auto max-w-5xl">
         <button
           onClick={() => router.back()}
           className="mb-8 flex items-center gap-2 text-xs font-bold tracking-widest text-slate-500 uppercase transition-colors hover:text-blue-500"
@@ -89,7 +144,7 @@ export default function CardDetailPage({
                   Current Price
                 </p>
                 <span className="text-3xl font-black text-blue-600 dark:text-blue-400">
-                  {card.price_usd ? `$${card.price_usd.toFixed(2)}` : "N/A"}
+                  {card.price_usd ? `$${card.price_usd.toFixed(2)}` : 'N/A'}
                 </span>
               </div>
               <div className="text-right">
@@ -103,10 +158,14 @@ export default function CardDetailPage({
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-              <button className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-blue-600 p-4 text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-500">
+              <button
+                onClick={handleAddToBinder}
+                disabled={addToBinder.isPending}
+                className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-blue-600 p-4 text-white shadow-lg shadow-blue-500/20 transition-all hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+              >
                 <Library className="h-5 w-5" />
                 <span className="text-[10px] font-black uppercase">
-                  Add to Binder
+                  {addToBinder.isPending ? 'Adding...' : 'Add to Binder'}
                 </span>
               </button>
               <button className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200/50 bg-slate-100 p-4 text-slate-600 transition-all hover:bg-slate-200 dark:border-slate-700/50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">

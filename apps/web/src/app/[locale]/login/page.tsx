@@ -1,47 +1,47 @@
-"use client";
+'use client';
 
-import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { useTranslation } from "react-i18next";
-import Link from "next/link";
-import { Input } from "@trade-binder/ui";
+import { signIn } from 'next-auth/react';
+import { useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
+import Link from 'next/link';
+import { Input } from '@trade-binder/ui';
 
 export default function LoginPage() {
-  const { t } = useTranslation(["common"]);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const { t } = useTranslation(['common']);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
   const searchParams =
-    typeof window !== "undefined"
+    typeof window !== 'undefined'
       ? new URLSearchParams(window.location.search)
       : null;
-  const registered = searchParams?.get("registered");
+  const registered = searchParams?.get('registered');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError('');
 
     try {
-      const result = await signIn("credentials", {
+      const result = await signIn('credentials', {
         redirect: false,
         email,
         password,
       });
 
       if (result?.error) {
-        setError("Invalid email or password");
+        setError('Invalid email or password');
       } else {
         router.push(`/${locale}`);
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
-      setError(`${t("common:error_occurred")} ${errorMessage}`);
+      setError(`${t('common:error_occurred')} ${errorMessage}`);
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md space-y-8 rounded-3xl border border-slate-200/50 bg-white/70 p-10 shadow-[0_20px_50px_rgba(0,0,0,0.05)] backdrop-blur-xl dark:border-slate-800/50 dark:bg-slate-900/40">
           <div>
             <h2 className="mt-6 text-center text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-              {t("signIn")}
+              {t('signIn')}
             </h2>
             <p className="mt-2 text-center text-sm font-medium text-slate-500 dark:text-slate-400">
               Welcome back to your collection
@@ -64,13 +64,13 @@ export default function LoginPage() {
             {registered && (
               <div className="rounded-2xl border border-green-500/20 bg-green-500/10 p-4">
                 <div className="text-center text-sm font-bold text-green-600 dark:text-green-400">
-                  {t("registrationSuccess")}
+                  {t('registrationSuccess')}
                 </div>
               </div>
             )}
             <div className="grid grid-cols-2 gap-4">
               <button
-                onClick={() => signIn("discord", { callbackUrl: `/${locale}` })}
+                onClick={() => signIn('discord', { callbackUrl: `/${locale}` })}
                 className="flex items-center justify-center gap-2 rounded-2xl bg-[#5865F2] px-4 py-3 text-xs font-black text-white shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-0.5 hover:bg-[#4752C4] active:scale-95"
               >
                 <svg
@@ -84,7 +84,7 @@ export default function LoginPage() {
                 Discord
               </button>
               <button
-                onClick={() => signIn("google", { callbackUrl: `/${locale}` })}
+                onClick={() => signIn('google', { callbackUrl: `/${locale}` })}
                 className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-xs font-black text-slate-900 shadow-lg transition-all hover:-translate-y-0.5 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
@@ -141,7 +141,7 @@ export default function LoginPage() {
                     required
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    placeholder={t("email")}
+                    placeholder={t('email')}
                   />
                 </div>
                 <div className="group relative">
@@ -153,7 +153,7 @@ export default function LoginPage() {
                     required
                     value={password}
                     onChange={e => setPassword(e.target.value)}
-                    placeholder={t("password")}
+                    placeholder={t('password')}
                   />
                 </div>
               </div>
@@ -164,7 +164,7 @@ export default function LoginPage() {
                   disabled={loading}
                   className="group relative flex w-full justify-center rounded-2xl bg-blue-600 px-4 py-4 text-sm font-black tracking-widest text-white uppercase shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5 hover:bg-blue-500 active:scale-95 disabled:translate-y-0 disabled:opacity-50"
                 >
-                  {loading ? "Signing in..." : t("signIn")}
+                  {loading ? 'Signing in...' : t('signIn')}
                 </button>
               </div>
 
@@ -173,7 +173,7 @@ export default function LoginPage() {
                   href={`/${locale}/register`}
                   className="text-xs font-black tracking-widest text-blue-600 uppercase transition-colors hover:text-blue-500 dark:text-blue-400"
                 >
-                  {t("dontHaveAccount")} {t("signUp")}
+                  {t('dontHaveAccount')} {t('signUp')}
                 </Link>
               </div>
             </form>

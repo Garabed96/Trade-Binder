@@ -55,7 +55,7 @@ export const authOptions: NextAuthOptions = {
             username: z.string(),
             password_hash: z.string().nullable(),
             registration_complete: z.boolean(),
-          }),
+          })
         )`
           SELECT id, email, username, password_hash, registration_complete
           FROM users
@@ -66,7 +66,10 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const isPasswordValid = await bcrypt.compare(credentials.password, user.password_hash);
+        const isPasswordValid = await bcrypt.compare(
+          credentials.password,
+          user.password_hash
+        );
 
         if (!isPasswordValid) {
           return null;
@@ -90,24 +93,59 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user, account }) {
-      console.log('SignIn Callback:', { provider: account?.provider, email: user.email });
+      console.log('SignIn Callback:', {
+        provider: account?.provider,
+        email: user.email,
+      });
 
       if (account?.provider === 'credentials') return true;
 
       // Handle OAuth users: persistence to DB
       if (user.email) {
         try {
-          const existingUser = await pool.maybeOne(sql.type(z.object({ id: z.string() }))`
+          const existingUser = await pool.maybeOne(sql.type(
+            z.object({ id: z.string() })
+          )`
             SELECT id FROM users WHERE email = ${user.email}
           `);
 
           if (!existingUser) {
             console.log('Creating new OAuth user:', user.email);
-            await pool.one(sql.type(z.object({ id: z.string() }))`
+            const newUser = await pool.one(sql.type(
+              z.object({ id: z.string() })
+            )`
               INSERT INTO users (username, email)
               VALUES (${user.name || user.email.split('@')[0]}, ${user.email})
               RETURNING id
             `);
+
+            // Create default binder for new user
+            console.log(
+              'Creating default binder for new OAuth user:',
+              newUser.id
+            );
+            const defaultBinder = await pool.one(sql.type(
+              z.object({ id: z.string() })
+            )`
+              INSERT INTO binders (user_id, name, description, type, is_public, target_capacity)
+              VALUES (
+                ${newUser.id},
+                'My Collection',
+                'Your default collection binder',
+                'trade',
+                TRUE,
+                250
+              )
+              RETURNING id
+            `);
+
+            // Set as default binder
+            await pool.query(sql.type(z.object({}))`
+              UPDATE users
+              SET default_binder_id = ${defaultBinder.id}
+              WHERE id = ${newUser.id}
+            `);
+            console.log('Default binder set for OAuth user:', defaultBinder.id);
           } else {
             console.log('Existing OAuth user found:', existingUser.id);
           }
@@ -127,7 +165,7 @@ export const authOptions: NextAuthOptions = {
         try {
           // Fetch the DB user ID and registration_complete status for this email
           const dbUser = await pool.maybeOne(sql.type(
-            z.object({ id: z.string(), registration_complete: z.boolean() }),
+            z.object({ id: z.string(), registration_complete: z.boolean() })
           )`
             SELECT id, registration_complete FROM users WHERE email = ${user.email}
           `);
@@ -135,12 +173,15 @@ export const authOptions: NextAuthOptions = {
             console.log(
               'Mapping DB ID and registration status to JWT:',
               dbUser.id,
-              dbUser.registration_complete,
+              dbUser.registration_complete
             );
             token.sub = dbUser.id;
             token.registration_complete = dbUser.registration_complete;
           } else {
-            console.warn('DB user not found during JWT generation for:', user.email);
+            console.warn(
+              'DB user not found during JWT generation for:',
+              user.email
+            );
           }
         } catch (error) {
           console.error('Error in jwt callback:', error);

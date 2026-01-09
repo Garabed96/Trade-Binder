@@ -11,14 +11,14 @@ export const inventoryRouter = router({
         isFoil: z.boolean().default(false),
         language: z.string().default('en'),
         binderId: z.string().uuid().optional().nullable(),
-      }),
+      })
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
       return await pool.one(sql.type(
         z.object({
           id: z.string(),
-        }),
+        })
       )`
         INSERT INTO user_cards (user_id, printing_id, binder_id, condition, is_foil, language)
         VALUES (${userId}, ${input.printingId}, ${input.binderId || null}, ${input.condition || null}, ${input.isFoil}, ${input.language})
@@ -30,7 +30,7 @@ export const inventoryRouter = router({
     .input(
       z.object({
         binderId: z.string().uuid().optional().nullable(),
-      }),
+      })
     )
     .query(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
@@ -52,12 +52,13 @@ export const inventoryRouter = router({
           binder_id: z.string().nullable(),
           set_name: z.string(),
           set_code: z.string(),
-        }),
+          rarity: z.string(),
+        })
       )`
-        SELECT 
-          uc.id, uc.printing_id, d.name, p.image_uri_normal, 
+        SELECT
+          uc.id, uc.printing_id, d.name, p.image_uri_normal,
           uc.condition, uc.is_foil, uc.language, uc.binder_id,
-          s.name as set_name, p.set_code
+          s.name as set_name, p.set_code, p.rarity
         FROM user_cards uc
         JOIN card_printings p ON uc.printing_id = p.id
         JOIN card_designs d ON p.design_id = d.oracle_id
@@ -80,12 +81,13 @@ export const inventoryRouter = router({
         language: z.string(),
         set_name: z.string(),
         set_code: z.string(),
-      }),
+        rarity: z.string(),
+      })
     )`
-      SELECT 
-        uc.id, uc.printing_id, d.name, p.image_uri_normal, 
+      SELECT
+        uc.id, uc.printing_id, d.name, p.image_uri_normal,
         uc.condition, uc.is_foil, uc.language,
-        s.name as set_name, p.set_code
+        s.name as set_name, p.set_code, p.rarity
       FROM user_cards uc
       JOIN card_printings p ON uc.printing_id = p.id
       JOIN card_designs d ON p.design_id = d.oracle_id
@@ -100,10 +102,21 @@ export const inventoryRouter = router({
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
       await pool.query(sql.type(z.object({}))`
-        DELETE FROM user_cards 
+        DELETE FROM user_cards
         WHERE id = ${input.userCardId} AND user_id = ${userId}
       `);
       return { success: true };
+    }),
+
+  batchRemove: protectedProcedure
+    .input(z.object({ userCardIds: z.array(z.string().uuid()) }))
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id;
+      await pool.query(sql.type(z.object({}))`
+        DELETE FROM user_cards
+        WHERE id = ANY(${sql.array(input.userCardIds, 'uuid')}) AND user_id = ${userId}
+      `);
+      return { success: true, deletedCount: input.userCardIds.length };
     }),
 
   update: protectedProcedure
@@ -113,14 +126,17 @@ export const inventoryRouter = router({
         condition: z.string().optional(),
         isFoil: z.boolean().optional(),
         language: z.string().optional(),
-      }),
+      })
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
       const updates = [];
-      if (input.condition !== undefined) updates.push(sql.fragment`condition = ${input.condition}`);
-      if (input.isFoil !== undefined) updates.push(sql.fragment`is_foil = ${input.isFoil}`);
-      if (input.language !== undefined) updates.push(sql.fragment`language = ${input.language}`);
+      if (input.condition !== undefined)
+        updates.push(sql.fragment`condition = ${input.condition}`);
+      if (input.isFoil !== undefined)
+        updates.push(sql.fragment`is_foil = ${input.isFoil}`);
+      if (input.language !== undefined)
+        updates.push(sql.fragment`language = ${input.language}`);
 
       if (updates.length === 0) return { success: true };
 

@@ -1,6 +1,6 @@
 'use client';
 
-export default function HomePage() {
+export default function MarketplacePage() {
   return (
     <div className="flex-1">
       <div className="container-default py-8">

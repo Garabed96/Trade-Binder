@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { useTranslation } from "react-i18next";
-import Link from "next/link";
-import { Input } from "@trade-binder/ui";
-import { trpc } from "@/src/utils/trpc";
-import { Navbar } from "@/src/components/Navbar";
+import { useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
+import Link from 'next/link';
+import { Input } from '@trade-binder/ui';
+import { trpc } from '@/src/utils/trpc';
+import { Navbar } from '@/src/components/Navbar';
 
 export default function RegisterPage() {
-  const { t } = useTranslation(["common"]);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const { t } = useTranslation(['common']);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const params = useParams();
@@ -24,7 +24,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError('');
 
     try {
       await createUser.mutateAsync({ username, email, password });
@@ -34,7 +34,7 @@ export default function RegisterPage() {
       const errorMessage =
         err instanceof Error
           ? err.message
-          : "An error occurred. Please try again.";
+          : 'An error occurred. Please try again.';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -48,7 +48,7 @@ export default function RegisterPage() {
         <div className="w-full max-w-md space-y-8 rounded-3xl border border-slate-200/50 bg-white/70 p-10 shadow-[0_20px_50px_rgba(0,0,0,0.05)] backdrop-blur-xl dark:border-slate-800/50 dark:bg-slate-900/40">
           <div>
             <h2 className="mt-6 text-center text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-              {t("createAccount")}
+              {t('createAccount')}
             </h2>
             <p className="mt-2 text-center text-sm font-medium text-slate-500 dark:text-slate-400">
               Join the community of collectors
@@ -72,7 +72,7 @@ export default function RegisterPage() {
                   required
                   value={username}
                   onChange={e => setUsername(e.target.value)}
-                  placeholder={t("username")}
+                  placeholder={t('username')}
                 />
               </div>
               <div className="group relative">
@@ -84,7 +84,7 @@ export default function RegisterPage() {
                   required
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder={t("email")}
+                  placeholder={t('email')}
                 />
               </div>
               <div className="group relative">
@@ -96,7 +96,7 @@ export default function RegisterPage() {
                   required
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  placeholder={t("password")}
+                  placeholder={t('password')}
                 />
               </div>
             </div>
@@ -107,7 +107,7 @@ export default function RegisterPage() {
                 disabled={loading}
                 className="group relative flex w-full justify-center rounded-2xl bg-blue-600 px-4 py-4 text-sm font-black tracking-widest text-white uppercase shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5 hover:bg-blue-500 active:scale-95 disabled:translate-y-0 disabled:opacity-50"
               >
-                {loading ? "Registering..." : t("signUp")}
+                {loading ? 'Registering...' : t('signUp')}
               </button>
             </div>
 
@@ -116,7 +116,7 @@ export default function RegisterPage() {
                 href={`/${locale}/login`}
                 className="text-xs font-black tracking-widest text-blue-600 uppercase transition-colors hover:text-blue-500 dark:text-blue-400"
               >
-                {t("alreadyHaveAccount")} {t("signIn")}
+                {t('alreadyHaveAccount')} {t('signIn')}
               </Link>
             </div>
           </form>

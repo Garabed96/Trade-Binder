@@ -1,11 +1,11 @@
-import { cardRouter } from "../card";
+import { cardRouter } from '../card';
 
-jest.mock("@/src/server/db", () => {
+jest.mock('@/src/server/db', () => {
   const mockType = jest.fn(() => {
     return jest.fn((strings: TemplateStringsArray, ...values: unknown[]) => ({
       strings,
       values,
-      sql: strings.join("?"),
+      sql: strings.join('?'),
     }));
   });
 
@@ -13,22 +13,22 @@ jest.mock("@/src/server/db", () => {
     jest.fn((strings: TemplateStringsArray, ...values: unknown[]) => ({
       strings,
       values,
-      sql: strings.join("?"),
+      sql: strings.join('?'),
     })),
     {
-      fragment: jest.fn((...args: unknown[]) => ({ type: "fragment", args })),
+      fragment: jest.fn((...args: unknown[]) => ({ type: 'fragment', args })),
       join: jest.fn((fragments: unknown[], separator?: unknown) => ({
-        type: "join",
+        type: 'join',
         fragments,
         separator,
       })),
       array: jest.fn((values: unknown[], type: string) => ({
-        type: "array",
+        type: 'array',
         values,
         sqlType: type,
       })),
       identifier: jest.fn((names: string[]) => ({
-        type: "identifier",
+        type: 'identifier',
         names,
       })),
       type: mockType,
@@ -46,7 +46,7 @@ jest.mock("@/src/server/db", () => {
   };
 });
 
-import { pool, sql } from "@/src/server/db";
+import { pool, sql } from '@/src/server/db';
 
 const mockPool = pool as jest.Mocked<typeof pool>;
 const mockSql = sql as jest.Mocked<typeof sql>;
@@ -55,24 +55,24 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-describe("card.search", () => {
+describe('card.search', () => {
   const mockCards = [
     {
-      id: "card-1",
-      name: "Lightning Bolt",
-      set_name: "Alpha",
-      set_code: "lea",
-      rarity: "common",
-      image_uri_normal: "http://example.com/bolt.jpg",
+      id: 'card-1',
+      name: 'Lightning Bolt',
+      set_name: 'Alpha',
+      set_code: 'lea',
+      rarity: 'common',
+      image_uri_normal: 'http://example.com/bolt.jpg',
       price_usd: 1.5,
     },
   ];
 
-  it("returns cards without filters", async () => {
+  it('returns cards without filters', async () => {
     mockPool.one.mockResolvedValueOnce({ total: 1 });
     mockPool.any.mockResolvedValueOnce(mockCards);
 
-    const caller = cardRouter.createCaller({});
+    const caller = cardRouter.createCaller({ session: null });
     const result = await caller.search({});
 
     expect(result.cards).toHaveLength(1);
@@ -81,178 +81,178 @@ describe("card.search", () => {
     expect(mockPool.any).toHaveBeenCalledTimes(1);
   });
 
-  it("applies name query filter", async () => {
+  it('applies name query filter', async () => {
     mockPool.one.mockResolvedValueOnce({ total: 1 });
     mockPool.any.mockResolvedValueOnce(mockCards);
 
-    const caller = cardRouter.createCaller({});
-    await caller.search({ query: "Lightning" });
+    const caller = cardRouter.createCaller({ session: null });
+    await caller.search({ query: 'Lightning' });
 
     expect(mockSql.fragment).toHaveBeenCalledWith(
       expect.anything(),
-      "%Lightning%"
+      '%Lightning%'
     );
   });
 
-  it("applies rarity filter", async () => {
+  it('applies rarity filter', async () => {
     mockPool.one.mockResolvedValueOnce({ total: 1 });
     mockPool.any.mockResolvedValueOnce(mockCards);
 
-    const caller = cardRouter.createCaller({});
-    await caller.search({ rarity: "mythic" });
+    const caller = cardRouter.createCaller({ session: null });
+    await caller.search({ rarity: 'mythic' });
 
-    expect(mockSql.fragment).toHaveBeenCalledWith(expect.anything(), "mythic");
+    expect(mockSql.fragment).toHaveBeenCalledWith(expect.anything(), 'mythic');
   });
 
-  it("applies set_code filter (lowercased)", async () => {
+  it('applies set_code filter (lowercased)', async () => {
     mockPool.one.mockResolvedValueOnce({ total: 1 });
     mockPool.any.mockResolvedValueOnce(mockCards);
 
-    const caller = cardRouter.createCaller({});
-    await caller.search({ set_code: "LEA" });
+    const caller = cardRouter.createCaller({ session: null });
+    await caller.search({ set_code: 'LEA' });
 
-    expect(mockSql.fragment).toHaveBeenCalledWith(expect.anything(), "lea");
+    expect(mockSql.fragment).toHaveBeenCalledWith(expect.anything(), 'lea');
   });
 
-  it("applies color filter with sql.array", async () => {
+  it('applies color filter with sql.array', async () => {
     mockPool.one.mockResolvedValueOnce({ total: 1 });
     mockPool.any.mockResolvedValueOnce(mockCards);
 
-    const caller = cardRouter.createCaller({});
-    await caller.search({ colors: ["W"] });
+    const caller = cardRouter.createCaller({ session: null });
+    await caller.search({ colors: ['W'] });
 
-    expect(mockSql.array).toHaveBeenCalledWith(["W"], "text");
+    expect(mockSql.array).toHaveBeenCalledWith(['W'], 'text');
   });
 
-  it("applies multiple color filters for exact match", async () => {
+  it('applies multiple color filters for exact match', async () => {
     mockPool.one.mockResolvedValueOnce({ total: 1 });
     mockPool.any.mockResolvedValueOnce(mockCards);
 
-    const caller = cardRouter.createCaller({});
-    await caller.search({ colors: ["W", "U"] });
+    const caller = cardRouter.createCaller({ session: null });
+    await caller.search({ colors: ['W', 'U'] });
 
-    expect(mockSql.array).toHaveBeenCalledWith(["W", "U"], "text");
+    expect(mockSql.array).toHaveBeenCalledWith(['W', 'U'], 'text');
   });
 
-  it("calculates pagination correctly", async () => {
+  it('calculates pagination correctly', async () => {
     mockPool.one.mockResolvedValueOnce({ total: 100 });
     mockPool.any.mockResolvedValueOnce(mockCards);
 
-    const caller = cardRouter.createCaller({});
+    const caller = cardRouter.createCaller({ session: null });
     const result = await caller.search({ page: 2 });
 
     expect(result.totalPages).toBe(3); // 100 / 40 = 2.5, ceil = 3
   });
 
-  it("combines multiple filters", async () => {
+  it('combines multiple filters', async () => {
     mockPool.one.mockResolvedValueOnce({ total: 1 });
     mockPool.any.mockResolvedValueOnce(mockCards);
 
-    const caller = cardRouter.createCaller({});
+    const caller = cardRouter.createCaller({ session: null });
     await caller.search({
-      query: "Bolt",
-      rarity: "common",
-      set_code: "lea",
-      colors: ["R"],
+      query: 'Bolt',
+      rarity: 'common',
+      set_code: 'lea',
+      colors: ['R'],
     });
 
     // sql.join should be called to combine filters with AND
     expect(mockSql.join).toHaveBeenCalled();
     // Verify all filter types were applied
     expect(mockSql.fragment).toHaveBeenCalled();
-    expect(mockSql.array).toHaveBeenCalledWith(["R"], "text");
+    expect(mockSql.array).toHaveBeenCalledWith(['R'], 'text');
   });
 });
 
-describe("card.fuzzySearch", () => {
-  it("returns matching cards", async () => {
+describe('card.fuzzySearch', () => {
+  it('returns matching cards', async () => {
     const mockResults = [
       {
-        id: "card-1",
-        name: "Lightning Bolt",
-        image_uri_normal: "http://example.com/bolt.jpg",
-        set_name: "Alpha",
-        set_code: "lea",
+        id: 'card-1',
+        name: 'Lightning Bolt',
+        image_uri_normal: 'http://example.com/bolt.jpg',
+        set_name: 'Alpha',
+        set_code: 'lea',
         price_usd: 1.5,
       },
     ];
     mockPool.any.mockResolvedValueOnce(mockResults);
 
-    const caller = cardRouter.createCaller({});
-    const result = await caller.fuzzySearch({ query: "Lightning" });
+    const caller = cardRouter.createCaller({ session: null });
+    const result = await caller.fuzzySearch({ query: 'Lightning' });
 
     expect(result).toHaveLength(1);
-    expect(result[0].name).toBe("Lightning Bolt");
+    expect(result[0].name).toBe('Lightning Bolt');
   });
 
-  it("requires minimum 3 characters", async () => {
-    const caller = cardRouter.createCaller({});
+  it('requires minimum 3 characters', async () => {
+    const caller = cardRouter.createCaller({ session: null });
 
-    await expect(caller.fuzzySearch({ query: "Li" })).rejects.toThrow();
+    await expect(caller.fuzzySearch({ query: 'Li' })).rejects.toThrow();
   });
 });
 
-describe("card.getById", () => {
-  it("returns card details", async () => {
+describe('card.getById', () => {
+  it('returns card details', async () => {
     const mockCard = {
-      id: "card-1",
-      name: "Lightning Bolt",
-      set_name: "Alpha",
-      set_code: "lea",
-      rarity: "common",
-      image_uri_normal: "http://example.com/bolt.jpg",
+      id: 'card-1',
+      name: 'Lightning Bolt',
+      set_name: 'Alpha',
+      set_code: 'lea',
+      rarity: 'common',
+      image_uri_normal: 'http://example.com/bolt.jpg',
       price_usd: 1.5,
-      oracle_text: "Deal 3 damage to any target.",
-      type_line: "Instant",
-      mana_cost: "{R}",
+      oracle_text: 'Deal 3 damage to any target.',
+      type_line: 'Instant',
+      mana_cost: '{R}',
     };
     mockPool.maybeOne.mockResolvedValueOnce(mockCard);
 
-    const caller = cardRouter.createCaller({});
-    const result = await caller.getById({ id: "card-1" });
+    const caller = cardRouter.createCaller({ session: null });
+    const result = await caller.getById({ id: 'card-1' });
 
-    expect(result?.name).toBe("Lightning Bolt");
-    expect(result?.oracle_text).toBe("Deal 3 damage to any target.");
+    expect(result?.name).toBe('Lightning Bolt');
+    expect(result?.oracle_text).toBe('Deal 3 damage to any target.');
   });
 
-  it("returns null when card not found", async () => {
+  it('returns null when card not found', async () => {
     mockPool.maybeOne.mockResolvedValueOnce(null);
 
-    const caller = cardRouter.createCaller({});
-    const result = await caller.getById({ id: "nonexistent" });
+    const caller = cardRouter.createCaller({ session: null });
+    const result = await caller.getById({ id: 'nonexistent' });
 
     expect(result).toBeNull();
   });
 });
 
-describe("card.listSets", () => {
-  it("returns all sets", async () => {
+describe('card.listSets', () => {
+  it('returns all sets', async () => {
     const mockSets = [
-      { code: "lea", name: "Alpha" },
-      { code: "leb", name: "Beta" },
+      { code: 'lea', name: 'Alpha' },
+      { code: 'leb', name: 'Beta' },
     ];
     mockPool.any.mockResolvedValueOnce(mockSets);
 
-    const caller = cardRouter.createCaller({});
+    const caller = cardRouter.createCaller({ session: null });
     const result = await caller.listSets();
 
     expect(result).toHaveLength(2);
-    expect(result[0].code).toBe("lea");
+    expect(result[0].code).toBe('lea');
   });
 });
 
-describe("card.getLatestSet", () => {
-  it("returns the latest set", async () => {
+describe('card.getLatestSet', () => {
+  it('returns the latest set', async () => {
     const mockSet = {
-      code: "dmu",
-      name: "Dominaria United",
-      released_at: "2022-09-09",
+      code: 'dmu',
+      name: 'Dominaria United',
+      released_at: '2022-09-09',
     };
     mockPool.maybeOne.mockResolvedValueOnce(mockSet);
 
-    const caller = cardRouter.createCaller({});
+    const caller = cardRouter.createCaller({ session: null });
     const result = await caller.getLatestSet();
 
-    expect(result?.code).toBe("dmu");
+    expect(result?.code).toBe('dmu');
   });
 });

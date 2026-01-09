@@ -19,7 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@repo/ui": ["../../packages/ui/src/index.ts"],
+      "@trade-binder/ui": ["../../packages/ui/src/index.ts"]
     }
   },
   "include": [

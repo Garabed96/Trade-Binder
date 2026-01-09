@@ -1,47 +1,47 @@
-"use client";
+'use client';
 
 import {
   GiCrystalBall,
   GiCardDraw,
   GiBookCover,
   GiSwordsEmblem,
-} from "react-icons/gi";
-import { useTranslation } from "react-i18next";
-import Link from "next/link";
-import { usePathname, useParams } from "next/navigation";
+} from 'react-icons/gi';
+import { useTranslation } from 'react-i18next';
+import Link from 'next/link';
+import { usePathname, useParams } from 'next/navigation';
 
 export function MobileNav() {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const pathname = usePathname();
   const params = useParams();
-  const locale = (params?.locale as string) || "en";
+  const locale = (params?.locale as string) || 'en';
 
   return (
     <div className="pb-safe fixed right-0 bottom-0 left-0 z-50 flex h-20 transform-gpu items-center justify-around border-t-2 border-amber-600/30 bg-gradient-to-t from-slate-950 via-slate-900 to-slate-900/95 px-1 shadow-[0_-4px_20px_rgba(0,0,0,0.5)] backdrop-blur-xl md:hidden">
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-amber-900/10 to-transparent" />
       <MobileNavItem
         icon={<GiCardDraw className="h-7 w-7" />}
-        label={t("navMarketplace")}
+        label={t('navMarketplace')}
         href={`/${locale}/marketplace`}
-        active={pathname.includes("/marketplace")}
+        active={pathname.includes('/marketplace')}
       />
       <MobileNavItem
         icon={<GiCrystalBall className="h-7 w-7" />}
-        label={t("navSearch")}
+        label={t('navSearch')}
         href={`/${locale}/search`}
-        active={pathname.includes("/search")}
+        active={pathname.includes('/search')}
       />
       <MobileNavItem
         icon={<GiBookCover className="h-7 w-7" />}
-        label={t("navBinder")}
+        label={t('navBinder')}
         href={`/${locale}/binder`}
-        active={pathname.includes("/binder")}
+        active={pathname.includes('/binder')}
       />
       <MobileNavItem
         icon={<GiSwordsEmblem className="h-7 w-7" />}
-        label={t("navProfile")}
+        label={t('navProfile')}
         href={`/${locale}/profile`}
-        active={pathname.includes("/profile")}
+        active={pathname.includes('/profile')}
       />
     </div>
   );
@@ -72,16 +72,16 @@ function MobileNavItem({
       <div
         className={`relative flex h-11 w-11 items-center justify-center rounded-2xl transition-all duration-500 ${
           active
-            ? "scale-110 border border-purple-400/40 bg-purple-500/20 shadow-[0_0_20px_rgba(168,85,247,0.3)]"
-            : "border border-white/5 bg-white/5 group-hover:border-purple-500/30 group-hover:bg-purple-500/5"
+            ? 'scale-110 border border-purple-400/40 bg-purple-500/20 shadow-[0_0_20px_rgba(168,85,247,0.3)]'
+            : 'border border-white/5 bg-white/5 group-hover:border-purple-500/30 group-hover:bg-purple-500/5'
         }`}
       >
         {/* Inner border glow */}
         <div
           className={`absolute inset-[1px] rounded-2xl transition-all duration-300 ${
             active
-              ? "bg-gradient-to-br from-amber-500/20 to-transparent"
-              : "bg-gradient-to-br from-slate-700/30 to-transparent group-hover:from-amber-900/20"
+              ? 'bg-gradient-to-br from-amber-500/20 to-transparent'
+              : 'bg-gradient-to-br from-slate-700/30 to-transparent group-hover:from-amber-900/20'
           }`}
         />
 
@@ -89,8 +89,8 @@ function MobileNavItem({
         <div
           className={`relative z-10 transition-all duration-300 ${
             active
-              ? "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
-              : "text-slate-400 group-hover:text-amber-400"
+              ? 'text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]'
+              : 'text-slate-400 group-hover:text-amber-400'
           }`}
         >
           {icon}
@@ -101,8 +101,8 @@ function MobileNavItem({
       <span
         className={`relative z-10 mt-1 text-[8px] font-black tracking-[0.15em] uppercase transition-all duration-300 ${
           active
-            ? "text-purple-300 drop-shadow-[0_0_4px_rgba(168,85,247,0.5)]"
-            : "text-slate-500 group-hover:text-slate-400"
+            ? 'text-purple-300 drop-shadow-[0_0_4px_rgba(168,85,247,0.5)]'
+            : 'text-slate-500 group-hover:text-slate-400'
         }`}
         style={{ fontFamily: "'Cinzel', serif" }}
       >

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Input } from "@trade-binder/ui";
-import { trpc } from "@/src/utils/trpc";
-import { useSession } from "next-auth/react";
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Input } from '@trade-binder/ui';
+import { trpc } from '@/src/utils/trpc';
+import { useSession } from 'next-auth/react';
 import {
   MapPin,
   User,
@@ -16,7 +16,7 @@ import {
   ShoppingCart,
   DollarSign,
   Users,
-} from "lucide-react";
+} from 'lucide-react';
 
 type MarketStatCard = {
   cardName: string;
@@ -46,17 +46,17 @@ function formatDate(value: string) {
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) return value;
   return d.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
   });
 }
 
 function formatCurrency(amount: number, currency?: string | null) {
-  const c = currency ?? "USD";
+  const c = currency ?? 'USD';
   try {
     return new Intl.NumberFormat(undefined, {
-      style: "currency",
+      style: 'currency',
       currency: c,
     }).format(amount);
   } catch {
@@ -65,7 +65,7 @@ function formatCurrency(amount: number, currency?: string | null) {
 }
 
 export default function ProfilePage() {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(['common']);
   const { data: session, update: updateSession } = useSession();
   const {
     data: user,
@@ -91,14 +91,14 @@ export default function ProfilePage() {
     coords?: { lat: number | null; lng: number | null };
   }>({});
   const [message, setMessage] = useState<{
-    type: "success" | "error";
+    type: 'success' | 'error';
     text: string;
   } | null>(null);
 
   // Use edited values if available, otherwise fall back to user data
-  const username = editedFields.username ?? user?.username ?? "";
-  const bio = editedFields.bio ?? user?.bio ?? "";
-  const locationName = editedFields.locationName ?? user?.location_name ?? "";
+  const username = editedFields.username ?? user?.username ?? '';
+  const bio = editedFields.bio ?? user?.bio ?? '';
+  const locationName = editedFields.locationName ?? user?.location_name ?? '';
   const coords = editedFields.coords ?? {
     lat: user?.latitude ?? null,
     lng: user?.longitude ?? null,
@@ -107,8 +107,8 @@ export default function ProfilePage() {
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
       setMessage({
-        type: "error",
-        text: "Geolocation is not supported by your browser",
+        type: 'error',
+        text: 'Geolocation is not supported by your browser',
       });
       return;
     }
@@ -122,10 +122,10 @@ export default function ProfilePage() {
             lng: position.coords.longitude,
           },
         }));
-        setMessage({ type: "success", text: "Location captured!" });
+        setMessage({ type: 'success', text: 'Location captured!' });
       },
       () => {
-        setMessage({ type: "error", text: "Unable to retrieve your location" });
+        setMessage({ type: 'error', text: 'Unable to retrieve your location' });
       }
     );
   };
@@ -142,15 +142,15 @@ export default function ProfilePage() {
         latitude: coords.lat,
         longitude: coords.lng,
       });
-      setMessage({ type: "success", text: "Profile updated successfully!" });
+      setMessage({ type: 'success', text: 'Profile updated successfully!' });
       // Clear edited fields since they're now saved
       setEditedFields({});
       await refetch();
       await updateSession();
     } catch (err) {
       setMessage({
-        type: "error",
-        text: err instanceof Error ? err.message : "Failed to update profile",
+        type: 'error',
+        text: err instanceof Error ? err.message : 'Failed to update profile',
       });
     }
   };
@@ -180,12 +180,12 @@ export default function ProfilePage() {
       <div className="mb-8">
         <h1 className="flex items-center gap-3 text-4xl font-black tracking-tight text-slate-900 dark:text-white">
           <User className="h-10 w-10 text-blue-600" />
-          {t("profileTitle", "Your Profile")}
+          {t('profileTitle', 'Your Profile')}
         </h1>
         <p className="mt-2 font-medium text-slate-500 dark:text-slate-400">
           {t(
-            "profileSubtitle",
-            "Complete your profile to start trading and building your reputation."
+            'profileSubtitle',
+            'Complete your profile to start trading and building your reputation.'
           )}
         </p>
       </div>
@@ -195,12 +195,12 @@ export default function ProfilePage() {
         {message && (
           <div
             className={`flex items-center gap-3 rounded-2xl border p-4 ${
-              message.type === "success"
-                ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                : "border-red-500/20 bg-red-500/10 text-red-600 dark:text-red-400"
+              message.type === 'success'
+                ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                : 'border-red-500/20 bg-red-500/10 text-red-600 dark:text-red-400'
             }`}
           >
-            {message.type === "success" ? (
+            {message.type === 'success' ? (
               <CheckCircle2 className="h-5 w-5" />
             ) : (
               <AlertCircle className="h-5 w-5" />
@@ -214,7 +214,7 @@ export default function ProfilePage() {
             <section className="space-y-4">
               <label className="flex items-center gap-2 text-sm font-black tracking-widest text-slate-400 uppercase">
                 <User className="h-4 w-4" />
-                {t("username", "Username")}
+                {t('username', 'Username')}
               </label>
               <Input
                 type="text"
@@ -232,7 +232,7 @@ export default function ProfilePage() {
             <section className="space-y-4">
               <label className="flex items-center gap-2 text-sm font-black tracking-widest text-slate-400 uppercase">
                 <FileText className="h-4 w-4" />
-                {t("bio", "Bio")}
+                {t('bio', 'Bio')}
               </label>
               <textarea
                 value={bio}
@@ -242,8 +242,8 @@ export default function ProfilePage() {
                 rows={4}
                 className="w-full rounded-2xl border border-slate-200 bg-white px-5 py-4 font-bold text-slate-900 transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700/50 dark:bg-slate-800/50 dark:text-white"
                 placeholder={t(
-                  "bioPlaceholder",
-                  "Tell us about your collection..."
+                  'bioPlaceholder',
+                  'Tell us about your collection...'
                 )}
               />
             </section>
@@ -253,7 +253,7 @@ export default function ProfilePage() {
             <section className="space-y-4">
               <label className="flex items-center gap-2 text-sm font-black tracking-widest text-slate-400 uppercase">
                 <MapPin className="h-4 w-4" />
-                {t("location", "Location")}
+                {t('location', 'Location')}
               </label>
               <Input
                 type="text"
@@ -264,7 +264,7 @@ export default function ProfilePage() {
                     locationName: e.target.value,
                   }))
                 }
-                placeholder={t("locationPlaceholder", "City, Country")}
+                placeholder={t('locationPlaceholder', 'City, Country')}
               />
               <button
                 type="button"
@@ -273,8 +273,8 @@ export default function ProfilePage() {
               >
                 <MapPin className="h-4 w-4" />
                 {coords.lat
-                  ? t("updateLocation", "Update Location")
-                  : t("getLocation", "Get Precise Location")}
+                  ? t('updateLocation', 'Update Location')
+                  : t('getLocation', 'Get Precise Location')}
               </button>
               {coords.lat && (
                 <p className="text-center font-mono text-[10px] text-slate-400">
@@ -290,8 +290,8 @@ export default function ProfilePage() {
                 className="flex w-full items-center justify-center rounded-2xl bg-blue-600 px-4 py-5 text-sm font-black tracking-widest text-white uppercase shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5 hover:bg-blue-500 active:scale-95 disabled:opacity-50"
               >
                 {updateProfile.isPending
-                  ? t("saving", "Saving...")
-                  : t("saveProfile", "Save & Complete Registration")}
+                  ? t('saving', 'Saving...')
+                  : t('saveProfile', 'Save & Complete Registration')}
               </button>
             </div>
           </div>
@@ -304,12 +304,12 @@ export default function ProfilePage() {
           <TrendingUp className="h-7 w-7 text-blue-600" />
           <div>
             <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-              {t("marketAchievementsTitle", "Market Achievements")}
+              {t('marketAchievementsTitle', 'Market Achievements')}
             </h2>
             <p className="mt-1 font-medium text-slate-500 dark:text-slate-400">
               {t(
-                "marketAchievementsSubtitle",
-                "Your trading stats, value, and local activity."
+                'marketAchievementsSubtitle',
+                'Your trading stats, value, and local activity.'
               )}
             </p>
           </div>
@@ -323,8 +323,8 @@ export default function ProfilePage() {
           <div className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-700/50 dark:bg-slate-800/50">
             <p className="font-medium text-slate-500 dark:text-slate-400">
               {t(
-                "marketAchievementsEmpty",
-                "No market stats yet. Complete a few trades to start building achievements."
+                'marketAchievementsEmpty',
+                'No market stats yet. Complete a few trades to start building achievements.'
               )}
             </p>
           </div>
@@ -334,13 +334,13 @@ export default function ProfilePage() {
               <div className="mb-4 flex items-center gap-3">
                 <Calendar className="h-5 w-5 text-blue-600" />
                 <p className="text-xs font-black tracking-widest text-slate-400 uppercase">
-                  {t("firstSaleDate", "First Sale Date")}
+                  {t('firstSaleDate', 'First Sale Date')}
                 </p>
               </div>
               <p className="text-2xl font-black text-slate-900 dark:text-white">
                 {marketStats.firstSaleDate
                   ? formatDate(marketStats.firstSaleDate)
-                  : t("notAvailable", "—")}
+                  : t('notAvailable', '—')}
               </p>
             </div>
 
@@ -348,12 +348,12 @@ export default function ProfilePage() {
               <div className="mb-4 flex items-center gap-3">
                 <Tag className="h-5 w-5 text-blue-600" />
                 <p className="text-xs font-black tracking-widest text-slate-400 uppercase">
-                  {t("mostValuableSold", "Most Valuable Sold")}
+                  {t('mostValuableSold', 'Most Valuable Sold')}
                 </p>
               </div>
               <p className="text-lg leading-snug font-black text-slate-900 dark:text-white">
                 {marketStats.mostValuableCardSold?.cardName ??
-                  t("notAvailable", "—")}
+                  t('notAvailable', '—')}
               </p>
               <p className="mt-2 text-2xl font-black text-emerald-600 dark:text-emerald-400">
                 {marketStats.mostValuableCardSold
@@ -361,7 +361,7 @@ export default function ProfilePage() {
                       marketStats.mostValuableCardSold.price,
                       marketStats.mostValuableCardSold.currency
                     )
-                  : t("notAvailable", "—")}
+                  : t('notAvailable', '—')}
               </p>
             </div>
 
@@ -369,12 +369,12 @@ export default function ProfilePage() {
               <div className="mb-4 flex items-center gap-3">
                 <ShoppingCart className="h-5 w-5 text-blue-600" />
                 <p className="text-xs font-black tracking-widest text-slate-400 uppercase">
-                  {t("mostValuableBought", "Most Valuable Bought")}
+                  {t('mostValuableBought', 'Most Valuable Bought')}
                 </p>
               </div>
               <p className="text-lg leading-snug font-black text-slate-900 dark:text-white">
                 {marketStats.mostValuableCardBought?.cardName ??
-                  t("notAvailable", "—")}
+                  t('notAvailable', '—')}
               </p>
               <p className="mt-2 text-2xl font-black text-slate-900 dark:text-white">
                 {marketStats.mostValuableCardBought
@@ -382,7 +382,7 @@ export default function ProfilePage() {
                       marketStats.mostValuableCardBought.price,
                       marketStats.mostValuableCardBought.currency
                     )
-                  : t("notAvailable", "—")}
+                  : t('notAvailable', '—')}
               </p>
             </div>
 
@@ -390,18 +390,18 @@ export default function ProfilePage() {
               <div className="mb-4 flex items-center gap-3">
                 <DollarSign className="h-5 w-5 text-blue-600" />
                 <p className="text-xs font-black tracking-widest text-slate-400 uppercase">
-                  {t("currentBinderValue", "Current Binder Value")}
+                  {t('currentBinderValue', 'Current Binder Value')}
                 </p>
               </div>
               <p className="text-3xl font-black text-emerald-600 dark:text-emerald-400">
-                {typeof marketStats.currentBinderValue === "number"
-                  ? formatCurrency(marketStats.currentBinderValue, "USD")
-                  : t("notAvailable", "—")}
+                {typeof marketStats.currentBinderValue === 'number'
+                  ? formatCurrency(marketStats.currentBinderValue, 'USD')
+                  : t('notAvailable', '—')}
               </p>
               <p className="mt-2 text-xs font-medium text-slate-500 dark:text-slate-400">
                 {t(
-                  "binderValueHint",
-                  "Estimated market value of all cards in your binder."
+                  'binderValueHint',
+                  'Estimated market value of all cards in your binder.'
                 )}
               </p>
             </div>
@@ -412,7 +412,7 @@ export default function ProfilePage() {
                   <div className="mb-4 flex items-center gap-3">
                     <Users className="h-5 w-5 text-blue-600" />
                     <p className="text-xs font-black tracking-widest text-slate-400 uppercase">
-                      {t("nearbyTraders", "Nearby Traders")}
+                      {t('nearbyTraders', 'Nearby Traders')}
                     </p>
                   </div>
 
@@ -420,10 +420,10 @@ export default function ProfilePage() {
                     {marketStats.nearbyTraders?.count ?? 0}
                     <span className="ml-2 text-sm font-black tracking-widest text-slate-400 uppercase">
                       {marketStats.nearbyTraders
-                        ? t("withinKm", "within {{km}}km", {
+                        ? t('withinKm', 'within {{km}}km', {
                             km: marketStats.nearbyTraders.radiusKm,
                           })
-                        : t("withinKmFallback", "near you")}
+                        : t('withinKmFallback', 'near you')}
                     </span>
                   </p>
                 </div>
@@ -436,8 +436,8 @@ export default function ProfilePage() {
                     className="flex items-center justify-center gap-2 rounded-xl bg-slate-100 px-4 py-3 text-xs font-black tracking-widest text-slate-900 uppercase transition-all hover:bg-slate-200 disabled:opacity-50 disabled:hover:bg-slate-100 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700 dark:disabled:hover:bg-slate-800"
                   >
                     {showNearbyTraders
-                      ? t("hideDetails", "Hide Details")
-                      : t("viewDetails", "View Details")}
+                      ? t('hideDetails', 'Hide Details')
+                      : t('viewDetails', 'View Details')}
                   </button>
                 </div>
               </div>
@@ -463,8 +463,8 @@ export default function ProfilePage() {
                   ) : (
                     <p className="font-medium text-slate-500 dark:text-slate-400">
                       {t(
-                        "nearbyTradersEmpty",
-                        "No nearby traders to display yet. Add your precise location to improve results."
+                        'nearbyTradersEmpty',
+                        'No nearby traders to display yet. Add your precise location to improve results.'
                       )}
                     </p>
                   )}
