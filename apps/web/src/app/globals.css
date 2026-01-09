@@ -189,7 +189,7 @@ body {
   }
 }
 
-.dark * {
+.dark body {
   background-color: var(--background);
   background-image: var(--mtg-gradient);
   background-attachment: fixed;

@@ -65,7 +65,7 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
             </Link>
 
             {/* Mobile Toggles & Login */}
-            <div className="flex min-w-0 shrink items-center gap-2 md:hidden">
+            <div className="flex min-w-0 shrink-0 items-center gap-2 md:hidden">
               <LanguageSwitcher compact={true} />
               <ThemeToggle />
               {!minimal && <LoginButton />}
