@@ -1,26 +1,27 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { trpc } from "@/src/utils/trpc";
-import { useTranslation } from "react-i18next";
-import { FilterBar } from "@/src/components/FilterBar";
-import { Library, Star } from "lucide-react";
-import Image from "next/image";
-import { useSearch } from "@/src/context/SearchContext";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from 'react';
+import { trpc } from '@/src/utils/trpc';
+import { useTranslation } from 'react-i18next';
+import { FilterBar } from '@/src/components/FilterBar';
+import { Library, Star } from 'lucide-react';
+import Image from 'next/image';
+import { useSearch } from '@/src/context/SearchContext';
+import { useRouter } from 'next/navigation';
 
 export default function SearchPage() {
-  const { t } = useTranslation(["common"]);
+  const { t } = useTranslation(['common']);
   const { query, setTotalMatches } = useSearch();
   const router = useRouter();
-  const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [rarity, setRarity] = useState<string>("");
-  const [setCode, setSetCode] = useState<string>("");
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [rarity, setRarity] = useState<string>('');
+  const [setCode, setSetCode] = useState<string>('');
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [message, setMessage] = useState<string | null>(null);
 
   // State for sorting
-  const [orderBy, setOrderBy] = useState<"name" | "price_usd">("name");
-  const [orderDir, setOrderDir] = useState<"ASC" | "DESC">("ASC");
+  const [orderBy, setOrderBy] = useState<'name' | 'price_usd'>('name');
+  const [orderDir, setOrderDir] = useState<'ASC' | 'DESC'>('ASC');
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -33,6 +34,7 @@ export default function SearchPage() {
 
   const sets = trpc.card.listSets.useQuery();
   const latestSet = trpc.card.getLatestSet.useQuery();
+  const { data: defaultBinderId } = trpc.user.getDefaultBinder.useQuery();
 
   // Set default set to latest if no search/set is selected
   const effectiveSetCode =
@@ -56,6 +58,18 @@ export default function SearchPage() {
     }
   );
 
+  // Add to inventory mutation
+  const addToInventory = trpc.inventory.add.useMutation({
+    onSuccess: () => {
+      setMessage('Card added to collection!');
+      setTimeout(() => setMessage(null), 3000);
+    },
+    onError: (error: { message: string }) => {
+      setMessage(`Error: ${error.message}`);
+      setTimeout(() => setMessage(null), 5000);
+    },
+  });
+
   // Sync total matches to context for Navbar to display
   useEffect(() => {
     if (data?.totalCount !== undefined) {
@@ -70,12 +84,12 @@ export default function SearchPage() {
     setPage(1);
   };
 
-  const toggleSort = (field: "name" | "price_usd") => {
+  const toggleSort = (field: 'name' | 'price_usd') => {
     if (orderBy === field) {
-      setOrderDir(orderDir === "ASC" ? "DESC" : "ASC");
+      setOrderDir(orderDir === 'ASC' ? 'DESC' : 'ASC');
     } else {
       setOrderBy(field);
-      setOrderDir(field === "price_usd" ? "DESC" : "ASC");
+      setOrderDir(field === 'price_usd' ? 'DESC' : 'ASC');
     }
   };
 
@@ -106,7 +120,7 @@ export default function SearchPage() {
           <div className="mb-8 flex items-center gap-3">
             <div className="h-2 w-2 animate-pulse rounded-full bg-blue-500" />
             <h2 className="text-xs font-black tracking-[0.2em] text-slate-400 uppercase dark:text-slate-500">
-              Latest Release:{" "}
+              Latest Release:{' '}
               <span className="ml-1 text-slate-900 dark:text-white">
                 {latestSet.data?.name}
               </span>
@@ -116,7 +130,7 @@ export default function SearchPage() {
 
         {/* Card Grid */}
         <div
-          className={`grid grid-cols-2 gap-6 transition-opacity duration-300 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 ${isFetching ? "opacity-40" : "opacity-100"}`}
+          className={`grid grid-cols-2 gap-6 transition-opacity duration-300 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 ${isFetching ? 'opacity-40' : 'opacity-100'}`}
         >
           {data?.cards.map(card => (
             <div
@@ -125,7 +139,7 @@ export default function SearchPage() {
               className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/40 bg-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1.5 hover:border-blue-500/50 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] dark:border-slate-800/60 dark:bg-slate-900/40"
             >
               <div className="relative aspect-[2.5/3.5] overflow-hidden bg-slate-100/50 dark:bg-slate-950">
-                {" "}
+                {' '}
                 {card.image_uri_normal ? (
                   <Image
                     fill
@@ -141,14 +155,14 @@ export default function SearchPage() {
                 )}
                 {/* Card Badges */}
                 <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5">
-                  {card.rarity === "mythic" && (
+                  {card.rarity === 'mythic' && (
                     <span className="rounded-full bg-orange-500 px-2 py-0.5 text-[9px] font-black text-white uppercase shadow-lg ring-1 ring-white/20">
-                      {t("mythic")}
+                      {t('mythic')}
                     </span>
                   )}
-                  {card.rarity === "rare" && (
+                  {card.rarity === 'rare' && (
                     <span className="rounded-full bg-yellow-500 px-2 py-0.5 text-[9px] font-black text-white uppercase shadow-lg ring-1 ring-white/20">
-                      {t("rarityRare")}
+                      {t('rarityRare')}
                     </span>
                   )}
                 </div>
@@ -180,7 +194,7 @@ export default function SearchPage() {
 
                 <div className="flex items-center justify-between border-t border-slate-100/50 pt-2 dark:border-slate-800/50">
                   <span className="text-base font-black tracking-tight text-blue-600 dark:text-blue-400">
-                    {card.price_usd ? `$${card.price_usd.toFixed(2)}` : "—"}
+                    {card.price_usd ? `$${card.price_usd.toFixed(2)}` : '—'}
                   </span>
                 </div>
 
@@ -188,15 +202,26 @@ export default function SearchPage() {
                 <div className="flex items-center gap-2 pt-1">
                   <button
                     title="Add to Binder"
-                    className="/* Light Mode: Vibrant Blue Glass */ /* Dark Mode: Electric Blue Glow */ flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl border border-blue-500/30 bg-blue-500/20 text-blue-700 shadow-lg shadow-blue-500/10 backdrop-blur-md transition-all duration-300 hover:bg-blue-500 hover:text-white hover:shadow-blue-500/40 active:scale-95 dark:border-blue-400/20 dark:bg-blue-500/10 dark:text-blue-400 dark:hover:bg-blue-500 dark:hover:text-white"
+                    className="/* Light Mode: Vibrant Blue Glass */ /* Dark Mode: Electric Blue Glow */ flex h-9 flex-1 items-center justify-center gap-1.5 rounded-xl border border-blue-500/30 bg-blue-500/20 text-blue-700 shadow-lg shadow-blue-500/10 backdrop-blur-md transition-all duration-300 hover:bg-blue-500 hover:text-white hover:shadow-blue-500/40 active:scale-95 disabled:opacity-50 dark:border-blue-400/20 dark:bg-blue-500/10 dark:text-blue-400 dark:hover:bg-blue-500 dark:hover:text-white"
                     onClick={e => {
                       e.stopPropagation();
-                      console.log("Add to Binder:", card.id);
+                      addToInventory.mutate({
+                        printingId: card.id,
+                        condition: 'Near Mint',
+                        isFoil: false,
+                        language: 'en',
+                        binderId: defaultBinderId || null,
+                      });
                     }}
+                    disabled={addToInventory.isPending}
                   >
                     <Library className="h-3.5 w-3.5" />
                     <span className="text-[9px] font-black tracking-wider uppercase">
-                      Binder
+                      {addToInventory.isPending
+                        ? 'Adding...'
+                        : defaultBinderId
+                          ? 'Collection'
+                          : 'Binder'}
                     </span>
                   </button>
 
@@ -205,7 +230,7 @@ export default function SearchPage() {
                     className="/* Glass Base: Light tint of amber/white */ /* Shadow and Glow */ /* Interaction */ flex h-9 w-9 items-center justify-center rounded-xl border border-white/40 bg-white/20 shadow-lg shadow-black/5 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-yellow-400/50 hover:bg-yellow-400/20 active:scale-90 dark:border-white/10 dark:bg-white/5 dark:hover:border-yellow-500/30 dark:hover:bg-yellow-500/10"
                     onClick={e => {
                       e.stopPropagation();
-                      console.log("Add to Wishlist:", card.id);
+                      console.log('Add to Wishlist:', card.id);
                     }}
                   >
                     <Star className="h-3.5 w-3.5 fill-current text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]" />
@@ -220,14 +245,14 @@ export default function SearchPage() {
           <div className="flex flex-col items-center justify-center gap-4 py-20">
             <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500/20 border-t-blue-500"></div>
             <p className="animate-pulse font-black tracking-widest text-slate-400 uppercase">
-              {t("searching")}
+              {t('searching')}
             </p>
           </div>
         )}
 
         {debouncedSearch.length >= 3 && data?.cards.length === 0 && (
           <p className="py-10 text-center text-gray-500 dark:text-slate-400">
-            {`${t("noResults")} ${debouncedSearch}`}
+            {`${t('noResults')} ${debouncedSearch}`}
           </p>
         )}
 
@@ -239,21 +264,28 @@ export default function SearchPage() {
               onClick={() => setPage(p => p - 1)}
               className="rounded-lg border px-4 py-2 transition-colors hover:bg-slate-50 disabled:opacity-30 dark:border-slate-700 dark:text-white dark:hover:bg-slate-800"
             >
-              {t("previous")}
+              {t('previous')}
             </button>
             <span className="text-xs font-bold tracking-widest text-slate-500 uppercase dark:text-slate-400">
-              {t("pageOf", { page, total: data.totalPages })}
+              {t('pageOf', { page, total: data.totalPages })}
             </span>
             <button
               disabled={page === data.totalPages}
               onClick={() => setPage(p => p + 1)}
               className="rounded-lg border px-4 py-2 transition-colors hover:bg-slate-50 disabled:opacity-30 dark:border-slate-700 dark:text-white dark:hover:bg-slate-800"
             >
-              {t("next")}
+              {t('next')}
             </button>
           </div>
         )}
       </main>
+
+      {/* Message Toast */}
+      {message && (
+        <div className="fixed top-4 right-4 z-50 rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 shadow-xl">
+          <p className="text-sm text-slate-200">{message}</p>
+        </div>
+      )}
     </div>
   );
 }

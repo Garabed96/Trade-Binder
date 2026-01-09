@@ -1,0 +1,571 @@
+1 Buster Sword (FIN) 351 *F*
+1 Celes, Rune Knight (FIC) 209 *F*
+2 Vincent Valentine // Galian Beast (FIN) 528 *F*
+1 Cloud, Ex-SOLDIER (FIC) 210 *F*
+1 Kuja, Genome Sorcerer // Trance Kuja, Fate Defied (FIN) 544 *F*
+1 Akroma's Will (FCA) 21
+1 Bolas's Citadel (FCA) 7 *F*
+2 Tymna the Weaver (FCA) 18
+1 Nyxbloom Ancient (FCA) 16 *F*
+2 Lightning Bolt (FCA) 40 *F*
+2 Deadly Dispute (FCA) 33 *F*
+2 Mizzix's Mastery (FCA) 41
+1 Carpet of Flowers (FCA) 44 *F*
+2 Syr Konrad, the Grim (FCA) 10 *F*
+1 Traxos, Scourge of Kroog (FCA) 20 *F*
+1 Aerith Gainsborough (FIN) 519 *F*
+1 Adelbert Steiner (FIN) 422
+1 Aerith Gainsborough (FIN) 374
+1 Ambrosia Whiteheart (FIN) 6 *F*
+1 Astrologian's Planisphere (FIN) 46 *F*
+1 Ahriman (FIN) 87 *F*
+1 Fight On! (FIN) 100 *F*
+1 Jecht, Reluctant Guardian // Braska's Final Aeon (FIN) 363
+1 Fire Magic (FIN) 136 *F*
+1 A Realm Reborn (FIN) 196 *F*
+2 Absolute Virtue (FIN) 212
+1 Adventurer's Airship (FIN) 252 *F*
+1 Aettir and Priwen (FIN) 253 *F*
+1 Blitzball (FIN) 254 *F*
+1 Adventurer's Inn (FIN) 271 *F*
+1 Island (FIN) 297 *F*
+1 Island (FIN) 298 *F*
+1 Island (FIN) 299 *F*
+2 Forest (FIN) 306 *F*
+2 Forest (FIN) 308 *F*
+1 Ultima, Origin of Oblivion (FIN) 421
+1 Aerith Rescue Mission (FIN) 5 *F*
+2 Ambrosia Whiteheart (FIN) 325 *F*
+1 Ashe, Princess of Dalmasca (FIN) 7 *F*
+2 Ambrosia Whiteheart (FIN) 325
+1 Ambrosia Whiteheart (FIN) 6 *F*
+1 Auron's Inspiration (FIN) 8 *F*
+1 Battle Menu (FIN) 9 *F*
+1 Cloud, Midgar Mercenary (FIN) 375 *F*
+1 Cloud, Midgar Mercenary (FIN) 10
+2 Cloudbound Moogle (FIN) 11 *F*
+2 Coeurl (FIN) 12 *F*
+2 Crystal Fragments // Summon: Alexander (FIN) 357 *F*
+1 Crystal Fragments // Summon: Alexander (FIN) 357
+2 Crystal Fragments // Summon: Alexander (FIN) 13 *F*
+1 The Crystal's Chosen (FIN) 14 *F*
+1 Dion, Bahamut's Dominant // Bahamut, Warden of Light (FIN) 16 *F*
+1 Dion, Bahamut's Dominant // Bahamut, Warden of Light (FIN) 428
+2 Dwarven Castle Guard (FIN) 18 *F*
+1 From Father to Son (FIN) 20 *F*
+2 G'raha Tia (FIN) 21 *F*
+4 G'raha Tia (FIN) 429
+3 Gaelicat (FIN) 22 *F*
+2 Machinist's Arsenal (FIN) 23 *F*
+2 Magitek Armor (FIN) 24 *F*
+2 Magitek Infantry (FIN) 25 *F*
+3 Minwu, White Mage (FIN) 430
+2 Minwu, White Mage (FIN) 26
+1 Paladin's Arms (FIN) 28 *F*
+2 Phoenix Down (FIN) 29 *F*
+2 Restoration Magic (FIN) 30 *F*
+1 Sidequest: Catch a Fish // Cooking Campsite (FIN) 31 *F*
+1 Slash of Light (FIN) 32 *F*
+1 Snow Villiers (FIN) 432
+1 Stiltzkin, Moogle Merchant (FIN) 327 *F*
+1 Stiltzkin, Moogle Merchant (FIN) 433
+2 Summon: Choco/Mog (FIN) 358 *F*
+2 Summon: Choco/Mog (FIN) 35 *F*
+1 Summon: Knights of Round (FIN) 36
+1 Summon: Knights of Round (FIN) 359
+2 Summon: Primal Garuda (FIN) 360 *F*
+1 Summon: Primal Garuda (FIN) 37 *F*
+2 Ultima (FIN) 38 *F*
+1 Venat, Heart of Hydaelyn // Hydaelyn, the Mothercrystal (FIN) 39
+1 Venat, Heart of Hydaelyn // Hydaelyn, the Mothercrystal (FIN) 329 *F*
+3 Weapons Vendor (FIN) 40 *F*
+1 White Auracite (FIN) 41 *F*
+3 White Mage's Staff (FIN) 42 *F*
+1 The Wind Crystal (FIN) 330
+1 The Wind Crystal (FIN) 43
+1 Zack Fair (FIN) 45 *F*
+2 Astrologian's Planisphere (FIN) 46
+1 Cargo Ship (FIN) 47 *F*
+1 Combat Tutorial (FIN) 48 *F*
+2 Dragoon's Wyvern (FIN) 49 *F*
+2 Dreams of Laguna (FIN) 50 *F*
+1 Edgar, King of Figaro (FIN) 51
+1 Ether (FIN) 53 *F*
+1 Gogo, Master of Mimicry (FIN) 377 *F*
+1 Gogo, Master of Mimicry (FIN) 54
+1 Aerith Gainsborough (FIN) 374
+3 Ice Magic (FIN) 56 *F*
+1 Il Mheg Pixie (FIN) 57 *F*
+2 Jill, Shiva's Dominant // Shiva, Warden of Ice (FIN) 58
+1 Louisoix's Sacrifice (FIN) 59 *F*
+1 Louisoix's Sacrifice (FIN) 59
+1 The Lunar Whale (FIN) 60
+2 Magic Damper (FIN) 61 *F*
+1 Matoya, Archon Elder (FIN) 62 *F*
+2 Memories Returning (FIN) 63 *F*
+1 Memories Returning (FIN) 331 *F*
+1 The Prima Vista (FIN) 64 *F*
+3 Qiqirn Merchant (FIN) 65 *F*
+2 Quistis Trepe (FIN) 440
+1 Quistis Trepe (FIN) 66 *F*
+1 Relm's Sketching (FIN) 67 *F*
+2 Retrieve the Esper (FIN) 68 *F*
+2 Rook Turret (FIN) 69 *F*
+2 Sage's Nouliths (FIN) 70 *F*
+1 Sahagin (FIN) 71 *F*
+1 Sidequest: Card Collection // Magicked Card (FIN) 73 *F*
+2 Stolen Uniform (FIN) 332 *F*
+4 Stuck in Summoner's Sanctum (FIN) 76 *F*
+1 Summon: Leviathan (FIN) 77 *F*
+2 Summon: Shiva (FIN) 362 *F*
+1 Summon: Shiva (FIN) 78 *F*
+2 Swallowed by Leviathan (FIN) 79 *F*
+1 Syncopate (FIN) 80 *F*
+1 Thief's Knife (FIN) 81 *F*
+2 Travel the Overworld (FIN) 82 *F*
+3 Ultros, Obnoxious Octopus (FIN) 442
+1 Ultros, Obnoxious Octopus (FIN) 83 *F*
+1 Valkyrie Aerial Unit (FIN) 84 *F*
+1 The Water Crystal (FIN) 333 *F*
+1 Y'shtola Rhul (FIN) 86 *F*
+1 Y'shtola Rhul (FIN) 577 *F*
+1 Al Bhed Salvagers (FIN) 88 *F*
+1 Ardyn, the Usurper (FIN) 315 *F*
+1 Ardyn, the Usurper (FIN) 379
+1 Ardyn, the Usurper (FIN) 444
+1 Ardyn, the Usurper (FIN) 89 *F*
+2 Cecil, Dark Knight // Cecil, Redeemed Paladin (FIN) 380 *F*
+2 Cecil, Dark Knight // Cecil, Redeemed Paladin (FIN) 91 *F*
+1 Circle of Power (FIN) 92 *F*
+1 Cornered by Black Mages (FIN) 93 *F*
+1 Dark Knight's Greatsword (FIN) 95 *F*
+1 The Darkness Crystal (FIN) 335 *F*
+2 The Darkness Crystal (FIN) 335
+1 Demon Wall (FIN) 97 *F*
+1 Evil Reawakened (FIN) 98 *F*
+1 Fang, Fearless l'Cie (FIN) 526 *F*
+1 Fang, Fearless l'Cie (FIN) 381 *F*
+1 The Final Days (FIN) 101 *F*
+1 Jecht, Reluctant Guardian // Braska's Final Aeon (FIN) 104
+1 Kain, Traitorous Dragoon (FIN) 105
+1 Malboro (FIN) 106 *F*
+3 Ninja's Blades (FIN) 108 *F*
+2 Overkill (FIN) 109 *F*
+1 Phantom Train (FIN) 110 *F*
+1 Poison the Waters (FIN) 111 *F*
+3 Qutrub Forayer (FIN) 112 *F*
+2 Reno and Rude (FIN) 113 *F*
+1 Sephiroth, Fabled SOLDIER // Sephiroth, One-Winged Angel (FIN) 115 *F*
+1 Sephiroth, Fabled SOLDIER // Sephiroth, One-Winged Angel (FIN) 382
+2 Sephiroth's Intervention (FIN) 116 *F*
+2 Shambling Cie'th (FIN) 117 *F*
+2 Shinra Reinforcements (FIN) 118 *F*
+1 Summon: Anima (FIN) 120 *F*
+2 Summon: Anima (FIN) 364 *F*
+1 Summon: Primal Odin (FIN) 365
+1 Summon: Primal Odin (FIN) 365 *F*
+2 Tonberry (FIN) 122 *F*
+1 Undercity Dire Rat (FIN) 123 *F*
+1 Vayne's Treachery (FIN) 124 *F*
+1 Vincent's Limit Break (FIN) 126 *F*
+1 Zenos yae Galvus // Shinryu, Transcendent Rival (FIN) 455
+1 Zenos yae Galvus // Shinryu, Transcendent Rival (FIN) 384
+1 Barret Wallace (FIN) 129 *F*
+2 Call the Mountain Chocobo (FIN) 131 *F*
+1 Choco-Comet (FIN) 132 *F*
+1 Clive, Ifrit's Dominant // Ifrit, Warden of Inferno (FIN) 458
+2 Coral Sword (FIN) 134 *F*
+2 The Fire Crystal (FIN) 337
+1 Firion, Wild Rose Warrior (FIN) 137
+3 Firion, Wild Rose Warrior (FIN) 386
+1 Firion, Wild Rose Warrior (FIN) 386 *F*
+1 Freya Crescent (FIN) 138 *F*
+1 Gilgamesh, Master-at-Arms (FIN) 139 *F*
+2 Haste Magic (FIN) 140
+2 Hill Gigas (FIN) 141 *F*
+1 Item Shopkeep (FIN) 142 *F*
+2 Laughing Mad (FIN) 143 *F*
+2 Light of Judgment (FIN) 144 *F*
+1 Mysidian Elder (FIN) 145 *F*
+1 Opera Love Song (FIN) 147 *F*
+1 Prompto Argentum (FIN) 148 *F*
+4 Prompto Argentum (FIN) 387
+1 Queen Brahne (FIN) 149 *F*
+2 Random Encounter (FIN) 150 *F*
+2 Raubahn, Bull of Ala Mhigo (FIN) 388
+1 Red Mage's Rapier (FIN) 152 *F*
+1 Sabotender (FIN) 153
+2 Sandworm (FIN) 155 *F*
+1 Seifer Almasy (FIN) 466
+1 Seifer Almasy (FIN) 389 *F*
+2 Sidequest: Play Blitzball // World Champion, Celestial Weapon (FIN) 158 *F*
+2 Sorceress's Schemes (FIN) 159 *F*
+1 Summon: Brynhildr (FIN) 160 *F*
+2 Summon: Esper Ramuh (FIN) 367 *F*
+1 Summon: Esper Ramuh (FIN) 161 *F*
+1 Summon: G.F. Cerberus (FIN) 162 *F*
+1 Summon: G.F. Cerberus (FIN) 368
+1 Summon: G.F. Cerberus (FIN) 368 *F*
+1 Summon: G.F. Ifrit (FIN) 369
+3 Suplex (FIN) 164 *F*
+2 Thunder Magic (FIN) 165 *F*
+2 Unexpected Request (FIN) 167 *F*
+2 Vaan, Street Thief (FIN) 168 *F*
+1 Warrior's Sword (FIN) 169 *F*
+1 Airship Crash (FIN) 171 *F*
+1 Ancient Adamantoise (FIN) 172
+4 Bard's Bow (FIN) 174 *F*
+1 Blitzball Shot (FIN) 176 *F*
+1 Cactuar (FIN) 177 *F*
+2 Chocobo Kick (FIN) 178 *F*
+1 Chocobo Racetrack (FIN) 179 *F*
+2 Clash of the Eikons (FIN) 341 *F*
+1 Coliseum Behemoth (FIN) 181 *F*
+3 Diamond Weapon (FIN) 470
+1 Diamond Weapon (FIN) 183 *F*
+1 Esper Origins // Summon: Esper Maduin (FIN) 370 *F*
+1 Esper Origins // Summon: Esper Maduin (FIN) 185 *F*
+1 Esper Origins // Summon: Esper Maduin (FIN) 185
+1 Galuf's Final Act (FIN) 186 *F*
+1 Goobbue Gardener (FIN) 188 *F*
+3 Gran Pulse Ochu (FIN) 189 *F*
+2 Gysahl Greens (FIN) 190 *F*
+2 Jumbo Cactuar (FIN) 191
+3 Loporrit Scout (FIN) 192 *F*
+1 Reach the Horizon (FIN) 195 *F*
+2 A Realm Reborn (FIN) 344
+2 Ride the Shoopuf (FIN) 197 *F*
+1 Rydia's Return (FIN) 198 *F*
+1 Sazh's Chocobo (FIN) 200 *F*
+1 Sidequest: Raise a Chocobo // Black Chocobo (FIN) 201 *F*
+2 Summon: Fat Chocobo (FIN) 371 *F*
+2 Summon: Fat Chocobo (FIN) 202 *F*
+2 Summon: Fenrir (FIN) 372 *F*
+2 Summon: Titan (FIN) 373 *F*
+1 Summon: Titan (FIN) 373
+1 Tifa Lockhart (FIN) 391 *F*
+1 Tifa Lockhart (FIN) 391
+1 Tifa's Limit Break (FIN) 207 *F*
+1 Torgal, A Fine Hound (FIN) 208 *F*
+1 Torgal, A Fine Hound (FIN) 345
+1 Torgal, A Fine Hound (FIN) 345 *F*
+1 Traveling Chocobo (FIN) 210 *F*
+1 Vanille, Cheerful l'Cie (FIN) 537 *F*
+1 Vanille, Cheerful l'Cie (FIN) 392 *F*
+1 Vanille, Cheerful l'Cie (FIN) 392
+1 Vanille, Cheerful l'Cie (FIN) 211 *F*
+1 Balthier and Fran (FIN) 477
+1 Balthier and Fran (FIN) 319 *F*
+1 Black Waltz No. 3 (FIN) 214 *F*
+1 Cloud of Darkness (FIN) 217 *F*
+1 Emet-Selch, Unsundered // Hades, Sorcerer of Eld (FIN) 218 *F*
+2 Emet-Selch, Unsundered // Hades, Sorcerer of Eld (FIN) 394 *F*
+1 Exdeath, Void Warlock // Neo Exdeath, Dimension's End (FIN) 220 *F*
+1 Garland, Knight of Cornelia // Chaos, the Endless (FIN) 486
+1 Garnet, Princess of Alexandria (FIN) 222 *F*
+1 Giott, King of the Dwarves (FIN) 223 *F*
+1 Gladiolus Amicitia (FIN) 224 *F*
+1 Golbez, Crystal Collector (FIN) 395 *F*
+1 Golbez, Crystal Collector (FIN) 395
+1 Golbez, Crystal Collector (FIN) 225 *F*
+1 Hope Estheim (FIN) 491
+1 Hope Estheim (FIN) 396 *F*
+1 Hope Estheim (FIN) 396
+1 Ignis Scientia (FIN) 227
+1 Jenova, Ancient Calamity (FIN) 228
+1 Joshua, Phoenix's Dominant // Phoenix, Warden of Fire (FIN) 397 *F*
+1 Judge Magister Gabranth (FIN) 230 *F*
+1 Kefka, Court Mage // Kefka, Ruler of Ruin (FIN) 398
+1 Kuja, Genome Sorcerer // Trance Kuja, Fate Defied (FIN) 399
+1 Kuja, Genome Sorcerer // Trance Kuja, Fate Defied (FIN) 232 *F*
+2 Locke Cole (FIN) 234 *F*
+1 Noctis, Prince of Lucis (FIN) 546 *F*
+1 Omega, Heartless Evolution (FIN) 347 *F*
+3 Omega, Heartless Evolution (FIN) 501
+1 Rinoa Heartilly (FIN) 237 *F*
+1 Rufus Shinra (FIN) 238 *F*
+1 Rydia, Summoner of Mist (FIN) 239 *F*
+1 Serah Farron // Crystallized Serah (FIN) 240 *F*
+3 Shantotto, Tactician Magician (FIN) 507
+2 Shantotto, Tactician Magician (FIN) 241 *F*
+1 Sin, Spira's Punishment (FIN) 242
+2 Sin, Spira's Punishment (FIN) 348
+2 Squall, SeeD Mercenary (FIN) 402 *F*
+2 Squall, SeeD Mercenary (FIN) 402
+2 Squall, SeeD Mercenary (FIN) 509
+2 Squall, SeeD Mercenary (FIN) 243 *F*
+1 Tellah, Great Sage (FIN) 349 *F*
+1 Tidus, Blitzball Star (FIN) 246 *F*
+1 Tidus, Blitzball Star (FIN) 512
+1 Ultimecia, Time Sorceress // Ultimecia, Omnipotent (FIN) 247 *F*
+1 Vivi Ornitier (FIN) 321
+1 The Wandering Minstrel (FIN) 548 *F*
+1 The Wandering Minstrel (FIN) 403 *F*
+2 The Wandering Minstrel (FIN) 515
+1 Yuna, Hope of Spira (FIN) 250 *F*
+1 Yuna, Hope of Spira (FIN) 404
+1 Zidane, Tantalus Thief (FIN) 550 *F*
+2 Zidane, Tantalus Thief (FIN) 405 *F*
+2 Zidane, Tantalus Thief (FIN) 251 *F*
+2 Lunatic Pandora (FIN) 262 *F*
+2 Magic Pot (FIN) 263 *F*
+1 The Masamune (FIN) 353 *F*
+2 Monk's Fist (FIN) 265 *F*
+3 PuPu UFO (FIN) 266 *F*
+1 Relentless X-ATM092 (FIN) 268
+1 Ring of the Lucii (FIN) 269 *F*
+3 World Map (FIN) 270 *F*
+1 Balamb Garden, SeeD Academy // Balamb Garden, Airborne (FIN) 354 *F*
+1 Balamb Garden, SeeD Academy // Balamb Garden, Airborne (FIN) 272 *F*
+1 Baron, Airship Kingdom (FIN) 273 *F*
+1 Baron, Airship Kingdom (FIN) 273
+1 Capital City (FIN) 274 *F*
+2 Clive's Hideaway (FIN) 275 *F*
+2 Crossroads Village (FIN) 276 *F*
+1 Eden, Seat of the Sanctum (FIN) 277 *F*
+1 Eden, Seat of the Sanctum (FIN) 355 *F*
+3 Gohn, Town of Ruin (FIN) 278 *F*
+1 Gongaga, Reactor Town (FIN) 280 *F*
+2 Insomnia, Crown City (FIN) 282 *F*
+1 Jidoor, Aristocratic Capital // Overture (FIN) 311
+1 Lindblum, Industrial Regency // Mage Siege (FIN) 285 *F*
+1 Midgar, City of Mako // Reactor Raid (FIN) 313 *F*
+2 Rabanastre, Royal City (FIN) 287 *F*
+2 Sharlayan, Nation of Scholars (FIN) 288 *F*
+1 Treno, Dark City (FIN) 290 *F*
+2 Vector, Imperial Capital (FIN) 291 *F*
+1 Windurst, Federation Center (FIN) 292 *F*
+1 Zanarkand, Ancient Metropolis // Lasting Fayth (FIN) 314
+1 Plains (FIN) 294 *F*
+1 Plains (FIN) 295 *F*
+1 Plains (FIN) 296 *F*
+1 Island (FIN) 297 *F*
+1 Island (FIN) 298 *F*
+1 Island (FIN) 299 *F*
+1 Swamp (FIN) 300 *F*
+1 Swamp (FIN) 301 *F*
+1 Swamp (FIN) 302 *F*
+1 Mountain (FIN) 303 *F*
+1 Mountain (FIN) 304 *F*
+1 Mountain (FIN) 305 *F*
+1 Forest (FIN) 307 *F*
+1 Forest (FIN) 308
+1 Wastes (FIN) 309 *F*
+1 Cloud, Planet's Champion (FIN) 482
+1 Sephiroth, Planet's Heir (FIN) 505
+1 Ranger-Captain of Eos (FCA) 2
+1 Counterspell (FCA) 4 *F*
+1 Counterspell (FCA) 4
+1 Yawgmoth, Thran Physician (FCA) 11 *F*
+1 Ancient Copper Dragon (FCA) 12
+1 Azusa, Lost but Seeking (FCA) 15
+1 Danitha Capashen, Paragon (FCA) 22
+1 Stroke of Midnight (FCA) 26 *F*
+1 Stroke of Midnight (FCA) 26
+1 Wall of Omens (FCA) 27 *F*
+3 Brainstorm (FCA) 28
+2 Deadly Dispute (FCA) 33
+1 K'rrik, Son of Yawgmoth (FCA) 36
+1 Varragoth, Bloodsky Sire (FCA) 37 *F*
+2 Varragoth, Bloodsky Sire (FCA) 37
+1 Captain Lannery Storm (FCA) 38 *F*
+1 Captain Lannery Storm (FCA) 38
+1 Light Up the Stage (FCA) 39
+1 Mizzix's Mastery (FCA) 41 *F*
+1 Lightning Bolt (FCA) 40
+1 Farseek (FCA) 45 *F*
+1 Fynn, the Fangbearer (FCA) 46
+1 Nature's Claim (FCA) 47 *F*
+2 Primeval Titan (FCA) 48
+1 Atraxa, Grand Unifier (FCA) 49
+2 Muldrotha, the Gravetide (FCA) 57
+1 Thrasios, Triton Hero (FCA) 58
+1 Vial Smasher the Fierce (FCA) 59 *F*
+1 Smuggler's Copter (FCA) 62
+2 Celes, Rune Knight (FIC) 1
+2 Cloud, Ex-SOLDIER (FIC) 2
+1 Terra, Herald of Hope (FIC) 186
+2 Terra, Herald of Hope (FIC) 204
+1 Tidus, Yuna's Guardian (FIC) 5
+1 Alisaie Leveilleur (FIC) 129
+1 Auron, Venerated Guardian (FIC) 130
+1 Champions from Beyond (FIC) 101 *F*
+1 Cid, Freeflier Pilot (FIC) 131
+2 Coin of Fate (FIC) 104
+1 Cyan, Vengeful Samurai (FIC) 132
+1 Dancer's Chakrams (FIC) 105 *F*
+1 Heidegger, Shinra Executive (FIC) 136
+1 Summon: Ixion (FIC) 195 *F*
+2 Tataru Taru (FIC) 138
+1 Blue Mage's Cane (FIC) 112 *F*
+2 Blue Mage's Cane (FIC) 112
+1 Hraesvelgr of the First Brood (FIC) 142
+1 Espers to Magicite (FIC) 114 *F*
+1 Eye of Nidhogg (FIC) 115
+1 The Falcon, Airship Restored (FIC) 116 *F*
+1 Interceptor, Shadow's Hound (FIC) 147
+1 Rejoin the Fight (FIC) 49
+1 Shadow, Mysterious Assassin (FIC) 148
+1 Siegfried, Famed Swordsman (FIC) 149
+1 Transpose (FIC) 119
+1 Cait Sith, Fortune Teller (FIC) 151
+1 Snort (FIC) 120
+1 Strago and Relm (FIC) 155
+1 Summon: Esper Valigarmanda (FIC) 198
+1 Ultimate Magic: Meteor (FIC) 121 *F*
+2 Ultimate Magic: Meteor (FIC) 121
+2 Umaro, Raging Yeti (FIC) 156
+1 Yuffie, Materia Hunter (FIC) 65
+1 Bugenhagen, Wise Elder (FIC) 159
+1 Lifestream's Blessing (FIC) 122
+2 Summon: Magus Sisters (FIC) 200
+1 Yuna's Decision (FIC) 125 *F*
+1 Yuna's Whistle (FIC) 126
+1 Aerith, Last Ancient (FIC) 163
+2 Banon, the Returners' Leader (FIC) 165
+1 Hildibrand Manderville // Gentleman's Rise (FIC) 173
+1 Kefka, Dancing Mad (FIC) 174
+1 Locke, Treasure Hunter (FIC) 177
+1 Lyse Hext (FIC) 178
+2 Mog, Moogle Warrior (FIC) 179
+2 Sephiroth, Fallen Hero (FIC) 182
+2 Sin, Unending Cataclysm (FIC) 185
+1 Wakka, Devoted Guardian (FIC) 190
+2 Conformer Shuriken (FIC) 127
+1 Wrecking Ball Arm (FIC) 128
+1 Secret Rendezvous (FIC) 218 *F*
+1 Secret Rendezvous (FIC) 218
+1 The Earth Crystal (FIN) 184
+1 Sazh Katzroy (FIN) 199
+1 Terra, Magical Adept // Esper Terra (FIN) 245
+1 Moogles' Valor (FIN) 27
+1 Aettir and Priwen (FIN) 253
+1 Excalibur II (FIN) 352
+2 Excalibur II (FIN) 257
+2 Genji Glove (FIN) 258 *F*
+1 Genji Glove (FIN) 258
+2 Instant Ramen (FIN) 259 *F*
+1 Gilgamesh, Master-at-Arms (FIN) 139
+1 Vincent Valentine // Galian Beast (FIN) 125 *F*
+1 Vial Smasher the Fierce (FCA) 59
+1 Midgar, City of Mako // Reactor Raid (FIN) 286 *F*
+1 Summon: Primal Odin (FIN) 121
+1 Syr Konrad, the Grim (FCA) 10
+1 The Masamune (FIN) 264
+1 Fatal Push (FCA) 9
+1 Machinist's Arsenal (FIN) 23
+1 Dion, Bahamut's Dominant // Bahamut, Warden of Light (FIN) 521 *F*
+1 Cid, Timeless Artificer (FIN) 418 *F*
+1 Cid, Timeless Artificer (FIN) 416 *F*
+1 Cid, Timeless Artificer (FIN) 412 *F*
+1 Cid, Timeless Artificer (FIN) 407 *F*
+1 Choco, Seeker of Paradise (FIN) 215 *F*
+1 Guadosalam, Farplane Gateway (FIN) 281 *F*
+1 Sin, Spira's Punishment (FIN) 348 *F*
+1 Hecteyes (FIN) 103 *F*
+1 Namazu Trader (FIN) 107 *F*
+1 Resentful Revelation (FIN) 114 *F*
+1 Sidequest: Hunt the Mark // Yiazmat, Ultimate Mark (FIN) 119 *F*
+1 Zodiark, Umbral God (FIN) 128 *F*
+1 Prompto Argentum (FIN) 532 *F*
+2 Prompto Argentum (FIN) 387 *F*
+1 Seifer Almasy (FIN) 534 *F*
+1 Self-Destruct (FIN) 157 *F*
+1 Zell Dincht (FIN) 170 *F*
+1 Ancient Adamantoise (FIN) 172 *F*
+1 Bartz and Boko (FIN) 175 *F*
+1 Commune with Beavers (FIN) 182 *F*
+1 Gigantoad (FIN) 187 *F*
+1 Jumbo Cactuar (FIN) 343 *F*
+1 Prishe's Wanderings (FIN) 193 *F*
+1 Quina, Qu Gourmet (FIN) 194 *F*
+1 Summoner's Grimoire (FIN) 205 *F*
+1 Town Greeter (FIN) 209 *F*
+1 Cid, Timeless Artificer (FIN) 420 *F*
+1 Cid, Timeless Artificer (FIN) 415 *F*
+1 Cid, Timeless Artificer (FIN) 411 *F*
+1 Jenova, Ancient Calamity (FIN) 346 *F*
+1 Elixir (FIN) 256 *F*
+1 Excalibur II (FIN) 352 *F*
+1 Lion Heart (FIN) 261 *F*
+1 The Regalia (FIN) 267 *F*
+1 The Gold Saucer (FIN) 279 *F*
+1 Ishgard, the Holy See // Faith & Grief (FIN) 310 *F*
+1 Zanarkand, Ancient Metropolis // Lasting Fayth (FIN) 314 *F*
+1 Fatal Push (FCA) 9 *F*
+1 Danitha Capashen, Paragon (FCA) 22 *F*
+1 Fynn, the Fangbearer (FCA) 46 *F*
+1 Chromatic Lantern (FCA) 61 *F*
+1 Smuggler's Copter (FCA) 62 *F*
+1 Strixhaven Stadium (FCA) 63 *F*
+1 Eject (FIN) 52 *F*
+1 Ice Flan (FIN) 55 *F*
+1 Scorpion Sentinel (FIN) 72 *F*
+1 Sleep Magic (FIN) 74 *F*
+1 Gaius van Baelsar (FIN) 102 *F*
+1 Nibelheim Aflame (FIN) 339 *F*
+1 You're Not Alone (FIN) 44 *F*
+1 Dragoon's Lance (FIN) 17 *F*
+1 Blade of Selves (SLD) 1864 *F*
+1 Colossus Hammer (SLD) 1866 *F*
+1 Umezawa's Jitte (SLD) 1865 *F*
+1 Staff of the Storyteller (SLD) 1863 *F*
+1 Sword of Truth and Justice (SLD) 1867 *F*
+1 Praetor's Grasp (SLD) 1861 *F*
+1 Star of Extinction (SLD) 1862 *F*
+1 Temporal Extortion (SLD) 1859 *F*
+1 Day of Judgment (SLD) 1858 *F*
+1 Toxic Deluge (SLD) 1860 *F*
+1 Heroic Intervention (SLD) 1872 *F*
+1 Damn (SLD) 1870 *F*
+1 Lightning Bolt (SLD) 1871 *F*
+1 Cyclonic Rift (SLD) 1869 *F*
+1 Prismatic Ending (SLD) 1868 *F*
+1 Ultima Weapon (FIN) 563
+1 Beatrix, Loyal General (FIN) 554
+1 Collective Effort (FIC) 237
+1 Farewell (FIC) 242 *F*
+1 Kefka, Dancing Mad (FIC) 84
+1 An Offer You Can't Refuse (FIC) 267 *F*
+1 Kefka, Court Mage // Kefka, Ruler of Ruin (FIN) 543 *F*
+1 Kinnan, Bonder Prodigy (FCA) 55
+1 Brilliant Wings (FIC) 454 *F*
+1 Judgment of Alexander (FIC) 455 *F*
+1 Mega Flare (FIC) 456 *F*
+1 Amarant Coral (FIC) 457 *F*
+1 Vivi's Persistence (FIC) 458 *F*
+1 Search for Dagger (FIC) 459 *F*
+1 Edea, Possessed Sorceress (FIC) 448 *F*
+1 Fated Clash (FIC) 449 *F*
+1 Rinoa, Angel Wing (FIC) 450 *F*
+1 Seifer, Balamb Rival (FIC) 451 *F*
+1 Duelist's Flame (FIC) 452 *F*
+1 Squall, Gunblade Duelist (FIC) 453 *F*
+1 Noctis, Heir Apparent (FIC) 460 *F*
+1 Fishing Gear (FIC) 461 *F*
+1 Chocobo Camp (FIC) 462 *F*
+1 Flash Photography (FIC) 463 *F*
+1 Campsite Cuisine (FIC) 464 *F*
+1 Warrior's Resolve (FIC) 465 *F*
+1 Garland, Royal Kidnapper (FIC) 442 *F*
+1 The Destined Black Mage (FIC) 447 *F*
+1 The Destined Warrior (FIC) 443 *F*
+1 The Destined White Mage (FIC) 444 *F*
+1 Chaos Shrine's Black Crystal (FIC) 445 *F*
+1 The Destined Thief (FIC) 446 *F*
+1 Stiltzkin, Moogle Merchant (FIN) 565 *F*
+1 Locke, Treasure Hunter (FIC) 475 *F*
+1 Birds of Paradise (FIC) 483 *F*
+1 Summon: Bahamut (FIN) 1
+1 Starting Town (FIN) 289
+1 Rhystic Study (FCA) 31
+1 Squall, Gunblade Duelist (FIC) 453
+2 Plains (FIC) 478 *F*
+2 Island (FIC) 479 *F*
+2 Swamp (FIC) 480 *F*
+2 Mountain (FIC) 481 *F*
+1 SOLDIER Military Program (FIC) 108 *F*
+1 Rikku, Resourceful Guardian (FIC) 145
+1 Gatta and Luzzu (FIC) 134
+1 Rejoin the Fight (FIC) 118
+1 Yuna, Grand Summoner (PW25) 16 *F*

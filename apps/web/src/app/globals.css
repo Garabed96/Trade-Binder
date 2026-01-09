@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&display=swap");
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&display=swap');
+@import 'tailwindcss';
 
-@plugin "tailwindcss-animate";
+@plugin 'tailwindcss-animate';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -89,7 +89,7 @@
 
 @theme inline {
   --font-sans:
-    "Cinzel", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    'Cinzel', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -144,7 +144,7 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-.dark body {
+.dark * {
   background-color: var(--background);
   background-image: var(--mtg-gradient);
   background-attachment: fixed;
@@ -158,7 +158,7 @@ body {
 
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-sans), "Cinzel", serif;
+    font-family: var(--font-sans), 'Cinzel', serif;
     -webkit-font-smoothing: antialiased; /* Makes Cinzel look sharper */
     letter-spacing: 0.02em; /* Gives it that ancient inscription feel */
   }

@@ -17,7 +17,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <button
-        className="p-2 rounded-full bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all active:scale-90"
+        className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-200 transition-all hover:bg-slate-300 active:scale-90 dark:bg-slate-800 dark:hover:bg-slate-700"
         aria-label="Toggle theme"
         disabled
       >
@@ -27,7 +27,7 @@ export function ThemeToggle() {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-5 h-5 text-slate-400"
+          className="h-5 w-5 text-slate-400"
         >
           <path
             strokeLinecap="round"
@@ -44,7 +44,7 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="p-2 rounded-full bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all active:scale-90"
+      className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-200 transition-all hover:bg-slate-300 active:scale-90 dark:bg-slate-800 dark:hover:bg-slate-700"
       aria-label="Toggle theme"
     >
       {isDark ? (
@@ -54,7 +54,7 @@ export function ThemeToggle() {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-5 h-5 text-yellow-500"
+          className="h-5 w-5 text-yellow-500"
         >
           <path
             strokeLinecap="round"
@@ -69,7 +69,7 @@ export function ThemeToggle() {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="w-5 h-5 text-slate-700"
+          className="h-5 w-5 text-slate-700"
         >
           <path
             strokeLinecap="round"

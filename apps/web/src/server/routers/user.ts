@@ -16,7 +16,7 @@ export const userRouter = router({
         longitude: z.number().nullable(),
         location_name: z.string().nullable(),
         bio: z.string().nullable(),
-      }),
+      })
     )`
       SELECT id,
              username,
@@ -39,7 +39,7 @@ export const userRouter = router({
         longitude: z.number().nullable(),
         location_name: z.string().nullable(),
         bio: z.string().nullable(),
-      }),
+      })
     )
     .mutation(async ({ input, ctx }) => {
       const userId = (ctx.session.user as { id: string }).id;
@@ -86,7 +86,7 @@ export const userRouter = router({
                 id: z.string(),
                 username: z.string(),
                 distanceKm: z.number(),
-              }),
+              })
             )
             .optional()
             .nullable(),
@@ -99,12 +99,12 @@ export const userRouter = router({
         z.object({
           latitude: z.number().nullable(),
           longitude: z.number().nullable(),
-        }),
+        })
       )`
         SELECT latitude, longitude
         FROM users
         WHERE id = ${userId}
-      `,
+      `
     );
 
     const firstSale = await pool.maybeOne(
@@ -114,7 +114,7 @@ export const userRouter = router({
                JOIN binders b ON uc.binder_id = b.id
         WHERE uc.user_id = ${userId}
           AND b.type = 'sale'
-      `,
+      `
     );
 
     const mostSold = await pool.maybeOne(
@@ -122,7 +122,7 @@ export const userRouter = router({
         z.object({
           card_name: z.string(),
           price: z.number(),
-        }),
+        })
       )`
         SELECT d.name as card_name, p.price_usd::float8 as price
         FROM user_cards uc
@@ -133,7 +133,7 @@ export const userRouter = router({
           AND b.type = 'sale'
           AND p.price_usd IS NOT NULL
         ORDER BY p.price_usd DESC LIMIT 1
-      `,
+      `
     );
 
     const mostBought = await pool.maybeOne(
@@ -141,7 +141,7 @@ export const userRouter = router({
         z.object({
           card_name: z.string(),
           price: z.number(),
-        }),
+        })
       )`
         SELECT d.name as card_name, p.price_usd::float8 as price
         FROM user_cards uc
@@ -152,7 +152,7 @@ export const userRouter = router({
           AND (b.type IS NULL OR b.type <> 'sale')
           AND p.price_usd IS NOT NULL
         ORDER BY p.price_usd DESC LIMIT 1
-      `,
+      `
     );
 
     const binderValue = await pool.one(
@@ -161,17 +161,25 @@ export const userRouter = router({
         FROM user_cards uc
                JOIN card_printings p ON uc.printing_id = p.id
         WHERE uc.user_id = ${userId}
-      `,
+      `
     );
 
     if (me.latitude == null || me.longitude == null) {
       return outputSchema.parse({
         firstSaleDate: firstSale?.first_sale_date ?? null,
         mostValuableCardSold: mostSold
-          ? { cardName: mostSold.card_name, price: mostSold.price, currency: 'USD' }
+          ? {
+              cardName: mostSold.card_name,
+              price: mostSold.price,
+              currency: 'USD',
+            }
           : null,
         mostValuableCardBought: mostBought
-          ? { cardName: mostBought.card_name, price: mostBought.price, currency: 'USD' }
+          ? {
+              cardName: mostBought.card_name,
+              price: mostBought.price,
+              currency: 'USD',
+            }
           : null,
         currentBinderValue: binderValue.total,
         nearbyTraders: { radiusKm, count: 0, traders: [] },
@@ -184,7 +192,7 @@ export const userRouter = router({
           id: z.string(),
           username: z.string(),
           distance_km: z.number(),
-        }),
+        })
       )`
         SELECT u.id,
                u.username,
@@ -200,24 +208,32 @@ export const userRouter = router({
           AND u.latitude IS NOT NULL
           AND u.longitude IS NOT NULL
         ORDER BY distance_km ASC LIMIT 50
-      `,
+      `
     );
 
-    const nearby = traders.filter((t) => t.distance_km <= radiusKm);
+    const nearby = traders.filter(t => t.distance_km <= radiusKm);
 
     return outputSchema.parse({
       firstSaleDate: firstSale?.first_sale_date ?? null,
       mostValuableCardSold: mostSold
-        ? { cardName: mostSold.card_name, price: mostSold.price, currency: 'USD' }
+        ? {
+            cardName: mostSold.card_name,
+            price: mostSold.price,
+            currency: 'USD',
+          }
         : null,
       mostValuableCardBought: mostBought
-        ? { cardName: mostBought.card_name, price: mostBought.price, currency: 'USD' }
+        ? {
+            cardName: mostBought.card_name,
+            price: mostBought.price,
+            currency: 'USD',
+          }
         : null,
       currentBinderValue: binderValue.total,
       nearbyTraders: {
         radiusKm,
         count: nearby.length,
-        traders: nearby.map((t) => ({
+        traders: nearby.map(t => ({
           id: t.id,
           username: t.username,
           distanceKm: t.distance_km,
@@ -231,11 +247,27 @@ export const userRouter = router({
       z.object({
         id: z.string(),
         username: z.string(),
-      }),
+      })
     )`
       SELECT id, username
       FROM users
     `);
+  }),
+
+  getDefaultBinder: protectedProcedure.query(async ({ ctx }) => {
+    const userId = (ctx.session.user as { id: string }).id;
+
+    const result = await pool.maybeOne(sql.type(
+      z.object({
+        default_binder_id: z.string().nullable(),
+      })
+    )`
+      SELECT default_binder_id
+      FROM users
+      WHERE id = ${userId}
+    `);
+
+    return result?.default_binder_id || null;
   }),
 
   create: publicProcedure
@@ -244,12 +276,41 @@ export const userRouter = router({
         username: z.string(),
         email: z.string().email(),
         password: z.string().min(6),
-      }),
+      })
     )
     .mutation(async ({ input }) => {
       const passwordHash = await bcrypt.hash(input.password, 10);
-      return await pool.one(sql.type(z.object({ id: z.string() }))`
+
+      // Create user
+      const newUser = await pool.one(sql.type(z.object({ id: z.string() }))`
         INSERT INTO users (username, email, password_hash)
-        VALUES (${input.username}, ${input.email}, ${passwordHash}) RETURNING id`);
+        VALUES (${input.username}, ${input.email}, ${passwordHash})
+        RETURNING id
+      `);
+
+      // Create default binder for new user
+      const defaultBinder = await pool.one(sql.type(
+        z.object({ id: z.string() })
+      )`
+        INSERT INTO binders (user_id, name, description, type, is_public, target_capacity)
+        VALUES (
+          ${newUser.id},
+          'My Collection',
+          'Your default collection binder',
+          'trade',
+          TRUE,
+         250 
+        )
+        RETURNING id
+      `);
+
+      // Set as default binder
+      await pool.query(sql.type(z.object({}))`
+        UPDATE users
+        SET default_binder_id = ${defaultBinder.id}
+        WHERE id = ${newUser.id}
+      `);
+
+      return newUser;
     }),
 });
