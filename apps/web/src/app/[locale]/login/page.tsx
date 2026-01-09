@@ -1,83 +1,91 @@
-'use client';
+"use client";
 
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
-import Link from 'next/link';
+import { signIn } from "next-auth/react";
+import { useState } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import Link from "next/link";
+import { Input } from "@trade-binder/ui";
 
 export default function LoginPage() {
-  const { t } = useTranslation(['common']);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const { t } = useTranslation(["common"]);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const params = useParams();
   const locale = params.locale as string;
   const searchParams =
-    typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-  const registered = searchParams?.get('registered');
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search)
+      : null;
+  const registered = searchParams?.get("registered");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const result = await signIn('credentials', {
+      const result = await signIn("credentials", {
         redirect: false,
         email,
         password,
       });
 
       if (result?.error) {
-        setError('Invalid email or password');
+        setError("Invalid email or password");
       } else {
         router.push(`/${locale}`);
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
-      setError(`${t('common:error_occurred')} ${errorMessage}`);
+      setError(`${t("common:error_occurred")} ${errorMessage}`);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background dark:bg-transparent">
-      <div className="flex-1 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md space-y-8 bg-white/70 dark:bg-slate-900/40 backdrop-blur-xl p-10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-200/50 dark:border-slate-800/50">
+    <div className="bg-background flex min-h-screen flex-col dark:bg-transparent">
+      <div className="flex flex-1 flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md space-y-8 rounded-3xl border border-slate-200/50 bg-white/70 p-10 shadow-[0_20px_50px_rgba(0,0,0,0.05)] backdrop-blur-xl dark:border-slate-800/50 dark:bg-slate-900/40">
           <div>
             <h2 className="mt-6 text-center text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-              {t('signIn')}
+              {t("signIn")}
             </h2>
-            <p className="mt-2 text-center text-sm text-slate-500 dark:text-slate-400 font-medium">
+            <p className="mt-2 text-center text-sm font-medium text-slate-500 dark:text-slate-400">
               Welcome back to your collection
             </p>
           </div>
 
           <div className="mt-8 space-y-6">
             {registered && (
-              <div className="rounded-2xl bg-green-500/10 border border-green-500/20 p-4">
-                <div className="text-sm text-green-600 dark:text-green-400 font-bold text-center">
-                  {t('registrationSuccess')}
+              <div className="rounded-2xl border border-green-500/20 bg-green-500/10 p-4">
+                <div className="text-center text-sm font-bold text-green-600 dark:text-green-400">
+                  {t("registrationSuccess")}
                 </div>
               </div>
             )}
             <div className="grid grid-cols-2 gap-4">
               <button
-                onClick={() => signIn('discord', { callbackUrl: `/${locale}` })}
-                className="flex items-center justify-center gap-2 rounded-2xl bg-[#5865F2] px-4 py-3 text-xs font-black text-white shadow-lg shadow-blue-500/20 hover:bg-[#4752C4] hover:-translate-y-0.5 transition-all active:scale-95"
+                onClick={() => signIn("discord", { callbackUrl: `/${locale}` })}
+                className="flex items-center justify-center gap-2 rounded-2xl bg-[#5865F2] px-4 py-3 text-xs font-black text-white shadow-lg shadow-blue-500/20 transition-all hover:-translate-y-0.5 hover:bg-[#4752C4] active:scale-95"
               >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <svg
+                  className="h-5 w-5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
                   <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993.023.03.063.037.085.028a19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
                 </svg>
                 Discord
               </button>
               <button
-                onClick={() => signIn('google', { callbackUrl: `/${locale}` })}
-                className="flex items-center justify-center gap-2 rounded-2xl bg-white dark:bg-slate-800 px-4 py-3 text-xs font-black text-slate-900 dark:text-white shadow-lg border border-slate-200 dark:border-slate-700 hover:-translate-y-0.5 transition-all active:scale-95"
+                onClick={() => signIn("google", { callbackUrl: `/${locale}` })}
+                className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-xs font-black text-slate-900 shadow-lg transition-all hover:-translate-y-0.5 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path
@@ -102,11 +110,14 @@ export default function LoginPage() {
             </div>
 
             <div className="relative">
-              <div className="absolute inset-0 flex items-center" aria-hidden="true">
+              <div
+                className="absolute inset-0 flex items-center"
+                aria-hidden="true"
+              >
                 <div className="w-full border-t border-slate-200 dark:border-slate-800"></div>
               </div>
-              <div className="relative flex justify-center text-xs font-black uppercase tracking-widest leading-6">
-                <span className="bg-white dark:bg-[#0f172a] px-4 text-slate-400">
+              <div className="relative flex justify-center text-xs leading-6 font-black tracking-widest uppercase">
+                <span className="bg-white px-4 text-slate-400 dark:bg-[#0f172a]">
                   Or use credentials
                 </span>
               </div>
@@ -114,37 +125,35 @@ export default function LoginPage() {
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               {error && (
-                <div className="rounded-2xl bg-red-500/10 border border-red-500/20 p-4">
-                  <div className="text-sm text-red-600 dark:text-red-400 font-bold text-center">
+                <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-4">
+                  <div className="text-center text-sm font-bold text-red-600 dark:text-red-400">
                     {error}
                   </div>
                 </div>
               )}
               <div className="space-y-4">
-                <div className="relative group">
-                  <input
+                <div className="group relative">
+                  <Input
                     id="email-address"
                     name="email"
                     type="email"
                     autoComplete="email"
                     required
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full px-5 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-bold text-sm"
-                    placeholder={t('email')}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder={t("email")}
                   />
                 </div>
-                <div className="relative group">
-                  <input
+                <div className="group relative">
+                  <Input
                     id="password"
                     name="password"
                     type="password"
                     autoComplete="current-password"
                     required
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full px-5 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all font-bold text-sm"
-                    placeholder={t('password')}
+                    onChange={e => setPassword(e.target.value)}
+                    placeholder={t("password")}
                   />
                 </div>
               </div>
@@ -153,18 +162,18 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="group relative w-full flex justify-center py-4 px-4 bg-blue-600 hover:bg-blue-500 text-white text-sm font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 disabled:translate-y-0"
+                  className="group relative flex w-full justify-center rounded-2xl bg-blue-600 px-4 py-4 text-sm font-black tracking-widest text-white uppercase shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5 hover:bg-blue-500 active:scale-95 disabled:translate-y-0 disabled:opacity-50"
                 >
-                  {loading ? 'Signing in...' : t('signIn')}
+                  {loading ? "Signing in..." : t("signIn")}
                 </button>
               </div>
 
               <div className="text-center">
                 <Link
                   href={`/${locale}/register`}
-                  className="text-xs font-black uppercase tracking-widest text-blue-600 hover:text-blue-500 dark:text-blue-400 transition-colors"
+                  className="text-xs font-black tracking-widest text-blue-600 uppercase transition-colors hover:text-blue-500 dark:text-blue-400"
                 >
-                  {t('dontHaveAccount')} {t('signUp')}
+                  {t("dontHaveAccount")} {t("signUp")}
                 </Link>
               </div>
             </form>

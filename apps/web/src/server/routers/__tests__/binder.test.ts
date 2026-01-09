@@ -47,7 +47,9 @@ const createCtx = (userId = "user-1") => ({
   session: {
     user: {
       id: userId,
+      registration_complete: true,
     },
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
   },
 });
 

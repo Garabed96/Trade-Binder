@@ -16,17 +16,17 @@ export function LoginButton() {
 
   if (session) {
     return (
-      <div className="group/user flex items-center gap-3 rounded-2xl border border-slate-200/50 bg-white/50 p-1.5 pr-4 shadow-sm backdrop-blur-md dark:border-slate-700/50 dark:bg-slate-800/50">
+      <div className="group/user flex h-10 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-1.5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
         <Link href={`/${locale}/profile`} className="relative h-9 w-9">
           {session.user?.image ? (
             <Image
               fill
               src={session.user.image || logo}
               alt={session.user.name || ""}
-              className="rounded-xl border border-slate-200 object-cover shadow-sm transition-transform duration-300 group-hover/user:scale-105 dark:border-slate-700"
+              className="rounded-2xl border border-slate-200 object-cover shadow-sm transition-transform duration-300 group-hover/user:scale-105 dark:border-slate-700"
             />
           ) : (
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-100 text-slate-400 dark:border-slate-700 dark:bg-slate-800">
+            <div className="flex h-9 w-9 items-center justify-center rounded-2xl border border-slate-200 bg-slate-100 text-slate-400 dark:border-slate-700 dark:bg-slate-800">
               <User className="h-5 w-5" />
             </div>
           )}
@@ -44,7 +44,7 @@ export function LoginButton() {
 
         <button
           onClick={() => signOut()}
-          className="group/out ml-1 rounded-lg p-2 text-slate-400 transition-all hover:bg-red-50 hover:text-red-500 active:scale-90 dark:hover:bg-red-500/10"
+          className="group/out ml-1 rounded-2xl p-2 text-slate-400 transition-all hover:bg-red-50 hover:text-red-500 active:scale-90 dark:hover:bg-red-500/10"
           title={t("signOut")}
         >
           <LogOut className="h-4 w-4 transition-transform group-hover/out:translate-x-0.5" />
@@ -56,7 +56,7 @@ export function LoginButton() {
   return (
     <Link
       href={`/${locale}/login`}
-      className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-r from-purple-400 to-amber-400 px-5 py-2.5 text-[10px] font-black tracking-[0.15em] text-slate-900 uppercase shadow-lg transition-all hover:-translate-y-0.5 hover:text-amber-900 hover:drop-shadow-[0_0_8px_rgba(251,191,36,0.8)] active:scale-95"
+      className="group relative flex h-10 items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-r from-purple-400 to-amber-400 px-5 text-[10px] font-black tracking-[0.15em] text-slate-900 uppercase shadow-lg transition-all hover:-translate-y-0.5 hover:text-amber-900 hover:drop-shadow-[0_0_8px_rgba(251,191,36,0.8)] active:scale-95"
       suppressHydrationWarning
     >
       <div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-500 group-hover:animate-pulse group-hover:opacity-100" />

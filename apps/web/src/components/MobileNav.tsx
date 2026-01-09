@@ -70,7 +70,7 @@ function MobileNavItem({
 
       {/* Icon container with card-like border */}
       <div
-        className={`relative flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-500 ${
+        className={`relative flex h-11 w-11 items-center justify-center rounded-2xl transition-all duration-500 ${
           active
             ? "scale-110 border border-purple-400/40 bg-purple-500/20 shadow-[0_0_20px_rgba(168,85,247,0.3)]"
             : "border border-white/5 bg-white/5 group-hover:border-purple-500/30 group-hover:bg-purple-500/5"
@@ -78,7 +78,7 @@ function MobileNavItem({
       >
         {/* Inner border glow */}
         <div
-          className={`absolute inset-[1px] rounded-lg transition-all duration-300 ${
+          className={`absolute inset-[1px] rounded-2xl transition-all duration-300 ${
             active
               ? "bg-gradient-to-br from-amber-500/20 to-transparent"
               : "bg-gradient-to-br from-slate-700/30 to-transparent group-hover:from-amber-900/20"
