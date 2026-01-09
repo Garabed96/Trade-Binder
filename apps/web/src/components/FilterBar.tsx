@@ -59,7 +59,7 @@ export function FilterBar({
 
   return (
     <div className="relative z-40 w-full border-b border-white/20 bg-white/10 py-4 shadow-lg backdrop-blur-xl md:sticky md:top-20 dark:border-white/5 dark:bg-slate-900/40">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="container-default">
         <div className="flex flex-col gap-6 md:flex-row md:items-center">
           <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:flex md:w-auto md:flex-row">
             {/* Sets Filter */}
@@ -68,7 +68,7 @@ export function FilterBar({
                 {t("expansionSet")}
               </label>
               <select
-                className="min-w-[180px] cursor-pointer appearance-none rounded-xl border border-slate-200/60 bg-white/50 px-4 py-2 text-xs font-bold shadow-sm transition-all outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700/60 dark:bg-slate-800/50 dark:text-slate-200"
+                className="min-w-[180px] cursor-pointer appearance-none rounded-2xl border border-slate-200/60 bg-white/50 px-4 py-2 text-xs font-bold shadow-sm transition-all outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700/60 dark:bg-slate-800/50 dark:text-slate-200"
                 value={setCode}
                 onChange={e => setSetCode(e.target.value)}
               >
@@ -87,7 +87,7 @@ export function FilterBar({
                 {t("rarity")}
               </label>
               <select
-                className="w-full cursor-pointer appearance-none rounded-xl border border-slate-200/60 bg-white/50 px-4 py-2 text-xs font-bold shadow-sm transition-all outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700/60 dark:bg-slate-800/50 dark:text-slate-200"
+                className="w-full cursor-pointer appearance-none rounded-2xl border border-slate-200/60 bg-white/50 px-4 py-2 text-xs font-bold shadow-sm transition-all outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700/60 dark:bg-slate-800/50 dark:text-slate-200"
                 value={rarity}
                 onChange={e => setRarity(e.target.value)}
               >
@@ -129,10 +129,10 @@ export function FilterBar({
               <label className="text-[12px] font-black tracking-widest text-slate-800 uppercase sm:mr-1 dark:text-slate-500">
                 {t("sort")}
               </label>
-              <div className="flex w-full rounded-xl border border-slate-200/60 bg-slate-100/50 p-1 shadow-inner sm:w-auto dark:border-slate-800/60 dark:bg-slate-950/30">
+              <div className="flex w-full rounded-2xl border border-slate-200/60 bg-slate-100/50 p-1 shadow-inner sm:w-auto dark:border-slate-800/60 dark:bg-slate-950/30">
                 <button
                   onClick={() => toggleSort("name")}
-                  className={`flex-1 rounded-lg px-4 py-1.5 text-[12px] font-black transition-all sm:flex-none ${
+                  className={`flex-1 rounded-2xl px-4 py-1.5 text-[12px] font-black transition-all sm:flex-none ${
                     orderBy === "name"
                       ? "bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50 dark:bg-slate-800 dark:text-blue-400 dark:ring-slate-700/50"
                       : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
@@ -143,7 +143,7 @@ export function FilterBar({
                 </button>
                 <button
                   onClick={() => toggleSort("price_usd")}
-                  className={`flex-1 rounded-lg px-4 py-1.5 text-[12px] font-black transition-all sm:flex-none ${
+                  className={`flex-1 rounded-2xl px-4 py-1.5 text-[12px] font-black transition-all sm:flex-none ${
                     orderBy === "price_usd"
                       ? "bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50 dark:bg-slate-800 dark:text-blue-400 dark:ring-slate-700/50"
                       : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"

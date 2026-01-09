@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { inferRouterOutputs } from "@trpc/server";
 import { AppRouter } from "@/src/server/routers/_app";
+import { Button, Input } from "@trade-binder/ui";
 
 type RouterOutputs = inferRouterOutputs<AppRouter>;
 export type Binder = RouterOutputs["binder"]["list"]["binders"][number];
@@ -159,7 +160,7 @@ export default function BinderPageContent() {
   }
 
   return (
-    <div className="relative mx-auto min-h-screen space-y-10 bg-gradient-to-b from-zinc-950 via-slate-900 to-black p-8 text-slate-100">
+    <div className="container-default relative min-h-screen space-y-10 bg-gradient-to-b from-zinc-950 via-slate-900 to-black py-8 text-slate-100">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.08),transparent_60%)]" />
 
       <header className="relative space-y-2">
@@ -211,32 +212,33 @@ export default function BinderPageContent() {
               to confirm:
             </p>
 
-            <input
-              type="text"
+            <Input
+              variant="danger"
               value={deleteConfirmText}
               onChange={e => setDeleteConfirmText(e.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-black/40 px-3 py-2 text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/50 focus:outline-none"
               placeholder="Enter binder name"
               autoFocus
             />
 
             <div className="mt-6 flex gap-3">
-              <button
+              <Button
+                color="secondary"
+                variant="solid"
                 onClick={closeDeleteModal}
-                className="flex-1 rounded-md border border-slate-700 bg-slate-800 px-4 py-2 font-medium text-slate-300 transition hover:bg-slate-700"
+                className="flex-1"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
+                color="destructive"
+                variant="solid"
                 onClick={confirmDelete}
-                disabled={
-                  deleteConfirmText !== binderToDelete.name ||
-                  deleteBinder.isPending
-                }
-                className="flex-1 rounded-md bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={deleteConfirmText !== binderToDelete.name}
+                loading={deleteBinder.isPending}
+                className="flex-1"
               >
-                {deleteBinder.isPending ? "Deleting..." : "Delete Binder"}
-              </button>
+                Delete Binder
+              </Button>
             </div>
           </div>
         </div>
@@ -252,9 +254,12 @@ export default function BinderPageContent() {
                 className="group relative rounded-xl border border-slate-700/60 bg-slate-900/60 p-5 backdrop-blur transition hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]"
               >
                 {/* Menu Toggle Button */}
-                <button
+                <Button
+                  color="secondary"
+                  variant="outline"
+                  size="icon-sm"
                   onClick={() => toggleMenu(binder.id)}
-                  className="absolute top-3 right-3 z-10 rounded-md border border-slate-600/50 bg-slate-800/80 p-1.5 text-slate-300 shadow-lg backdrop-blur transition hover:border-slate-500 hover:bg-slate-700 hover:text-white"
+                  className="absolute top-3 right-3 z-10"
                 >
                   <svg
                     className="h-5 w-5"
@@ -265,7 +270,7 @@ export default function BinderPageContent() {
                     <circle cx="12" cy="12" r="2" />
                     <circle cx="12" cy="19" r="2" />
                   </svg>
-                </button>
+                </Button>
 
                 {/* Dropdown Menu */}
                 {openMenuId === binder.id && (
@@ -407,8 +412,7 @@ export default function BinderPageContent() {
                 <label className="text-xs tracking-widest text-slate-400 uppercase">
                   Binder Name
                 </label>
-                <input
-                  className="w-full rounded-md border border-slate-700 bg-black/40 px-3 py-2 focus:ring-2 focus:ring-amber-600/50 focus:outline-none"
+                <Input
                   placeholder="e.g. Dimir Control Vault"
                   value={editName}
                   onChange={e => setEditName(e.target.value)}
@@ -453,7 +457,10 @@ export default function BinderPageContent() {
                 Reveal binder to other planeswalkers
               </label>
 
-              <button
+              <Button
+                color="warning"
+                variant="solid"
+                fullWidth
                 onClick={e => {
                   e.preventDefault();
                   if (!editingBinderId) return;
@@ -465,11 +472,10 @@ export default function BinderPageContent() {
                     isPublic: editIsPublic,
                   });
                 }}
-                disabled={updateBinder.isPending}
-                className="relative w-full rounded-md bg-gradient-to-r from-amber-600 to-orange-600 px-4 py-2 font-semibold tracking-wide shadow-lg shadow-amber-600/20 transition hover:brightness-110 disabled:opacity-50"
+                loading={updateBinder.isPending}
               >
-                {updateBinder.isPending ? "Updating..." : "Update Binder"}
-              </button>
+                Update Binder
+              </Button>
             </div>
           ) : (
             // Create Form
@@ -482,8 +488,7 @@ export default function BinderPageContent() {
                 <label className="text-xs tracking-widest text-slate-400 uppercase">
                   Binder Name
                 </label>
-                <input
-                  className="w-full rounded-md border border-slate-700 bg-black/40 px-3 py-2 focus:ring-2 focus:ring-blue-600/50 focus:outline-none"
+                <Input
                   placeholder="e.g. Dimir Control Vault"
                   value={name}
                   onChange={e => setName(e.target.value)}
@@ -532,7 +537,10 @@ export default function BinderPageContent() {
                 {binderCount} / {maxBinders} binders used
               </div>
 
-              <button
+              <Button
+                color="primary"
+                variant="solid"
+                fullWidth
                 onClick={e => {
                   e.preventDefault();
                   if (!canCreateBinder) {
@@ -548,15 +556,11 @@ export default function BinderPageContent() {
                     isPublic,
                   });
                 }}
-                disabled={createBinder.isPending || !canCreateBinder}
-                className="relative w-full rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 font-semibold tracking-wide shadow-lg shadow-blue-600/20 transition hover:brightness-110 disabled:opacity-50"
+                disabled={!canCreateBinder}
+                loading={createBinder.isPending}
               >
-                {createBinder.isPending
-                  ? "Inscribing..."
-                  : canCreateBinder
-                    ? "Bind the Tome"
-                    : "Binder Limit Reached"}
-              </button>
+                {canCreateBinder ? "Bind the Tome" : "Binder Limit Reached"}
+              </Button>
             </div>
           )}
         </aside>

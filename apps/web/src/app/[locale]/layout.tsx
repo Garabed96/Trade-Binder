@@ -39,7 +39,7 @@ export default async function RootLayout({
         <Providers locale={validLocale}>
           <RegistrationBanner />
           <Navbar />
-          <main className="pb-20 md:pb-0">{children}</main>
+          <main className="flex-1 pb-20 md:pb-0">{children}</main>
           <MobileNav />
         </Providers>
       </body>

@@ -17,8 +17,8 @@ export function RegistrationBanner() {
   if (!session || isRegistered) return null;
 
   return (
-    <div className="bg-amber-500 px-4 py-2 text-white">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+    <div className="bg-amber-500 py-2 text-white">
+      <div className="container-default flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <AlertCircle className="h-5 w-5 shrink-0" />
           <p className="text-sm font-bold">
