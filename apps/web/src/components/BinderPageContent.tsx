@@ -1,14 +1,15 @@
 'use client';
 
 import { trpc } from '@/src/utils/trpc';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useSession } from 'next-auth/react';
 import { inferRouterOutputs } from '@trpc/server';
 import { AppRouter } from '@/src/server/routers/_app';
 import { UnassignedCardGrid } from './UnassignedCardGrid';
 import { BatchActionBar } from './BatchActionBar';
 import { BinderSidebarCard } from './BinderSidebarCard';
-import { ArrowRight, ChevronDown, ChevronUp, Plus, X } from 'lucide-react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { useSession } from 'next-auth/react';
+import { Button, Input } from '@repo/ui';
+import { Plus, X, ChevronUp, ChevronDown, ArrowRight } from 'lucide-react';
 
 type RouterOutputs = inferRouterOutputs<AppRouter>;
 export type Binder = RouterOutputs['binder']['list']['binders'][number] & {
@@ -392,7 +393,7 @@ export default function BinderPageContent() {
   }
 
   return (
-    <div className="relative mx-auto min-h-screen bg-gradient-to-b from-zinc-950 via-slate-900 to-black p-4 text-slate-100 md:p-8">
+    <div className="container-default relative min-h-screen space-y-10 bg-gradient-to-b from-zinc-950 via-slate-900 to-black py-8 text-slate-100">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.08),transparent_60%)]" />
 
       {/* Header */}
@@ -447,32 +448,33 @@ export default function BinderPageContent() {
               to confirm:
             </p>
 
-            <input
-              type="text"
+            <Input
+              variant="danger"
               value={deleteConfirmText}
               onChange={e => setDeleteConfirmText(e.target.value)}
-              className="w-full rounded-md border border-slate-700 bg-black/40 px-3 py-2 text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/50 focus:outline-none"
               placeholder="Enter binder name"
               autoFocus
             />
 
             <div className="mt-6 flex gap-3">
-              <button
+              <Button
+                color="secondary"
+                variant="solid"
                 onClick={closeDeleteModal}
-                className="flex-1 rounded-md border border-slate-700 bg-slate-800 px-4 py-2 font-medium text-slate-300 transition hover:bg-slate-700"
+                className="flex-1"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
+                color="destructive"
+                variant="solid"
                 onClick={confirmDelete}
-                disabled={
-                  deleteConfirmText !== binderToDelete.name ||
-                  deleteBinder.isPending
-                }
-                className="flex-1 rounded-md bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                disabled={deleteConfirmText !== binderToDelete.name}
+                loading={deleteBinder.isPending}
+                className="flex-1"
               >
-                {deleteBinder.isPending ? 'Deleting...' : 'Delete Binder'}
-              </button>
+                Delete Binder
+              </Button>
             </div>
           </div>
         </div>
@@ -639,7 +641,7 @@ export default function BinderPageContent() {
             </div>
           )}
 
-          {/* Horizontal Scrollable Binder List */}
+          {/* Horizontal Scrollable Binder List (Mobile) */}
           <div className="flex gap-3 overflow-x-auto pb-2">
             {listBinder?.binders?.map(binder => (
               <button
@@ -794,8 +796,7 @@ export default function BinderPageContent() {
                     </button>
                   </div>
 
-                  <input
-                    className="w-full rounded-md border border-slate-700 bg-black/40 px-3 py-2 text-sm focus:ring-2 focus:ring-amber-600/50 focus:outline-none"
+                  <Input
                     placeholder="Binder name"
                     value={editName}
                     onChange={e => setEditName(e.target.value)}
@@ -876,88 +877,6 @@ export default function BinderPageContent() {
                       <ChevronDown className="h-4 w-4 text-slate-400" />
                     )}
                   </button>
-
-                  {showCreateForm && (
-                    <div className="space-y-3 border-t border-slate-700/60 p-4">
-                      <input
-                        className="w-full rounded-md border border-slate-700 bg-black/40 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600/50 focus:outline-none"
-                        placeholder="Binder name"
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                      />
-
-                      <textarea
-                        className="w-full rounded-md border border-slate-700 bg-black/40 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600/50 focus:outline-none"
-                        placeholder="Description (optional)"
-                        value={description}
-                        onChange={e => setDescription(e.target.value)}
-                        rows={2}
-                      />
-
-                      <select
-                        className="w-full rounded-md border border-slate-700 bg-black/40 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600/50 focus:outline-none"
-                        value={type}
-                        onChange={handleChange}
-                      >
-                        <option value="personal">Personal</option>
-                        <option value="trade">Trade</option>
-                        <option value="sale">Sale</option>
-                      </select>
-
-                      <input
-                        type="number"
-                        min="1"
-                        placeholder="Target capacity (optional)"
-                        value={targetCapacity || ''}
-                        onChange={e =>
-                          setTargetCapacity(
-                            e.target.value ? parseInt(e.target.value) : null
-                          )
-                        }
-                        className="w-full rounded-md border border-slate-700 bg-black/40 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600/50 focus:outline-none"
-                      />
-
-                      <label className="flex items-center gap-2 text-sm text-slate-300">
-                        <input
-                          type="checkbox"
-                          checked={isPublic}
-                          onChange={e => setIsPublic(e.target.checked)}
-                          className="h-4 w-4 rounded border-slate-600 bg-black/40"
-                        />
-                        Make public
-                      </label>
-
-                      <p className="text-center text-xs text-slate-400">
-                        {binderCount} / {maxBinders} binders used
-                      </p>
-
-                      <button
-                        onClick={() => {
-                          if (!canCreateBinder) {
-                            showMessage(
-                              `Binder limit reached (${binderCount}/${maxBinders})`
-                            );
-                            return;
-                          }
-                          createBinder.mutate({
-                            name,
-                            description: description || undefined,
-                            type,
-                            isPublic,
-                            targetCapacity,
-                          });
-                        }}
-                        disabled={createBinder.isPending || !canCreateBinder}
-                        className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
-                      >
-                        {createBinder.isPending
-                          ? 'Creating...'
-                          : canCreateBinder
-                            ? 'Create Binder'
-                            : 'Limit Reached'}
-                      </button>
-                    </div>
-                  )}
                 </div>
               )}
 

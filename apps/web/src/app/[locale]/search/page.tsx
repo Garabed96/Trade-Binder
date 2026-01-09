@@ -114,7 +114,7 @@ export default function SearchPage() {
         toggleSort={toggleSort}
       />
 
-      <main className="mx-auto max-w-7xl p-6 md:p-12">
+      <main className="container-default py-6 md:py-12">
         {/* Latest Set Indicator */}
         {!debouncedSearch && setCode === latestSet.data?.code && (
           <div className="mb-8 flex items-center gap-3">

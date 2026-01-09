@@ -1,14 +1,14 @@
 // import { TRPCError } from "@trpc/server";
-import { binderRouter } from "../binder";
+import { binderRouter } from '../binder';
 
-jest.mock("@/src/server/db", () => {
+jest.mock('@/src/server/db', () => {
   // Mock sql.type() to return a function that acts as a tagged template
   const mockType = jest.fn(() => {
     return jest.fn((strings: TemplateStringsArray, ...values: unknown[]) => ({
       strings,
       values,
       // Add any other properties that slonik sql queries have
-      sql: strings.join("?"),
+      sql: strings.join('?'),
     }));
   });
 
@@ -16,7 +16,7 @@ jest.mock("@/src/server/db", () => {
     jest.fn((strings: TemplateStringsArray, ...values: unknown[]) => ({
       strings,
       values,
-      sql: strings.join("?"),
+      sql: strings.join('?'),
     })),
     {
       fragment: jest.fn((...args: unknown[]) => args),
@@ -39,15 +39,17 @@ jest.mock("@/src/server/db", () => {
   };
 });
 
-import { pool } from "@/src/server/db";
+import { pool } from '@/src/server/db';
 
 const mockPool = pool as jest.Mocked<typeof pool>;
 
-const createCtx = (userId = "user-1") => ({
+const createCtx = (userId = 'user-1') => ({
   session: {
     user: {
       id: userId,
+      registration_complete: true,
     },
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
   },
 });
 
@@ -56,34 +58,34 @@ beforeEach(() => {
 });
 
 // Test: create fails when limit reached
-describe("binder.create", () => {
-  it("creates a binder when under limit", async () => {
+describe('binder.create', () => {
+  it('creates a binder when under limit', async () => {
     mockPool.one
       .mockResolvedValueOnce({ count: 2 }) // count query
-      .mockResolvedValueOnce({ id: "binder-1" }); // insert
+      .mockResolvedValueOnce({ id: 'binder-1' }); // insert
 
     const caller = binderRouter.createCaller(createCtx());
 
     const result = await caller.create({
-      name: "My Binder",
-      type: "personal",
+      name: 'My Binder',
+      type: 'personal',
       isPublic: false,
     });
 
-    expect(result.id).toBe("binder-1");
+    expect(result.id).toBe('binder-1');
     expect(mockPool.one).toHaveBeenCalledTimes(2);
   });
 });
 
 // Test: getById returns null when not found
-describe("binder.getById", () => {
-  it("returns null when binder does not exist", async () => {
+describe('binder.getById', () => {
+  it('returns null when binder does not exist', async () => {
     mockPool.maybeOne.mockResolvedValueOnce(null);
 
     const caller = binderRouter.createCaller(createCtx());
 
     const result = await caller.getById({
-      id: "00000000-0000-0000-0000-000000000000",
+      id: '00000000-0000-0000-0000-000000000000',
     });
 
     expect(result).toBeNull();
@@ -91,14 +93,14 @@ describe("binder.getById", () => {
 });
 
 // Test: list returns binders + limits
-describe("binder.list", () => {
-  it("returns binders and limits", async () => {
+describe('binder.list', () => {
+  it('returns binders and limits', async () => {
     mockPool.any.mockResolvedValueOnce([
       {
-        id: "b1",
-        name: "Binder 1",
+        id: 'b1',
+        name: 'Binder 1',
         description: null,
-        type: "personal",
+        type: 'personal',
         is_public: false,
         card_count: 3,
       },
@@ -115,10 +117,10 @@ describe("binder.list", () => {
 });
 
 // Test: unauthorized access (important)
-it("throws UNAUTHORIZED without session", async () => {
+it('throws UNAUTHORIZED without session', async () => {
   const caller = binderRouter.createCaller({ session: null });
 
   await expect(caller.list()).rejects.toMatchObject({
-    code: "UNAUTHORIZED",
+    code: 'UNAUTHORIZED',
   });
 });

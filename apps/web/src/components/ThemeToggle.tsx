@@ -17,7 +17,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <button
-        className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-200 transition-all hover:bg-slate-300 active:scale-90 dark:bg-slate-800 dark:hover:bg-slate-700"
+        className="flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"
         aria-label="Toggle theme"
         disabled
       >
@@ -43,8 +43,8 @@ export function ThemeToggle() {
 
   return (
     <button
+      className="flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-200 transition-all hover:bg-slate-300 active:scale-90 dark:bg-slate-800 dark:hover:bg-slate-700"
       aria-label="Toggle theme"
     >
       {isDark ? (

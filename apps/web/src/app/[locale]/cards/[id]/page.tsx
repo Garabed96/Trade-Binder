@@ -1,11 +1,11 @@
 'use client';
 
 import { use, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { trpc } from '@/src/utils/trpc';
 import Image from 'next/image';
 import { ChevronLeft, Library, Layers, Star } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 
 export default function CardDetailPage({
   params,
