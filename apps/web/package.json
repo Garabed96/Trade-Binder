@@ -9,7 +9,6 @@
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
-    "import-cards": "tsx src/scripts/import-cards.ts",
     "migrate": "ley --config ley.config.js --dir src/migrations up",
     "migrate:rollback": "ley --dir src/migrations down",
     "migrate:status": "ley --dir src/migrations status",
