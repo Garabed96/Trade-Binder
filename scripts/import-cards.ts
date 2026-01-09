@@ -1,6 +1,9 @@
 import { config } from 'dotenv';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 
-config();
+const __dirname = dirname(fileURLToPath(import.meta.url));
+config({ path: join(__dirname, '../apps/web/.env') });
 import { createPool, sql } from 'slonik';
 import fs from 'node:fs';
 import path from 'node:path';

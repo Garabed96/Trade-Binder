@@ -77,5 +77,23 @@ pnpm migrate
 
 echo ""
 echo "Database is up and migrations are complete!"
-echo "DATABASE_URL: $DATABASE_URL"
 
+# Check if cards exist in the database
+CARD_COUNT=$($DOCKER_COMPOSE exec -T db psql -U "${POSTGRES_USER:-postgres}" -d "${POSTGRES_DB:-trade_binder}" -tAc "SELECT COUNT(*) FROM card_printings;" 2>/dev/null || echo "0")
+
+if [ "$CARD_COUNT" -eq "0" ] 2>/dev/null; then
+  echo ""
+  echo "No cards found in the database."
+  read -p "Would you like to import cards from Scryfall? (y/N) " -n 1 -r
+  echo ""
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    echo "Importing cards..."
+    cd "$PROJECT_ROOT"
+    pnpm import-cards
+  else
+    echo "Skipping card import. You can run 'pnpm import-cards' later."
+  fi
+fi
+
+echo ""
+echo "Ready to go!"
