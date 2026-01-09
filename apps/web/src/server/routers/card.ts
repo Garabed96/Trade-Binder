@@ -63,12 +63,15 @@ export const cardRouter = router({
         );
       }
 
-      // Color filtering via the intersection table
+      // Color filtering - exact match (exclusive)
       if (input.colors && input.colors.length > 0) {
         filters.push(sql.fragment`EXISTS (
-          SELECT 1 FROM card_design_colors cdc 
-          WHERE cdc.design_id = d.oracle_id 
-          AND cdc.color_id = ANY(${sql.array(input.colors, "text")})
+          SELECT 1 FROM card_design_colors cdc
+          WHERE cdc.design_id = d.oracle_id
+          GROUP BY cdc.design_id
+          HAVING
+            COUNT(*) = ${input.colors.length}
+            AND COUNT(*) FILTER (WHERE cdc.color_id = ANY(${sql.array(input.colors, "text")})) = ${input.colors.length}
         )`);
       }
 
