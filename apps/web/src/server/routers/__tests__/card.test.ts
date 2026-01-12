@@ -192,6 +192,144 @@ describe('card.fuzzySearch', () => {
 
     await expect(caller.fuzzySearch({ query: 'Li' })).rejects.toThrow();
   });
+
+  it('returns empty array when no matches found', async () => {
+    mockPool.any.mockResolvedValueOnce([]);
+
+    const caller = cardRouter.createCaller({ session: null });
+    const result = await caller.fuzzySearch({ query: 'NonexistentCard123' });
+
+    expect(result).toHaveLength(0);
+  });
+
+  it('limits results to 5 cards', async () => {
+    const mockResults = Array.from({ length: 10 }, (_, i) => ({
+      id: `card-${i}`,
+      name: `Lightning Bolt ${i}`,
+      image_uri_normal: `http://example.com/bolt${i}.jpg`,
+      set_name: 'Alpha',
+      set_code: 'lea',
+      price_usd: 1.5,
+    }));
+    mockPool.any.mockResolvedValueOnce(mockResults.slice(0, 5));
+
+    const caller = cardRouter.createCaller({ session: null });
+    const result = await caller.fuzzySearch({ query: 'Lightning' });
+
+    expect(result).toHaveLength(5);
+  });
+
+  it('performs case-insensitive search', async () => {
+    const mockResults = [
+      {
+        id: 'card-1',
+        name: 'Lightning Bolt',
+        image_uri_normal: 'http://example.com/bolt.jpg',
+        set_name: 'Alpha',
+        set_code: 'lea',
+        price_usd: 1.5,
+      },
+    ];
+    mockPool.any.mockResolvedValueOnce(mockResults);
+
+    const caller = cardRouter.createCaller({ session: null });
+    const result = await caller.fuzzySearch({ query: 'lightning' });
+
+    expect(result).toHaveLength(1);
+    expect(result[0].name).toBe('Lightning Bolt');
+  });
+
+  it('performs partial matching with wildcards', async () => {
+    const mockResults = [
+      {
+        id: 'card-1',
+        name: 'Lightning Bolt',
+        image_uri_normal: 'http://example.com/bolt.jpg',
+        set_name: 'Alpha',
+        set_code: 'lea',
+        price_usd: 1.5,
+      },
+      {
+        id: 'card-2',
+        name: 'Chain Lightning',
+        image_uri_normal: 'http://example.com/chain.jpg',
+        set_name: 'Legends',
+        set_code: 'leg',
+        price_usd: 2.0,
+      },
+    ];
+    mockPool.any.mockResolvedValueOnce(mockResults);
+
+    const caller = cardRouter.createCaller({ session: null });
+    const result = await caller.fuzzySearch({ query: 'ight' });
+
+    expect(result.length).toBeGreaterThan(0);
+    expect(result.every(card => card.name.toLowerCase().includes('ight'))).toBe(
+      true
+    );
+  });
+
+  it('returns cards with all required fields', async () => {
+    const mockResults = [
+      {
+        id: 'card-1',
+        name: 'Lightning Bolt',
+        image_uri_normal: 'http://example.com/bolt.jpg',
+        set_name: 'Alpha',
+        set_code: 'lea',
+        price_usd: 1.5,
+      },
+    ];
+    mockPool.any.mockResolvedValueOnce(mockResults);
+
+    const caller = cardRouter.createCaller({ session: null });
+    const result = await caller.fuzzySearch({ query: 'Lightning' });
+
+    expect(result[0]).toHaveProperty('id');
+    expect(result[0]).toHaveProperty('name');
+    expect(result[0]).toHaveProperty('image_uri_normal');
+    expect(result[0]).toHaveProperty('set_name');
+    expect(result[0]).toHaveProperty('set_code');
+    expect(result[0]).toHaveProperty('price_usd');
+  });
+
+  it('handles cards with null price', async () => {
+    const mockResults = [
+      {
+        id: 'card-1',
+        name: 'Lightning Bolt',
+        image_uri_normal: 'http://example.com/bolt.jpg',
+        set_name: 'Alpha',
+        set_code: 'lea',
+        price_usd: null,
+      },
+    ];
+    mockPool.any.mockResolvedValueOnce(mockResults);
+
+    const caller = cardRouter.createCaller({ session: null });
+    const result = await caller.fuzzySearch({ query: 'Lightning' });
+
+    expect(result[0].price_usd).toBeNull();
+  });
+
+  it('handles cards with null image', async () => {
+    const mockResults = [
+      {
+        id: 'card-1',
+        name: 'Lightning Bolt',
+        image_uri_normal: null,
+        set_name: 'Alpha',
+        set_code: 'lea',
+        price_usd: 1.5,
+      },
+    ];
+    mockPool.any.mockResolvedValueOnce(mockResults);
+
+    const caller = cardRouter.createCaller({ session: null });
+    const result = await caller.fuzzySearch({ query: 'Lightning' });
+
+    expect(result[0].image_uri_normal).toBeNull();
+  });
 });
 
 describe('card.getById', () => {
