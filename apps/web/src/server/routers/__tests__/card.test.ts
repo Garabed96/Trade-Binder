@@ -1,8 +1,9 @@
+import { Mocked, vi } from 'vitest';
 import { cardRouter } from '../card';
 
-jest.mock('@/src/server/db', () => {
-  const mockType = jest.fn(() => {
-    return jest.fn((strings: TemplateStringsArray, ...values: unknown[]) => ({
+vi.mock('@/src/server/db', () => {
+  const mockType = vi.fn(() => {
+    return vi.fn((strings: TemplateStringsArray, ...values: unknown[]) => ({
       strings,
       values,
       sql: strings.join('?'),
@@ -10,24 +11,24 @@ jest.mock('@/src/server/db', () => {
   });
 
   const mockSql = Object.assign(
-    jest.fn((strings: TemplateStringsArray, ...values: unknown[]) => ({
+    vi.fn((strings: TemplateStringsArray, ...values: unknown[]) => ({
       strings,
       values,
       sql: strings.join('?'),
     })),
     {
-      fragment: jest.fn((...args: unknown[]) => ({ type: 'fragment', args })),
-      join: jest.fn((fragments: unknown[], separator?: unknown) => ({
+      fragment: vi.fn((...args: unknown[]) => ({ type: 'fragment', args })),
+      join: vi.fn((fragments: unknown[], separator?: unknown) => ({
         type: 'join',
         fragments,
         separator,
       })),
-      array: jest.fn((values: unknown[], type: string) => ({
+      array: vi.fn((values: unknown[], type: string) => ({
         type: 'array',
         values,
         sqlType: type,
       })),
-      identifier: jest.fn((names: string[]) => ({
+      identifier: vi.fn((names: string[]) => ({
         type: 'identifier',
         names,
       })),
@@ -37,10 +38,10 @@ jest.mock('@/src/server/db', () => {
 
   return {
     pool: {
-      one: jest.fn(),
-      any: jest.fn(),
-      maybeOne: jest.fn(),
-      query: jest.fn(),
+      one: vi.fn(),
+      any: vi.fn(),
+      maybeOne: vi.fn(),
+      query: vi.fn(),
     },
     sql: mockSql,
   };
@@ -48,11 +49,11 @@ jest.mock('@/src/server/db', () => {
 
 import { pool, sql } from '@/src/server/db';
 
-const mockPool = pool as jest.Mocked<typeof pool>;
-const mockSql = sql as jest.Mocked<typeof sql>;
+const mockPool = pool as Mocked<typeof pool>;
+const mockSql = sql as Mocked<typeof sql>;
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe('card.search', () => {
@@ -131,7 +132,8 @@ describe('card.search', () => {
     const caller = cardRouter.createCaller({ session: null });
     await caller.search({ colors: ['W', 'U'] });
 
-    expect(mockSql.array).toHaveBeenCalledWith(['W', 'U'], 'text');
+    // Colors are sorted alphabetically before being passed to sql.array
+    expect(mockSql.array).toHaveBeenCalledWith(['U', 'W'], 'text');
   });
 
   it('calculates pagination correctly', async () => {

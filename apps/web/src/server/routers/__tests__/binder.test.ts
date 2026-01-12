@@ -1,10 +1,11 @@
+import { Mocked, vi } from 'vitest';
 // import { TRPCError } from "@trpc/server";
 import { binderRouter } from '../binder';
 
-jest.mock('@/src/server/db', () => {
+vi.mock('@/src/server/db', () => {
   // Mock sql.type() to return a function that acts as a tagged template
-  const mockType = jest.fn(() => {
-    return jest.fn((strings: TemplateStringsArray, ...values: unknown[]) => ({
+  const mockType = vi.fn(() => {
+    return vi.fn((strings: TemplateStringsArray, ...values: unknown[]) => ({
       strings,
       values,
       // Add any other properties that slonik sql queries have
@@ -13,14 +14,14 @@ jest.mock('@/src/server/db', () => {
   });
 
   const mockSql = Object.assign(
-    jest.fn((strings: TemplateStringsArray, ...values: unknown[]) => ({
+    vi.fn((strings: TemplateStringsArray, ...values: unknown[]) => ({
       strings,
       values,
       sql: strings.join('?'),
     })),
     {
-      fragment: jest.fn((...args: unknown[]) => args),
-      join: jest.fn((fragments: unknown[], separator?: unknown) => ({
+      fragment: vi.fn((...args: unknown[]) => args),
+      join: vi.fn((fragments: unknown[], separator?: unknown) => ({
         fragments,
         separator,
       })),
@@ -30,10 +31,10 @@ jest.mock('@/src/server/db', () => {
 
   return {
     pool: {
-      one: jest.fn(),
-      any: jest.fn(),
-      maybeOne: jest.fn(),
-      query: jest.fn(),
+      one: vi.fn(),
+      any: vi.fn(),
+      maybeOne: vi.fn(),
+      query: vi.fn(),
     },
     sql: mockSql,
   };
@@ -41,7 +42,7 @@ jest.mock('@/src/server/db', () => {
 
 import { pool } from '@/src/server/db';
 
-const mockPool = pool as jest.Mocked<typeof pool>;
+const mockPool = pool as Mocked<typeof pool>;
 
 const createCtx = (userId = 'user-1') => ({
   session: {
@@ -54,7 +55,7 @@ const createCtx = (userId = 'user-1') => ({
 });
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 // Test: create fails when limit reached

@@ -11,20 +11,18 @@
     "prepare": "husky",
     "setup-db": "./scripts/setup-db.sh",
     "import-cards": "bun scripts/import-cards.ts",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
     "bun": "^1.3.5",
     "husky": "^9.1.7",
-    "jest": "^30.2.0",
     "lint-staged": "^16.2.7",
     "prettier": "^3.7.4",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "ts-jest": "^29.4.6",
     "tsx": "^4.21.0",
-    "turbo": "^2.7.2"
+    "turbo": "^2.7.2",
+    "vitest": "^4.0.16"
   },
   "lint-staged": {
     "apps/web/**/*.{js,jsx,ts,tsx,mjs}": [

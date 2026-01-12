@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { router, publicProcedure } from "@/src/server/trpc";
-import { pool, sql } from "@/src/server/db";
+import { z } from 'zod';
+import { router, publicProcedure } from '@/src/server/trpc';
+import { pool, sql } from '@/src/server/db';
 
 export const cardRouter = router({
   listSets: publicProcedure.query(async () => {
@@ -38,8 +38,8 @@ export const cardRouter = router({
         rarity: z.string().optional(),
         set_code: z.string().optional(),
         colors: z.array(z.string()).optional(),
-        orderBy: z.enum(["name", "price_usd", "released_at"]).default("name"),
-        orderDir: z.enum(["ASC", "DESC"]).default("ASC"),
+        orderBy: z.enum(['name', 'price_usd', 'released_at']).default('name'),
+        orderDir: z.enum(['ASC', 'DESC']).default('ASC'),
         page: z.number().default(1),
       })
     )
@@ -50,7 +50,7 @@ export const cardRouter = router({
       const filters = []; // Start with an empty array
 
       if (input.query && input.query.trim().length >= 1) {
-        filters.push(sql.fragment`d.name ILIKE ${"%" + input.query + "%"}`);
+        filters.push(sql.fragment`d.name ILIKE ${'%' + input.query + '%'}`);
       }
 
       if (input.rarity) {
@@ -63,12 +63,19 @@ export const cardRouter = router({
         );
       }
 
-      // Color filtering via the intersection table
+      // Exact color filtering: show only cards with exactly the selected colors
       if (input.colors && input.colors.length > 0) {
+        // Sort colors to ensure consistent comparison
+        const sortedColors = [...input.colors].sort();
+
         filters.push(sql.fragment`EXISTS (
-          SELECT 1 FROM card_design_colors cdc 
-          WHERE cdc.design_id = d.oracle_id 
-          AND cdc.color_id = ANY(${sql.array(input.colors, "text")})
+          SELECT 1 FROM (
+            SELECT design_id, array_agg(color_id ORDER BY color_id) as colors
+            FROM card_design_colors
+            WHERE design_id = d.oracle_id
+            GROUP BY design_id
+          ) cdc
+          WHERE cdc.colors = ${sql.array(sortedColors, 'text')}
         )`);
       }
 
@@ -78,11 +85,11 @@ export const cardRouter = router({
           : sql.fragment``;
 
       const sortColumn =
-        input.orderBy === "name"
-          ? sql.identifier(["d", "name"])
-          : sql.identifier(["p", input.orderBy]);
+        input.orderBy === 'name'
+          ? sql.identifier(['d', 'name'])
+          : sql.identifier(['p', input.orderBy]);
       const sortDir =
-        input.orderDir === "ASC" ? sql.fragment`ASC` : sql.fragment`DESC`;
+        input.orderDir === 'ASC' ? sql.fragment`ASC` : sql.fragment`DESC`;
 
       // 1. Fetch total count for pagination info
       const countResult = await pool.one(sql.type(
@@ -151,7 +158,7 @@ export const cardRouter = router({
         FROM card_designs d
         JOIN card_printings p ON d.oracle_id = p.design_id
         JOIN card_sets s ON p.set_code = s.code
-        WHERE d.name ILIKE ${"%" + input.query + "%"}
+        WHERE d.name ILIKE ${'%' + input.query + '%'}
         ORDER BY d.name ASC
         LIMIT 5
       `);
