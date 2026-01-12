@@ -30,8 +30,8 @@ pnpm dev              # Setup database, run migrations, start dev server
 pnpm build            # Build all apps for production
 pnpm lint             # Run ESLint across all apps
 pnpm type-check       # Run TypeScript type checking
-pnpm test             # Run Jest tests
-pnpm test:watch       # Run Jest in watch mode
+pnpm test             # Run Vitest tests
+pnpm test:watch       # Run Vitest in watch mode
 pnpm setup-db         # Start database and run migrations only
 pnpm clean            # Clean turbo cache and node_modules
 ```
