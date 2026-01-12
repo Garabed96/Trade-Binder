@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { LoginButton } from './LoginButton';
@@ -13,6 +12,7 @@ import { useSearch } from '@/src/context/SearchContext';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import logo from '@/public/my-trade-binder.png';
+import { useScrollVisibility } from '@/src/hooks/useScrollVisibility';
 
 export function Navbar({ minimal = false }: { minimal?: boolean }) {
   const { t } = useTranslation(['common']);
@@ -20,27 +20,10 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
   const params = useParams();
   const locale = (params?.locale as string) || 'en';
   const { query, setQuery, totalMatches } = useSearch();
-  const [navVisible, setNavVisible] = useState(true);
-  const lastScrollY = useRef(0);
+  const navVisible = useScrollVisibility();
 
   const pathname = usePathname();
   const isProfilePage = pathname?.endsWith('/profile');
-
-  // Track scroll direction for nav visibility
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY < lastScrollY.current) {
-        setNavVisible(true);
-      } else if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-        setNavVisible(false);
-      }
-      lastScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <nav

@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
+import { useScrollVisibility } from '@/src/hooks/useScrollVisibility';
 
 interface FilterBarProps {
   rarity: string;
@@ -28,6 +29,7 @@ export function FilterBar({
   toggleSort,
 }: FilterBarProps) {
   const { t } = useTranslation(['common']);
+  const filterVisible = useScrollVisibility();
 
   const colorMap = [
     {
@@ -58,7 +60,9 @@ export function FilterBar({
   ];
 
   return (
-    <div className="relative z-40 w-full border-b border-white/20 bg-white/10 py-4 shadow-lg backdrop-blur-xl md:sticky md:top-20 dark:border-white/5 dark:bg-slate-900/40">
+    <div
+      className={`relative z-40 w-full border-b border-white/20 bg-white/10 py-4 shadow-lg backdrop-blur-xl transition-transform duration-300 dark:border-white/5 dark:bg-slate-900/40 ${filterVisible ? 'md:translate-y-0' : 'md:-translate-y-full'}`}
+    >
       <div className="container-default">
         <div className="flex flex-col gap-6 md:flex-row md:items-center">
           <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:flex md:w-auto md:flex-row">
