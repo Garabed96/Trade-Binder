@@ -132,8 +132,8 @@ describe('card.search', () => {
     const caller = cardRouter.createCaller({ session: null });
     await caller.search({ colors: ['W', 'U'] });
 
-    // Colors are sorted alphabetically before being passed to sql.array
-    expect(mockSql.array).toHaveBeenCalledWith(['U', 'W'], 'text');
+    // Colors are passed as-is to sql.array (no sorting needed with ANY operator)
+    expect(mockSql.array).toHaveBeenCalledWith(['W', 'U'], 'text');
   });
 
   it('calculates pagination correctly', async () => {

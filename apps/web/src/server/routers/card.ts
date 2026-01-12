@@ -65,17 +65,14 @@ export const cardRouter = router({
 
       // Exact color filtering: show only cards with exactly the selected colors
       if (input.colors && input.colors.length > 0) {
-        // Sort colors to ensure consistent comparison
-        const sortedColors = [...input.colors].sort();
-
         filters.push(sql.fragment`EXISTS (
-          SELECT 1 FROM (
-            SELECT design_id, array_agg(color_id ORDER BY color_id) as colors
-            FROM card_design_colors
-            WHERE design_id = d.oracle_id
-            GROUP BY design_id
-          ) cdc
-          WHERE cdc.colors = ${sql.array(sortedColors, 'text')}
+          SELECT 1
+          FROM card_design_colors cdc
+          WHERE cdc.design_id = d.oracle_id
+          GROUP BY cdc.design_id
+          HAVING
+            COUNT(*) = ${input.colors.length}
+            AND COUNT(*) FILTER (WHERE cdc.color_id = ANY(${sql.array(input.colors, 'text')})) = ${input.colors.length}
         )`);
       }
 
