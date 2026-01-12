@@ -153,19 +153,6 @@ export default function SearchPage() {
                     {card.name}
                   </div>
                 )}
-                {/* Card Badges */}
-                <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5">
-                  {card.rarity === 'mythic' && (
-                    <span className="rounded-full bg-orange-500 px-2 py-0.5 text-[9px] font-black text-white uppercase shadow-lg ring-1 ring-white/20">
-                      {t('mythic')}
-                    </span>
-                  )}
-                  {card.rarity === 'rare' && (
-                    <span className="rounded-full bg-yellow-500 px-2 py-0.5 text-[9px] font-black text-white uppercase shadow-lg ring-1 ring-white/20">
-                      {t('rarityRare')}
-                    </span>
-                  )}
-                </div>
                 {/* Overlay on hover */}
                 <div className="absolute inset-0 flex items-end bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <p className="w-full translate-y-2 transform truncate text-[10px] font-black tracking-widest text-white uppercase transition-transform duration-300 group-hover:translate-y-0">
@@ -196,6 +183,16 @@ export default function SearchPage() {
                   <span className="text-base font-black tracking-tight text-blue-600 dark:text-blue-400">
                     {card.price_usd ? `$${card.price_usd.toFixed(2)}` : '—'}
                   </span>
+                  {card.rarity === 'mythic' && (
+                    <span className="rounded-full bg-orange-500 px-2 py-0.5 text-[9px] font-black text-white uppercase shadow-lg ring-1 ring-white/20">
+                      {t('mythic')}
+                    </span>
+                  )}
+                  {card.rarity === 'rare' && (
+                    <span className="rounded-full bg-yellow-500 px-2 py-0.5 text-[9px] font-black text-white uppercase shadow-lg ring-1 ring-white/20">
+                      {t('rarityRare')}
+                    </span>
+                  )}
                 </div>
 
                 {/* Card Options Row */}
