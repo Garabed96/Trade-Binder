@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '@/src/server/trpc';
 import { pool, sql } from '@/src/server/db';
+import { TRPCError } from '@trpc/server';
 
 export const inventoryRouter = router({
   add: protectedProcedure
@@ -101,6 +102,24 @@ export const inventoryRouter = router({
     .input(z.object({ userCardId: z.string().uuid() }))
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
+
+      // Check if card has an active listing
+      const activeListing = await pool.maybeOne(sql.type(
+        z.object({ id: z.string() })
+      )`
+        SELECT id
+        FROM listings
+        WHERE user_card_id = ${input.userCardId} AND status = 'active'
+      `);
+
+      if (activeListing) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message:
+            'Cannot remove a card with an active listing. Cancel the listing first.',
+        });
+      }
+
       await pool.query(sql.type(z.object({}))`
         DELETE FROM user_cards
         WHERE id = ${input.userCardId} AND user_id = ${userId}
@@ -112,6 +131,23 @@ export const inventoryRouter = router({
     .input(z.object({ userCardIds: z.array(z.string().uuid()) }))
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
+
+      // Check if any cards have active listings
+      const activeListings = await pool.any(sql.type(
+        z.object({ user_card_id: z.string() })
+      )`
+        SELECT user_card_id
+        FROM listings
+        WHERE user_card_id = ANY(${sql.array(input.userCardIds, 'uuid')}) AND status = 'active'
+      `);
+
+      if (activeListings.length > 0) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Cannot remove ${activeListings.length} card(s) with active listings. Cancel the listings first.`,
+        });
+      }
+
       await pool.query(sql.type(z.object({}))`
         DELETE FROM user_cards
         WHERE id = ANY(${sql.array(input.userCardIds, 'uuid')}) AND user_id = ${userId}

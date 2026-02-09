@@ -7,7 +7,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { FuzzySearchBar } from './FuzzySearchBar';
 import { useParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Library, Palette } from 'lucide-react';
+import { Library, Palette, Tag } from 'lucide-react';
 import { useSearch } from '@/src/context/SearchContext';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
@@ -60,11 +60,18 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
               {/* Desktop Only Links */}
               <div className="mx-6 hidden items-center gap-4 md:flex">
                 {session && (
-                  <NavLink
-                    href={`/${locale}/binder`}
-                    icon={<Library className="h-4 w-4" />}
-                    label={t('navBinder')}
-                  />
+                  <>
+                    <NavLink
+                      href={`/${locale}/binder`}
+                      icon={<Library className="h-4 w-4" />}
+                      label={t('navBinder')}
+                    />
+                    <NavLink
+                      href={`/${locale}/listings`}
+                      icon={<Tag className="h-4 w-4" />}
+                      label="My Listings"
+                    />
+                  </>
                 )}
                 {process.env.NODE_ENV === 'development' && (
                   <NavLink

@@ -6,6 +6,8 @@ import { inventoryRouter } from './inventory';
 import { binderRouter } from './binder';
 import { marketplaceRouter } from './marketplace';
 import { profileRouter } from './profile';
+import { listingRouter } from './listing';
+import { inquiryRouter } from './inquiry';
 
 export const appRouter = router({
   user: userRouter,
@@ -14,6 +16,8 @@ export const appRouter = router({
   binder: binderRouter,
   marketplace: marketplaceRouter,
   profile: profileRouter,
+  listing: listingRouter,
+  inquiry: inquiryRouter,
 });
 
 export type AppRouter = typeof appRouter;
