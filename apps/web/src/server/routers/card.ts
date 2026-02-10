@@ -31,6 +31,38 @@ export const cardRouter = router({
     `);
   }),
 
+  // Get latest set with a featured card image for homepage hero
+  getLatestSetWithHero: publicProcedure.query(async () => {
+    return await pool.maybeOne(sql.type(
+      z.object({
+        code: z.string(),
+        name: z.string(),
+        released_at: z.string().nullable(),
+        hero_image: z.string().nullable(),
+        card_count: z.number(),
+      })
+    )`
+      SELECT
+        s.code,
+        s.name,
+        s.released_at::text,
+        (
+          SELECT p.image_uri_normal
+          FROM card_printings p
+          WHERE p.set_code = s.code
+            AND p.rarity = 'mythic'
+            AND p.image_uri_normal IS NOT NULL
+          ORDER BY p.price_usd DESC NULLS LAST
+          LIMIT 1
+        ) as hero_image,
+        (SELECT COUNT(*)::int FROM card_printings WHERE set_code = s.code) as card_count
+      FROM card_sets s
+      WHERE s.released_at <= NOW()
+      ORDER BY s.released_at DESC
+      LIMIT 1
+    `);
+  }),
+
   search: publicProcedure
     .input(
       z.object({
@@ -273,6 +305,53 @@ export const cardRouter = router({
         colors: colors.map(c => c.color_id),
         printings,
       };
+    }),
+
+  // Featured cards for homepage carousel (rare/mythic only from public binders)
+  getFeaturedCards: publicProcedure
+    .input(z.object({ limit: z.number().default(12) }))
+    .query(async ({ input }) => {
+      return await pool.any(sql.type(
+        z.object({
+          user_card_id: z.string(),
+          oracle_id: z.string(),
+          name: z.string(),
+          image_uri_normal: z.string().nullable(),
+          set_name: z.string(),
+          set_code: z.string(),
+          rarity: z.string(),
+          is_foil: z.boolean(),
+          market_price: z.number().nullable(),
+          owner_username: z.string(),
+          listing_id: z.string().nullable(),
+          listing_price: z.number().nullable(),
+        })
+      )`
+        SELECT
+          uc.id as user_card_id,
+          d.oracle_id,
+          d.name,
+          p.image_uri_normal,
+          s.name as set_name,
+          p.set_code,
+          p.rarity,
+          uc.is_foil,
+          p.price_usd as market_price,
+          u.username as owner_username,
+          l.id as listing_id,
+          l.price as listing_price
+        FROM user_cards uc
+        JOIN binders b ON uc.user_id = b.user_id
+        JOIN users u ON uc.user_id = u.id
+        JOIN card_printings p ON uc.printing_id = p.id
+        JOIN card_designs d ON p.design_id = d.oracle_id
+        JOIN card_sets s ON p.set_code = s.code
+        LEFT JOIN listings l ON l.user_card_id = uc.id AND l.status = 'active'
+        WHERE b.is_public = TRUE
+          AND p.rarity IN ('rare', 'mythic')
+        ORDER BY RANDOM()
+        LIMIT ${input.limit}
+      `);
     }),
 
   // Get all printings for a design (for edition picker)
