@@ -585,9 +585,15 @@ export default function BinderPageContent() {
                 {/* Card Image */}
                 <div
                   className="relative aspect-[2.5/3.5] cursor-pointer bg-slate-800"
-                  onClick={() =>
-                    router.push(`/${locale}/cards/design/${card.oracle_id}`)
-                  }
+                  onClick={() => {
+                    // If card has a listing, go to marketplace to see it from buyer's perspective
+                    // Otherwise, go to card detail page
+                    if (card.listing_id) {
+                      router.push(`/${locale}/marketplace`);
+                    } else {
+                      router.push(`/${locale}/cards/design/${card.oracle_id}`);
+                    }
+                  }}
                 >
                   {card.image_uri_normal ? (
                     <Image
