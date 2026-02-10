@@ -53,6 +53,7 @@ export const cardRouter = router({
         filters.push(sql.fragment`d.name ILIKE ${'%' + input.query + '%'}`);
       }
 
+      // For rarity/set filters, we filter on printings but still group by design
       if (input.rarity) {
         filters.push(sql.fragment`p.rarity = ${input.rarity}`);
       }
@@ -81,48 +82,58 @@ export const cardRouter = router({
           ? sql.fragment`WHERE ${sql.join(filters, sql.fragment` AND `)}`
           : sql.fragment``;
 
-      const sortColumn =
-        input.orderBy === 'name'
-          ? sql.identifier(['d', 'name'])
-          : sql.identifier(['p', input.orderBy]);
+      // For grouped results, we need to determine sort based on design or representative printing
+      const outerSortColumn = input.orderBy === 'name' ? 'name' : input.orderBy;
       const sortDir =
         input.orderDir === 'ASC' ? sql.fragment`ASC` : sql.fragment`DESC`;
 
-      // 1. Fetch total count for pagination info
+      // 1. Fetch total count of unique designs matching the filters
       const countResult = await pool.one(sql.type(
         z.object({ total: z.number() })
       )`
-        SELECT COUNT(*)::int as total
+        SELECT COUNT(DISTINCT d.oracle_id)::int as total
         FROM card_designs d
-               JOIN card_printings p ON d.oracle_id = p.design_id
-          ${whereClause}
+        JOIN card_printings p ON d.oracle_id = p.design_id
+        ${whereClause}
       `);
 
-      // 2. Fetch the specific page of cards
+      // 2. Fetch grouped results with one representative printing per design
       const results = await pool.any(sql.type(
         z.object({
-          id: z.string(),
+          oracle_id: z.string(),
+          representative_printing_id: z.string(),
           name: z.string(),
           set_name: z.string(),
           set_code: z.string(),
           rarity: z.string(),
           image_uri_normal: z.string().nullable(),
           price_usd: z.number().nullable(),
+          printing_count: z.number(),
         })
       )`
-        SELECT p.id,
-               d.name,
-               s.name as set_name,
-               p.set_code,
-               p.rarity,
-               p.image_uri_normal,
-               p.price_usd
-        FROM card_designs d
-               JOIN card_printings p ON d.oracle_id = p.design_id
-               JOIN card_sets s ON p.set_code = s.code
+        WITH grouped AS (
+          SELECT DISTINCT ON (d.oracle_id)
+                 d.oracle_id,
+                 p.id as representative_printing_id,
+                 d.name,
+                 s.name as set_name,
+                 p.set_code,
+                 p.rarity,
+                 p.image_uri_normal,
+                 p.price_usd,
+                 s.released_at,
+                 (SELECT COUNT(*)::int FROM card_printings WHERE design_id = d.oracle_id) as printing_count
+          FROM card_designs d
+          JOIN card_printings p ON d.oracle_id = p.design_id
+          JOIN card_sets s ON p.set_code = s.code
           ${whereClause}
-        ORDER BY ${sortColumn} ${sortDir}
-          LIMIT ${limit}
+          ORDER BY d.oracle_id, s.released_at DESC NULLS LAST
+        )
+        SELECT oracle_id, representative_printing_id, name, set_name, set_code,
+               rarity, image_uri_normal, price_usd, printing_count
+        FROM grouped
+        ORDER BY ${sql.identifier([outerSortColumn])} ${sortDir} NULLS LAST
+        LIMIT ${limit}
         OFFSET ${offset}
       `);
 
@@ -136,27 +147,33 @@ export const cardRouter = router({
   fuzzySearch: publicProcedure
     .input(z.object({ query: z.string().min(3) }))
     .query(async ({ input }) => {
+      // Group by design, return one result per unique card with printing count
       return await pool.any(sql.type(
         z.object({
-          id: z.string(),
+          oracle_id: z.string(),
           name: z.string(),
+          representative_printing_id: z.string(),
           image_uri_normal: z.string().nullable(),
           set_name: z.string(),
           set_code: z.string(),
           price_usd: z.number().nullable(),
+          printing_count: z.number(),
         })
       )`
-        SELECT p.id,
+        SELECT DISTINCT ON (d.oracle_id)
+               d.oracle_id,
                d.name,
+               p.id as representative_printing_id,
                p.image_uri_normal,
                s.name as set_name,
                p.set_code,
-               p.price_usd
+               p.price_usd,
+               (SELECT COUNT(*)::int FROM card_printings WHERE design_id = d.oracle_id) as printing_count
         FROM card_designs d
         JOIN card_printings p ON d.oracle_id = p.design_id
         JOIN card_sets s ON p.set_code = s.code
         WHERE d.name ILIKE ${'%' + input.query + '%'}
-        ORDER BY d.name ASC
+        ORDER BY d.oracle_id, s.released_at DESC NULLS LAST
         LIMIT 5
       `);
     }),
@@ -167,6 +184,7 @@ export const cardRouter = router({
       return await pool.maybeOne(sql.type(
         z.object({
           id: z.string(),
+          oracle_id: z.string(),
           name: z.string(),
           set_name: z.string(),
           set_code: z.string(),
@@ -179,6 +197,7 @@ export const cardRouter = router({
         })
       )`
       SELECT p.id,
+             d.oracle_id,
              d.name,
              s.name as set_name,
              p.set_code,
@@ -193,5 +212,110 @@ export const cardRouter = router({
              JOIN card_sets s ON p.set_code = s.code
       WHERE p.id = ${input.id}
     `);
+    }),
+
+  // Get card design by oracle_id with all printings
+  getByOracleId: publicProcedure
+    .input(z.object({ oracleId: z.string().uuid() }))
+    .query(async ({ input }) => {
+      // Fetch the design
+      const design = await pool.maybeOne(sql.type(
+        z.object({
+          oracle_id: z.string(),
+          name: z.string(),
+          mana_cost: z.string().nullable(),
+          type_line: z.string().nullable(),
+          oracle_text: z.string().nullable(),
+          cmc: z.number().nullable(),
+        })
+      )`
+        SELECT oracle_id, name, mana_cost, type_line, oracle_text, cmc
+        FROM card_designs
+        WHERE oracle_id = ${input.oracleId}
+      `);
+
+      if (!design) return null;
+
+      // Fetch all printings for this design
+      const printings = await pool.any(sql.type(
+        z.object({
+          id: z.string(),
+          set_code: z.string(),
+          set_name: z.string(),
+          collector_number: z.string().nullable(),
+          rarity: z.string(),
+          image_uri_normal: z.string().nullable(),
+          price_usd: z.number().nullable(),
+          artist: z.string().nullable(),
+          released_at: z.string().nullable(),
+        })
+      )`
+        SELECT p.id, p.set_code, s.name as set_name, p.collector_number,
+               p.rarity, p.image_uri_normal, p.price_usd, p.artist,
+               s.released_at::text
+        FROM card_printings p
+        JOIN card_sets s ON p.set_code = s.code
+        WHERE p.design_id = ${input.oracleId}
+        ORDER BY s.released_at DESC NULLS LAST
+      `);
+
+      // Fetch colors for this design
+      const colors = await pool.any(sql.type(
+        z.object({ color_id: z.string() })
+      )`
+        SELECT color_id
+        FROM card_design_colors
+        WHERE design_id = ${input.oracleId}
+      `);
+
+      return {
+        ...design,
+        colors: colors.map(c => c.color_id),
+        printings,
+      };
+    }),
+
+  // Get all printings for a design (for edition picker)
+  getPrintingsForDesign: publicProcedure
+    .input(
+      z.object({
+        oracleId: z.string().uuid(),
+        sortBy: z
+          .enum(['released_at', 'price_usd', 'set_name'])
+          .default('released_at'),
+        sortDir: z.enum(['ASC', 'DESC']).default('DESC'),
+      })
+    )
+    .query(async ({ input }) => {
+      const sortColumn =
+        input.sortBy === 'set_name'
+          ? sql.identifier(['s', 'name'])
+          : input.sortBy === 'released_at'
+            ? sql.identifier(['s', 'released_at'])
+            : sql.identifier(['p', 'price_usd']);
+      const sortDir =
+        input.sortDir === 'ASC' ? sql.fragment`ASC` : sql.fragment`DESC`;
+
+      return await pool.any(sql.type(
+        z.object({
+          id: z.string(),
+          set_code: z.string(),
+          set_name: z.string(),
+          collector_number: z.string().nullable(),
+          rarity: z.string(),
+          image_uri_normal: z.string().nullable(),
+          price_usd: z.number().nullable(),
+          artist: z.string().nullable(),
+          released_at: z.string().nullable(),
+        })
+      )`
+        SELECT p.id, p.set_code, s.name as set_name, p.collector_number,
+               p.rarity, p.image_uri_normal, p.price_usd, p.artist,
+               s.released_at::text
+        FROM card_printings p
+        JOIN card_sets s ON p.set_code = s.code
+        WHERE p.design_id = ${input.oracleId}
+        ORDER BY ${sortColumn} ${sortDir} NULLS LAST
+      `);
     }),
 });

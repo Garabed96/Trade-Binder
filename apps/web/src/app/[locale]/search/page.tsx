@@ -134,8 +134,8 @@ export default function SearchPage() {
         >
           {data?.cards.map(card => (
             <div
-              onClick={() => router.push(`/cards/${card.id}`)}
-              key={card.id}
+              onClick={() => router.push(`/cards/design/${card.oracle_id}`)}
+              key={card.oracle_id}
               className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/40 bg-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1.5 hover:border-blue-500/50 hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] dark:border-slate-800/60 dark:bg-slate-900/40"
             >
               <div className="relative aspect-[2.5/3.5] overflow-hidden bg-slate-100/50 dark:bg-slate-950">
@@ -173,6 +173,11 @@ export default function SearchPage() {
                     <span className="rounded-md bg-slate-200/50 px-1.5 py-0.5 text-[10px] font-black text-slate-500 uppercase dark:bg-slate-800/80 dark:text-slate-500">
                       {card.set_code}
                     </span>
+                    {card.printing_count > 1 && (
+                      <span className="rounded-md bg-blue-100 px-1.5 py-0.5 text-[10px] font-black text-blue-600 dark:bg-blue-900/50 dark:text-blue-400">
+                        {card.printing_count} ed.
+                      </span>
+                    )}
                     <p className="truncate text-[10px] font-bold tracking-tighter text-slate-500 uppercase dark:text-slate-400">
                       {card.set_name}
                     </p>
@@ -203,7 +208,7 @@ export default function SearchPage() {
                     onClick={e => {
                       e.stopPropagation();
                       addToInventory.mutate({
-                        printingId: card.id,
+                        printingId: card.representative_printing_id,
                         condition: 'Near Mint',
                         isFoil: false,
                         language: 'en',
@@ -227,7 +232,7 @@ export default function SearchPage() {
                     className="/* Glass Base: Light tint of amber/white */ /* Shadow and Glow */ /* Interaction */ flex h-9 w-9 items-center justify-center rounded-xl border border-white/40 bg-white/20 shadow-lg shadow-black/5 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-yellow-400/50 hover:bg-yellow-400/20 active:scale-90 dark:border-white/10 dark:bg-white/5 dark:hover:border-yellow-500/30 dark:hover:bg-yellow-500/10"
                     onClick={e => {
                       e.stopPropagation();
-                      console.log('Add to Wishlist:', card.id);
+                      console.log('Add to Wishlist:', card.oracle_id);
                     }}
                   >
                     <Star className="h-3.5 w-3.5 fill-current text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]" />

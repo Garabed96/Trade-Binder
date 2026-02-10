@@ -11,18 +11,37 @@ export const inventoryRouter = router({
         condition: z.string().optional(),
         isFoil: z.boolean().default(false),
         language: z.string().default('en'),
-        binderId: z.string().uuid().optional().nullable(),
+        binderId: z.string().uuid().optional().nullable(), // Kept for backwards compat but ignored
       })
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
+      const username = ctx.session.user.name || 'My Collection';
+
+      // Get or create user's binder
+      let binder = await pool.maybeOne(sql.type(z.object({ id: z.string() }))`
+        SELECT id FROM binders WHERE user_id = ${userId} LIMIT 1
+      `);
+
+      if (!binder) {
+        binder = await pool.one(sql.type(z.object({ id: z.string() }))`
+          INSERT INTO binders (user_id, name, type, is_public)
+          VALUES (${userId}, ${`${username}'s Collection`}, 'personal', TRUE)
+          RETURNING id
+        `);
+
+        await pool.query(sql.type(z.object({}))`
+          UPDATE users SET default_binder_id = ${binder.id} WHERE id = ${userId}
+        `);
+      }
+
       return await pool.one(sql.type(
         z.object({
           id: z.string(),
         })
       )`
         INSERT INTO user_cards (user_id, printing_id, binder_id, condition, is_foil, language)
-        VALUES (${userId}, ${input.printingId}, ${input.binderId || null}, ${input.condition || null}, ${input.isFoil}, ${input.language})
+        VALUES (${userId}, ${input.printingId}, ${binder.id}, ${input.condition || null}, ${input.isFoil}, ${input.language})
         RETURNING id
       `);
     }),
