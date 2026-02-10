@@ -433,7 +433,8 @@ export const listingRouter = router({
           condition: z.string().nullable(),
           is_foil: z.boolean(),
           seller_username: z.string(),
-          seller_country: z.string().nullable(),
+          seller_country_code: z.string().nullable(),
+          seller_location_name: z.string().nullable(),
         })
       )`
         SELECT
@@ -447,7 +448,8 @@ export const listingRouter = router({
           uc.condition,
           uc.is_foil,
           u.username as seller_username,
-          u.country_code as seller_country
+          u.country_code as seller_country_code,
+          u.location_name as seller_location_name
         FROM listings l
         JOIN user_cards uc ON l.user_card_id = uc.id
         JOIN card_printings p ON uc.printing_id = p.id
