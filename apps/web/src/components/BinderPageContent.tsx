@@ -15,7 +15,6 @@ import {
   Lock,
   Plus,
   DollarSign,
-  Tag,
   MapPin,
 } from 'lucide-react';
 import { EditionPickerModal } from './EditionPickerModal';
