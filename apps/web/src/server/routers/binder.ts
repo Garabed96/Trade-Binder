@@ -333,4 +333,43 @@ export const binderRouter = router({
         cardCount: cards.length,
       };
     }),
+
+  // Get public sellers (users with public binders)
+  getPublicSellers: publicProcedure
+    .input(z.object({ limit: z.number().default(12) }))
+    .query(async ({ input }) => {
+      return await pool.any(sql.type(
+        z.object({
+          user_id: z.string(),
+          username: z.string(),
+          binder_name: z.string(),
+          card_count: z.number(),
+          total_value: z.number().nullable(),
+          preview_images: z.array(z.string().nullable()),
+        })
+      )`
+        SELECT
+          u.id as user_id,
+          u.username,
+          b.name as binder_name,
+          COUNT(uc.id)::int as card_count,
+          SUM(p.price_usd)::numeric as total_value,
+          ARRAY(
+            SELECT p2.image_uri_normal
+            FROM user_cards uc2
+            JOIN card_printings p2 ON uc2.printing_id = p2.id
+            WHERE uc2.user_id = u.id
+            ORDER BY uc2.acquired_at DESC
+            LIMIT 4
+          ) as preview_images
+        FROM users u
+        JOIN binders b ON b.user_id = u.id AND b.is_public = TRUE
+        LEFT JOIN user_cards uc ON uc.user_id = u.id
+        LEFT JOIN card_printings p ON uc.printing_id = p.id
+        GROUP BY u.id, u.username, b.name
+        HAVING COUNT(uc.id) > 0
+        ORDER BY COUNT(uc.id) DESC
+        LIMIT ${input.limit}
+      `);
+    }),
 });
