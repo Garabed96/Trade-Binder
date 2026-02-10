@@ -45,7 +45,7 @@ export const binderRouter = router({
       `);
     }
 
-    // Fetch cards in binder
+    // Fetch cards in binder with listing status
     const cards = await pool.any(sql.type(
       z.object({
         id: z.string(),
@@ -61,6 +61,9 @@ export const binderRouter = router({
         rarity: z.string(),
         price_usd: z.number().nullable(),
         acquired_at: z.string(),
+        listing_id: z.string().nullable(),
+        listing_price: z.number().nullable(),
+        listing_status: z.string().nullable(),
       })
     )`
       SELECT uc.id,
@@ -75,11 +78,15 @@ export const binderRouter = router({
              p.set_code,
              p.rarity,
              p.price_usd,
-             uc.acquired_at::text
+             uc.acquired_at::text,
+             l.id as listing_id,
+             l.price as listing_price,
+             l.status as listing_status
       FROM user_cards uc
              JOIN card_printings p ON uc.printing_id = p.id
              JOIN card_designs d ON p.design_id = d.oracle_id
              JOIN card_sets s ON p.set_code = s.code
+             LEFT JOIN listings l ON l.user_card_id = uc.id AND l.status = 'active'
       WHERE uc.user_id = ${userId}
       ORDER BY uc.acquired_at DESC
     `);
