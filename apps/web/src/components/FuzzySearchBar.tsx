@@ -78,9 +78,9 @@ export function FuzzySearchBar({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleResultClick = (cardId: string) => {
+  const handleResultClick = (oracleId: string) => {
     setIsOpen(false);
-    router.push(`/${locale}/cards/${cardId}`);
+    router.push(`/${locale}/cards/design/${oracleId}`);
   };
 
   const navigateToSearch = () => {
@@ -181,8 +181,8 @@ export function FuzzySearchBar({
             <div className="py-2">
               {results.map(card => (
                 <div
-                  key={card.id}
-                  onClick={() => handleResultClick(card.id)}
+                  key={card.oracle_id}
+                  onClick={() => handleResultClick(card.oracle_id)}
                   className="flex cursor-pointer items-center gap-4 px-4 py-3 transition-colors hover:bg-slate-700/50 dark:hover:bg-slate-800/70"
                 >
                   <div className="relative h-12 w-8 flex-shrink-0 overflow-hidden rounded bg-slate-700 dark:bg-slate-800">
@@ -210,6 +210,11 @@ export function FuzzySearchBar({
                       <span className="truncate text-[10px] text-slate-400 dark:text-slate-500">
                         {card.set_name}
                       </span>
+                      {card.printing_count > 1 && (
+                        <span className="rounded-full bg-slate-600 px-1.5 py-0.5 text-[9px] font-bold text-slate-300">
+                          {card.printing_count} editions
+                        </span>
+                      )}
                     </div>
                   </div>
                   {card.price_usd && (
