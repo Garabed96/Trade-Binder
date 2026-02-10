@@ -228,6 +228,90 @@ export const listingRouter = router({
       return { success: true };
     }),
 
+  // Seller: Re-list a cancelled listing
+  relist: protectedProcedure
+    .input(
+      z.object({
+        listingId: z.string().uuid(),
+        price: z.number().positive().optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id;
+
+      // Verify ownership and status
+      const listing = await pool.maybeOne(sql.type(
+        z.object({
+          id: z.string(),
+          user_id: z.string(),
+          status: z.string(),
+          price: z.number(),
+          user_card_id: z.string(),
+        })
+      )`
+        SELECT id, user_id, status, price, user_card_id
+        FROM listings
+        WHERE id = ${input.listingId}
+      `);
+
+      if (!listing) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Listing not found',
+        });
+      }
+
+      if (listing.user_id !== userId) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'You do not own this listing',
+        });
+      }
+
+      if (listing.status !== 'cancelled') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Only cancelled listings can be re-listed',
+        });
+      }
+
+      // Check if the card still exists and user still owns it
+      const card = await pool.maybeOne(sql.type(z.object({ id: z.string() }))`
+        SELECT id FROM user_cards WHERE id = ${listing.user_card_id} AND user_id = ${userId}
+      `);
+
+      if (!card) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'This card is no longer in your collection',
+        });
+      }
+
+      // Check for any other active listing for this card
+      const existingActive = await pool.maybeOne(sql.type(
+        z.object({ id: z.string() })
+      )`
+        SELECT id FROM listings WHERE user_card_id = ${listing.user_card_id} AND status = 'active'
+      `);
+
+      if (existingActive) {
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'This card already has an active listing',
+        });
+      }
+
+      const newPrice = input.price ?? listing.price;
+
+      await pool.query(sql.type(z.object({}))`
+        UPDATE listings
+        SET status = 'active', price = ${newPrice}, updated_at = NOW()
+        WHERE id = ${input.listingId}
+      `);
+
+      return { success: true };
+    }),
+
   // Buyer: Send inquiry on a listing
   sendInquiry: protectedProcedure
     .input(
@@ -349,7 +433,8 @@ export const listingRouter = router({
           condition: z.string().nullable(),
           is_foil: z.boolean(),
           seller_username: z.string(),
-          seller_country: z.string().nullable(),
+          seller_country_code: z.string().nullable(),
+          seller_location_name: z.string().nullable(),
         })
       )`
         SELECT
@@ -363,7 +448,8 @@ export const listingRouter = router({
           uc.condition,
           uc.is_foil,
           u.username as seller_username,
-          u.country_code as seller_country
+          u.country_code as seller_country_code,
+          u.location_name as seller_location_name
         FROM listings l
         JOIN user_cards uc ON l.user_card_id = uc.id
         JOIN card_printings p ON uc.printing_id = p.id

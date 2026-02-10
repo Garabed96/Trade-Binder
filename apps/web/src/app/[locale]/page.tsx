@@ -16,7 +16,9 @@ import {
   Sparkles,
   ArrowRight,
   Zap,
+  MapPin,
 } from 'lucide-react';
+import { getCountryName } from '@/src/utils/countries';
 
 export default function HomePage() {
   const params = useParams();
@@ -33,6 +35,10 @@ export default function HomePage() {
   // Fetch public sellers
   const { data: sellers, isLoading: loadingSellers } =
     trpc.binder.getPublicSellers.useQuery({ limit: 8 });
+
+  // Fetch marketplace listings
+  const { data: listings, isLoading: loadingListings } =
+    trpc.listing.search.useQuery({ limit: 12 });
 
   const scrollCarousel = (direction: 'left' | 'right') => {
     if (carouselRef.current) {
@@ -86,10 +92,10 @@ export default function HomePage() {
               )}
 
               <h1 className="mb-6 text-5xl leading-tight font-black tracking-tight text-slate-900 md:text-6xl lg:text-7xl dark:text-white">
-                Your Cards.
+                Your Cards
                 <br />
                 <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-amber-500 bg-clip-text text-transparent">
-                  Your Market.
+                  Your Market
                 </span>
               </h1>
 
@@ -311,6 +317,127 @@ export default function HomePage() {
                     @{card.owner_username}
                   </Link>
                 </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Cards For Sale Section */}
+      <section className="container-default py-12">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <ShoppingCart className="h-6 w-6 text-green-600 dark:text-green-400" />
+            <h2 className="text-2xl font-black text-slate-900 dark:text-white">
+              Cards For Sale
+            </h2>
+          </div>
+          <Link
+            href={`/${locale}/marketplace`}
+            className="text-sm font-bold text-blue-600 hover:underline dark:text-blue-400"
+          >
+            View All
+            <ArrowRight className="ml-1 inline h-4 w-4" />
+          </Link>
+        </div>
+
+        {loadingListings && (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+          </div>
+        )}
+
+        {!loadingListings && listings && listings.listings.length === 0 && (
+          <div className="rounded-2xl border border-slate-200 bg-white/50 p-12 text-center backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/50">
+            <ShoppingCart className="mx-auto mb-4 h-12 w-12 text-slate-400" />
+            <h3 className="mb-2 text-lg font-bold text-slate-900 dark:text-white">
+              No listings yet
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400">
+              Be the first to list a card for sale!
+            </p>
+          </div>
+        )}
+
+        {!loadingListings && listings && listings.listings.length > 0 && (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+            {listings.listings.map(listing => (
+              <div key={listing.id} className="flex flex-col gap-2">
+                <div className="group overflow-hidden rounded-xl border border-slate-200 bg-white/50 backdrop-blur-md transition-all hover:border-slate-300 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/50 dark:hover:border-slate-700">
+                  <Link href={`/${locale}/cards/design/${listing.card_id}`}>
+                    <div className="relative aspect-[2.5/3.5] bg-slate-100 dark:bg-slate-800">
+                      {listing.card_image ? (
+                        <Image
+                          src={listing.card_image}
+                          alt={listing.card_name}
+                          fill
+                          className="object-cover transition-transform group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-slate-500">
+                          No Image
+                        </div>
+                      )}
+
+                      {/* Price badge */}
+                      <div className="absolute top-2 right-2 rounded-full bg-green-500 px-2 py-1 text-xs font-black text-white shadow-lg">
+                        ${listing.price.toFixed(2)}
+                      </div>
+
+                      {/* Foil badge */}
+                      {listing.is_foil && (
+                        <div className="absolute bottom-2 left-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-0.5 text-[9px] font-black text-white uppercase">
+                          Foil
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+
+                  <div className="p-3">
+                    <p
+                      className="truncate text-sm font-bold text-slate-900 dark:text-white"
+                      title={listing.card_name}
+                    >
+                      {listing.card_name}
+                    </p>
+                    <div className="mt-1 flex items-center justify-between">
+                      <span className="text-[10px] font-black text-amber-600 uppercase dark:text-amber-400">
+                        {listing.set_code}
+                      </span>
+                      <span className="text-xs text-slate-500">
+                        {listing.condition || 'NM'}
+                      </span>
+                    </div>
+                    <Link
+                      href={`/${locale}/binder/${listing.seller_username}`}
+                      className="mt-1 block text-xs text-blue-600 hover:underline dark:text-blue-400"
+                    >
+                      @{listing.seller_username}
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Location Display - Outside Card */}
+                {(listing.seller_country_code ||
+                  listing.seller_location_name) && (
+                  <div className="rounded-lg border border-blue-200/60 bg-gradient-to-br from-blue-50 to-blue-100/50 px-3 py-2 shadow-sm dark:border-blue-900/40 dark:bg-gradient-to-br dark:from-blue-950/50 dark:to-blue-900/30">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-3.5 w-3.5 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                      <div className="min-w-0 flex-1">
+                        {listing.seller_location_name && (
+                          <div className="truncate text-xs leading-tight font-bold text-slate-900 dark:text-white">
+                            {listing.seller_location_name}
+                          </div>
+                        )}
+                        {listing.seller_country_code && (
+                          <div className="truncate text-[10px] font-semibold text-slate-700 dark:text-slate-300">
+                            {getCountryName(listing.seller_country_code)}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>

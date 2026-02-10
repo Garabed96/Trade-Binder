@@ -14,8 +14,12 @@ import {
   Globe,
   Lock,
   Plus,
+  DollarSign,
+  MapPin,
 } from 'lucide-react';
 import { EditionPickerModal } from './EditionPickerModal';
+import { CreateListingModal } from './CreateListingModal';
+import { ListingBadge } from './ListingBadge';
 
 export default function BinderPageContent() {
   const { status } = useSession();
@@ -48,6 +52,18 @@ export default function BinderPageContent() {
   // Delete confirmation
   const [cardToDelete, setCardToDelete] = useState<string | null>(null);
 
+  // Listing modal state
+  const [listingModalOpen, setListingModalOpen] = useState(false);
+  const [selectedCardForListing, setSelectedCardForListing] = useState<{
+    userCardId: string;
+    name: string;
+    image: string | null;
+    price: number | null;
+  } | null>(null);
+
+  // Location warning modal
+  const [showLocationWarning, setShowLocationWarning] = useState(false);
+
   // Message toast
   const [message, setMessage] = useState<string | null>(null);
 
@@ -61,6 +77,10 @@ export default function BinderPageContent() {
 
   // Queries
   const { data: binder, isLoading } = trpc.binder.get.useQuery(undefined, {
+    enabled: status === 'authenticated',
+  });
+
+  const { data: currentUser } = trpc.user.me.useQuery(undefined, {
     enabled: status === 'authenticated',
   });
 
@@ -105,6 +125,16 @@ export default function BinderPageContent() {
     },
   });
 
+  const cancelListing = trpc.listing.cancel.useMutation({
+    onSuccess: async () => {
+      showToast('Listing cancelled');
+      await utils.binder.get.invalidate();
+    },
+    onError: err => {
+      showToast(`Error: ${err.message}`);
+    },
+  });
+
   const showToast = (msg: string) => {
     setMessage(msg);
     setTimeout(() => setMessage(null), 3000);
@@ -138,6 +168,40 @@ export default function BinderPageContent() {
       isFoil: false,
       language: 'en',
     });
+  };
+
+  // Check if user has location set
+  const hasLocation =
+    currentUser?.latitude != null && currentUser?.longitude != null;
+
+  // Handle listing button click
+  const handleListingClick = (card: {
+    id: string;
+    name: string;
+    image_uri_normal: string | null;
+    listing_id: string | null;
+    price_usd: number | null;
+  }) => {
+    if (card.listing_id) {
+      // Card is already listed, cancel the listing
+      if (confirm(`Cancel listing for ${card.name}?`)) {
+        cancelListing.mutate({ listingId: card.listing_id });
+      }
+    } else {
+      // Check if user has location set before allowing listing
+      if (!hasLocation) {
+        setShowLocationWarning(true);
+        return;
+      }
+      // Open listing modal
+      setSelectedCardForListing({
+        userCardId: card.id,
+        name: card.name,
+        image: card.image_uri_normal,
+        price: card.price_usd,
+      });
+      setListingModalOpen(true);
+    }
   };
 
   // Extract cards for stable dependency
@@ -318,6 +382,62 @@ export default function BinderPageContent() {
           </div>
         )}
 
+        {/* Create Listing Modal */}
+        {selectedCardForListing && (
+          <CreateListingModal
+            isOpen={listingModalOpen}
+            onClose={() => {
+              setListingModalOpen(false);
+              setSelectedCardForListing(null);
+            }}
+            userCardId={selectedCardForListing.userCardId}
+            cardName={selectedCardForListing.name}
+            cardImage={selectedCardForListing.image}
+            defaultPrice={selectedCardForListing.price}
+            onSuccess={() => {
+              showToast('Card listed on marketplace!');
+              utils.binder.get.invalidate();
+            }}
+          />
+        )}
+
+        {/* Location Warning Modal */}
+        {showLocationWarning && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div className="w-full max-w-md rounded-xl border border-amber-600/40 bg-slate-900 p-6 shadow-2xl">
+              <div className="mb-4 flex items-center gap-3">
+                <div className="rounded-full bg-amber-500/20 p-2">
+                  <MapPin className="h-6 w-6 text-amber-400" />
+                </div>
+                <h3 className="text-xl font-bold text-amber-400">
+                  Location Required
+                </h3>
+              </div>
+              <p className="mb-6 text-slate-300">
+                You need to set your location before you can list cards for
+                sale. This helps buyers find sellers near them.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowLocationWarning(false)}
+                  className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 font-medium text-slate-300 hover:bg-slate-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setShowLocationWarning(false);
+                    router.push(`/${locale}/profile`);
+                  }}
+                  className="flex-1 rounded-lg bg-amber-600 px-4 py-2 font-semibold text-white hover:bg-amber-700"
+                >
+                  Set Location
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <header className="mb-8">
           <div className="flex items-start justify-between">
@@ -464,9 +584,15 @@ export default function BinderPageContent() {
                 {/* Card Image */}
                 <div
                   className="relative aspect-[2.5/3.5] cursor-pointer bg-slate-800"
-                  onClick={() =>
-                    router.push(`/${locale}/cards/design/${card.oracle_id}`)
-                  }
+                  onClick={() => {
+                    // If card has a listing, go to marketplace to see it from buyer's perspective
+                    // Otherwise, go to card detail page
+                    if (card.listing_id) {
+                      router.push(`/${locale}/marketplace`);
+                    } else {
+                      router.push(`/${locale}/cards/design/${card.oracle_id}`);
+                    }
+                  }}
                 >
                   {card.image_uri_normal ? (
                     <Image
@@ -479,6 +605,14 @@ export default function BinderPageContent() {
                     <div className="flex h-full w-full items-center justify-center text-slate-500">
                       No Image
                     </div>
+                  )}
+
+                  {/* Listing badge */}
+                  {card.listing_id && (
+                    <ListingBadge
+                      price={card.listing_price || 0}
+                      status="active"
+                    />
                   )}
 
                   {/* Delete button overlay */}
@@ -494,7 +628,7 @@ export default function BinderPageContent() {
 
                   {/* Foil badge */}
                   {card.is_foil && (
-                    <div className="absolute top-2 left-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-0.5 text-[9px] font-black text-white uppercase">
+                    <div className="absolute bottom-2 left-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-0.5 text-[9px] font-black text-white uppercase">
                       Foil
                     </div>
                   )}
@@ -531,6 +665,32 @@ export default function BinderPageContent() {
                       </span>
                     )}
                   </div>
+
+                  {/* Sell / Cancel Listing Button */}
+                  <button
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleListingClick(card);
+                    }}
+                    disabled={cancelListing.isPending}
+                    className={`mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+                      card.listing_id
+                        ? 'border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20'
+                        : 'border border-green-500/30 bg-green-500/10 text-green-400 hover:bg-green-500/20'
+                    } disabled:opacity-50`}
+                  >
+                    {card.listing_id ? (
+                      <>
+                        <X className="h-3 w-3" />
+                        Cancel Listing
+                      </>
+                    ) : (
+                      <>
+                        <DollarSign className="h-3 w-3" />
+                        Sell Card
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             ))}
