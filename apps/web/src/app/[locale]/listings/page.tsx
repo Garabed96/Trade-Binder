@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { trpc } from '@/src/utils/trpc';
 import { Edit2, X, MessageSquare, RotateCcw, Package } from 'lucide-react';
 import Image from 'next/image';
@@ -11,6 +12,7 @@ import { useParams, useRouter } from 'next/navigation';
 type TabType = 'active' | 'sold' | 'cancelled';
 
 export default function MyListingsPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabType>('active');
   const [editingListingId, setEditingListingId] = useState<string | null>(null);
   const [editPrice, setEditPrice] = useState('');
@@ -73,7 +75,7 @@ export default function MyListingsPage() {
   const handleSaveEdit = (listingId: string) => {
     const priceNum = parseFloat(editPrice);
     if (isNaN(priceNum) || priceNum <= 0) {
-      alert('Please enter a valid price');
+      alert(t('page.listings.invalidPrice'));
       return;
     }
 
@@ -84,13 +86,13 @@ export default function MyListingsPage() {
   };
 
   const handleCancelListing = (listingId: string, cardName: string) => {
-    if (confirm(`Cancel listing for ${cardName}?`)) {
+    if (confirm(t('page.listings.confirmCancelListing', { cardName }))) {
       cancelListing.mutate({ listingId });
     }
   };
 
   const handleRelistListing = (listingId: string, cardName: string) => {
-    if (confirm(`Re-list ${cardName} on the marketplace?`)) {
+    if (confirm(t('page.listings.confirmRelistListing', { cardName }))) {
       relistListing.mutate({ listingId });
     }
   };
@@ -100,7 +102,7 @@ export default function MyListingsPage() {
       <div className="container-default py-6 md:py-12">
         {/* Header */}
         <h1 className="mb-8 text-3xl font-black text-slate-900 dark:text-white">
-          My Listings
+          {t('page.listings.myListings')}
         </h1>
 
         {/* Tabs */}
@@ -113,7 +115,7 @@ export default function MyListingsPage() {
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
-            Active
+            {t('page.listings.tabActive')}
             {activeListings && activeListings.length > 0 && (
               <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-xs font-bold text-blue-600 dark:text-blue-400">
                 {activeListings.length}
@@ -128,7 +130,7 @@ export default function MyListingsPage() {
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
-            Sold
+            {t('page.listings.tabSold')}
             {soldListings && soldListings.length > 0 && (
               <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-xs font-bold text-green-600 dark:text-green-400">
                 {soldListings.length}
@@ -143,7 +145,7 @@ export default function MyListingsPage() {
                 : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
-            Cancelled
+            {t('page.listings.tabCancelled')}
             {cancelledListings && cancelledListings.length > 0 && (
               <span className="rounded-full bg-slate-500/20 px-2 py-0.5 text-xs font-bold text-slate-600 dark:text-slate-400">
                 {cancelledListings.length}
@@ -166,22 +168,20 @@ export default function MyListingsPage() {
               <Package className="h-12 w-12 text-slate-400" />
             </div>
             <p className="text-lg font-bold text-slate-700 dark:text-slate-300">
-              No {activeTab} listings
+              {t('page.listings.noListings', { tab: activeTab })}
             </p>
             <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-              {activeTab === 'active' &&
-                "You haven't listed any cards for sale yet. Go to your binder to list cards."}
-              {activeTab === 'sold' &&
-                "You haven't sold any cards yet. Keep your listings active and buyers will find you!"}
+              {activeTab === 'active' && t('page.listings.emptyActiveDesc')}
+              {activeTab === 'sold' && t('page.listings.emptySoldDesc')}
               {activeTab === 'cancelled' &&
-                'No cancelled listings. Good job keeping your listings active!'}
+                t('page.listings.emptyCancelledDesc')}
             </p>
             {activeTab === 'active' && (
               <button
                 onClick={() => router.push(`/${locale}/binder`)}
                 className="mt-6 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-2.5 font-bold text-white shadow-lg transition-all hover:shadow-blue-500/40"
               >
-                Go to Binder
+                {t('page.listings.goToBinder')}
               </button>
             )}
           </div>
@@ -251,13 +251,13 @@ export default function MyListingsPage() {
                           disabled={updateListing.isPending}
                           className="flex-1 rounded-lg bg-blue-600 px-2 py-1 text-xs font-bold text-white hover:bg-blue-700 disabled:opacity-50"
                         >
-                          Save
+                          {t('save')}
                         </button>
                         <button
                           onClick={() => setEditingListingId(null)}
                           className="flex-1 rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs font-bold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                         >
-                          Cancel
+                          {t('cancel')}
                         </button>
                       </div>
                     </div>
@@ -278,8 +278,7 @@ export default function MyListingsPage() {
                           }
                         >
                           <MessageSquare className="h-3 w-3" />
-                          {listing.inquiry_count} inquir
-                          {listing.inquiry_count === 1 ? 'y' : 'ies'}
+                          {t('inquiryCount', { count: listing.inquiry_count })}
                         </button>
                       )}
 
@@ -293,7 +292,7 @@ export default function MyListingsPage() {
                             className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-blue-500/30 bg-blue-500/10 px-2 py-1.5 text-xs font-bold text-blue-700 transition-colors hover:bg-blue-500/20 dark:text-blue-400"
                           >
                             <Edit2 className="h-3 w-3" />
-                            Edit
+                            {t('edit')}
                           </button>
                           <button
                             onClick={() =>
@@ -303,7 +302,7 @@ export default function MyListingsPage() {
                             className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-red-500/30 bg-red-500/10 px-2 py-1.5 text-xs font-bold text-red-700 transition-colors hover:bg-red-500/20 disabled:opacity-50 dark:text-red-400"
                           >
                             <X className="h-3 w-3" />
-                            Cancel
+                            {t('cancel')}
                           </button>
                         </div>
                       )}
@@ -319,7 +318,7 @@ export default function MyListingsPage() {
                             className="flex w-full items-center justify-center gap-1 rounded-lg border border-green-500/30 bg-green-500/10 px-2 py-1.5 text-xs font-bold text-green-700 transition-colors hover:bg-green-500/20 disabled:opacity-50 dark:text-green-400"
                           >
                             <RotateCcw className="h-3 w-3" />
-                            Re-list
+                            {t('page.listings.relist')}
                           </button>
                         </div>
                       )}

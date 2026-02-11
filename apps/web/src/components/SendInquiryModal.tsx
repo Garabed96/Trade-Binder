@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { trpc } from '@/src/utils/trpc';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 interface SendInquiryModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ export function SendInquiryModal({
   sellerUsername,
   onSuccess,
 }: SendInquiryModalProps) {
+  const { t } = useTranslation();
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -66,7 +68,7 @@ export function SendInquiryModal({
 
         {/* Header */}
         <h2 className="mb-4 text-2xl font-black text-slate-900 dark:text-white">
-          Send Inquiry
+          {t('modal.sendInquiry.title')}
         </h2>
 
         {/* Card preview */}
@@ -89,7 +91,8 @@ export function SendInquiryModal({
                 ${price.toFixed(2)}
               </p>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Seller: <span className="font-bold">{sellerUsername}</span>
+                {t('modal.sendInquiry.sellerLabel')}{' '}
+                <span className="font-bold">{sellerUsername}</span>
               </p>
             </div>
           </div>
@@ -98,9 +101,7 @@ export function SendInquiryModal({
         {/* Info box */}
         <div className="mb-4 rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900/50 dark:bg-blue-950/30">
           <p className="text-sm text-blue-900 dark:text-blue-200">
-            <span className="font-bold">How it works:</span> The seller will be
-            notified of your inquiry and can contact you to complete the
-            transaction off-platform.
+            {t('modal.sendInquiry.howItWorks')}
           </p>
         </div>
 
@@ -111,13 +112,13 @@ export function SendInquiryModal({
               htmlFor="message"
               className="mb-2 block text-sm font-bold text-slate-700 dark:text-slate-300"
             >
-              Message (Optional)
+              {t('modal.sendInquiry.messageLabel')}
             </label>
             <textarea
               id="message"
               value={message}
               onChange={e => setMessage(e.target.value)}
-              placeholder="Ask about condition, shipping, etc..."
+              placeholder={t('modal.sendInquiry.messagePlaceholder')}
               rows={4}
               className="w-full rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-900 transition-all outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-blue-400"
               disabled={sendInquiry.isPending}
@@ -137,14 +138,16 @@ export function SendInquiryModal({
               disabled={sendInquiry.isPending}
               className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 font-bold text-slate-700 transition-all hover:bg-slate-50 active:scale-95 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               type="submit"
               disabled={sendInquiry.isPending}
               className="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 font-bold text-white shadow-lg transition-all hover:shadow-blue-500/40 active:scale-95 disabled:opacity-50"
             >
-              {sendInquiry.isPending ? 'Sending...' : 'Send Inquiry'}
+              {sendInquiry.isPending
+                ? t('modal.sendInquiry.sending')
+                : t('modal.sendInquiry.send')}
             </button>
           </div>
         </form>

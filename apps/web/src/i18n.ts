@@ -20,6 +20,7 @@ const resources = {
 
 i18next.use(initReactI18next).init({
   resources,
+  lng: 'en', // Default language - will be overridden by locale from URL
   fallbackLng: 'en',
   defaultNS: 'common',
   ns: ['common', 'home'],

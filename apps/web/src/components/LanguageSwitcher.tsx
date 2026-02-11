@@ -1,18 +1,17 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
   const { i18n } = useTranslation();
   const pathname = usePathname();
+  const router = useRouter();
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'th' : 'en';
 
     document.cookie = `NEXT_LOCALE=${newLang}; path=/; max-age=31536000; SameSite=Lax`;
-
-    i18n.changeLanguage(newLang);
 
     const segments = pathname.split('/').filter(Boolean);
 
@@ -24,8 +23,8 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
 
     const newPathname = '/' + segments.join('/');
 
-    // Use window.history.pushState to change URL without reload
-    window.history.pushState({}, '', newPathname);
+    // Use Next.js router to navigate and trigger re-render with new locale
+    router.push(newPathname);
   };
 
   return (

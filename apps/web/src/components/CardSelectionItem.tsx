@@ -2,6 +2,7 @@
 
 import { Plus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 interface Card {
   id: string;
@@ -35,6 +36,7 @@ export function CardSelectionItem({
   onQuickAdd,
   onDelete,
 }: CardSelectionItemProps) {
+  const { t } = useTranslation();
   const rarityClass =
     rarityStyles[card.rarity as keyof typeof rarityStyles] ||
     rarityStyles.common;
@@ -82,7 +84,7 @@ export function CardSelectionItem({
           e.stopPropagation();
           onQuickAdd(card.id);
         }}
-        title="Quick add to binder"
+        title={t('cardSelection.quickAdd')}
       >
         <Plus className="h-4 w-4 text-white" />
       </button>
@@ -95,7 +97,7 @@ export function CardSelectionItem({
             e.stopPropagation();
             onDelete(card.id);
           }}
-          title="Delete card from collection"
+          title={t('cardSelection.deleteFromCollection')}
         >
           <Trash2 className="h-3.5 w-3.5 text-white" />
         </button>
@@ -113,7 +115,7 @@ export function CardSelectionItem({
           />
         ) : (
           <div className="flex h-full items-center justify-center text-xs text-slate-500">
-            No Image
+            {t('noImage')}
           </div>
         )}
       </div>

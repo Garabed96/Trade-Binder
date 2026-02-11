@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { trpc } from '@/src/utils/trpc';
 import Image from 'next/image';
 import { SendInquiryModal } from '@/src/components/SendInquiryModal';
@@ -27,6 +28,7 @@ interface MarketplaceListing {
 }
 
 export default function MarketplacePage() {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
   const [selectedListing, setSelectedListing] =
@@ -43,7 +45,7 @@ export default function MarketplacePage() {
   };
 
   const handleInquirySuccess = () => {
-    alert('Inquiry sent! The seller will be notified.');
+    alert(t('modal.sendInquiry.send'));
   };
 
   return (
@@ -60,14 +62,12 @@ export default function MarketplacePage() {
 
           {/* Heading with gradient text */}
           <h1 className="mb-4 bg-gradient-to-r from-indigo-700 via-purple-600 to-amber-600 bg-clip-text text-center text-4xl font-black text-transparent md:text-5xl dark:from-amber-300 dark:via-orange-200 dark:to-amber-100">
-            Trade Binder
+            {t('page.marketplace.heroTitle')}
           </h1>
 
           {/* Description */}
           <p className="mb-6 text-center text-lg text-slate-700 dark:text-slate-300">
-            Buy, sell, and trade Magic: The Gathering cards with collectors
-            worldwide. Organize your collection in digital binders and discover
-            the cards you need.
+            {t('page.marketplace.heroDescription')}
           </p>
 
           {/* CTA Buttons */}
@@ -76,7 +76,7 @@ export default function MarketplacePage() {
               href="/search"
               className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-center font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-blue-500/40 active:scale-95"
             >
-              Browse Cards
+              {t('page.marketplace.browseCards')}
             </Link>
             <button
               onClick={() => {
@@ -85,7 +85,7 @@ export default function MarketplacePage() {
               }}
               className="rounded-xl border border-white/40 bg-white/20 px-6 py-3 font-bold text-slate-900 backdrop-blur-md transition-all hover:bg-white/30 active:scale-95 dark:text-white dark:hover:bg-white/10"
             >
-              Learn More
+              {t('page.marketplace.learnMore')}
             </button>
           </div>
         </div>
@@ -94,7 +94,7 @@ export default function MarketplacePage() {
       {/* Feature Cards Section */}
       <section id="features" className="container-default py-12">
         <h2 className="mb-8 text-center text-2xl font-black text-slate-900 dark:text-white">
-          Why Trade Binder?
+          {t('page.marketplace.whyTradeBinder')}
         </h2>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -104,11 +104,10 @@ export default function MarketplacePage() {
               <ShoppingCart className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             </div>
             <h3 className="mb-2 text-xl font-bold text-slate-900 dark:text-white">
-              Buy & Sell Cards
+              {t('page.marketplace.featureBuySell')}
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              List your cards for sale or browse thousands of listings from
-              collectors worldwide.
+              {t('page.marketplace.featureBuySellDesc')}
             </p>
           </div>
 
@@ -118,11 +117,10 @@ export default function MarketplacePage() {
               <Library className="h-6 w-6 text-purple-600 dark:text-purple-400" />
             </div>
             <h3 className="mb-2 text-xl font-bold text-slate-900 dark:text-white">
-              Digital Binders
+              {t('page.marketplace.featureDigitalBinders')}
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              Organize your collection in customizable binders. Track values,
-              rarities, and sets.
+              {t('page.marketplace.featureDigitalBindersDesc')}
             </p>
           </div>
 
@@ -132,11 +130,10 @@ export default function MarketplacePage() {
               <Search className="h-6 w-6 text-amber-600 dark:text-amber-400" />
             </div>
             <h3 className="mb-2 text-xl font-bold text-slate-900 dark:text-white">
-              Advanced Search
+              {t('page.marketplace.featureAdvancedSearch')}
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              Filter by color, rarity, set, and price. Find exactly the cards
-              you&apos;re looking for.
+              {t('page.marketplace.featureAdvancedSearchDesc')}
             </p>
           </div>
         </div>
@@ -148,13 +145,14 @@ export default function MarketplacePage() {
           <div className="mb-2 flex items-center justify-center gap-2">
             <ShoppingCart className="h-6 w-6 text-green-600 dark:text-green-400" />
             <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-              Cards For Sale
+              {t('page.marketplace.cardsForSale')}
             </h2>
           </div>
           {data && data.totalCount > 0 && (
             <p className="text-sm text-slate-600 dark:text-slate-400">
-              {data.totalCount} card{data.totalCount !== 1 ? 's' : ''} available
-              from sellers
+              {t('page.marketplace.availableFromSellers', {
+                count: data.totalCount,
+              })}
             </p>
           )}
         </div>
@@ -165,7 +163,7 @@ export default function MarketplacePage() {
             <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              placeholder="Search cards for sale..."
+              placeholder={t('page.marketplace.searchPlaceholder')}
               value={searchQuery}
               onChange={e => {
                 setSearchQuery(e.target.value);
@@ -192,12 +190,12 @@ export default function MarketplacePage() {
               </div>
             </div>
             <h3 className="mb-2 text-xl font-bold text-slate-900 dark:text-white">
-              No listings found
+              {t('page.marketplace.noListings')}
             </h3>
             <p className="mx-auto max-w-md text-slate-600 dark:text-slate-400">
               {searchQuery
-                ? 'Try adjusting your search'
-                : 'Be the first to list a card!'}
+                ? t('page.marketplace.tryAdjustingSearch')
+                : t('page.marketplace.beFirstToList')}
             </p>
           </div>
         )}
@@ -260,7 +258,7 @@ export default function MarketplacePage() {
                           <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
                           <div className="min-w-0 flex-1">
                             <div className="mb-0.5 text-[10px] font-bold tracking-wide text-blue-600 uppercase dark:text-blue-400">
-                              Ships From
+                              {t('page.marketplace.shipsFrom')}
                             </div>
                             {listing.seller_location_name && (
                               <div className="truncate text-sm font-bold text-slate-900 dark:text-white">
@@ -280,7 +278,7 @@ export default function MarketplacePage() {
                     {/* Seller info */}
                     <div className="text-xs text-slate-500 dark:text-slate-400">
                       <div>
-                        Seller:{' '}
+                        {t('seller')}:{' '}
                         <span className="font-bold">
                           {listing.seller_username}
                         </span>
@@ -299,17 +297,17 @@ export default function MarketplacePage() {
                   onClick={() => setPage(p => p - 1)}
                   className="rounded-lg border border-slate-300 bg-white px-4 py-2 font-bold transition-colors hover:bg-slate-50 disabled:opacity-30 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
                 >
-                  Previous
+                  {t('previous')}
                 </button>
                 <span className="text-sm font-bold text-slate-500 dark:text-slate-400">
-                  Page {page} of {data.totalPages}
+                  {t('pageOf', { page, total: data.totalPages })}
                 </span>
                 <button
                   disabled={page === data.totalPages}
                   onClick={() => setPage(p => p + 1)}
                   className="rounded-lg border border-slate-300 bg-white px-4 py-2 font-bold transition-colors hover:bg-slate-50 disabled:opacity-30 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
                 >
-                  Next
+                  {t('next')}
                 </button>
               </div>
             )}

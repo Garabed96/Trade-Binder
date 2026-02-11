@@ -5,6 +5,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import {
   Search,
   Trash2,
@@ -22,6 +23,7 @@ import { CreateListingModal } from './CreateListingModal';
 import { ListingBadge } from './ListingBadge';
 
 export default function BinderPageContent() {
+  const { t } = useTranslation();
   const { status } = useSession();
   const router = useRouter();
   const params = useParams();
@@ -228,12 +230,12 @@ export default function BinderPageContent() {
   if (status !== 'authenticated') {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
-        <p className="text-slate-400">Please sign in to view your binder</p>
+        <p className="text-slate-400">{t('page.binder.mustSignIn')}</p>
         <button
           onClick={() => router.push(`/${locale}/api/auth/signin`)}
           className="rounded-lg bg-blue-600 px-6 py-2 font-bold text-white hover:bg-blue-700"
         >
-          Sign In
+          {t('signIn')}
         </button>
       </div>
     );
@@ -276,18 +278,17 @@ export default function BinderPageContent() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
             <div className="w-full max-w-md rounded-xl border border-red-600/40 bg-slate-900 p-6 shadow-2xl">
               <h3 className="mb-4 text-xl font-bold text-red-400">
-                Remove Card
+                {t('page.binder.remove')}
               </h3>
               <p className="mb-6 text-slate-300">
-                Are you sure you want to remove this card from your binder? This
-                action cannot be undone.
+                {t('page.binder.removeConfirmation')}
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setCardToDelete(null)}
                   className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 font-medium text-slate-300 hover:bg-slate-700"
                 >
-                  Cancel
+                  {t('cancel')}
                 </button>
                 <button
                   onClick={() =>
@@ -296,7 +297,9 @@ export default function BinderPageContent() {
                   disabled={removeCard.isPending}
                   className="flex-1 rounded-lg bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700 disabled:opacity-50"
                 >
-                  {removeCard.isPending ? 'Removing...' : 'Remove'}
+                  {removeCard.isPending
+                    ? t('page.binder.removing')
+                    : t('remove')}
                 </button>
               </div>
             </div>
@@ -309,7 +312,7 @@ export default function BinderPageContent() {
             <div className="w-full max-w-md rounded-xl border border-slate-700 bg-slate-900 p-6 shadow-2xl">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-xl font-bold text-slate-200">
-                  Binder Settings
+                  {t('page.binder.settings')}
                 </h3>
                 <button
                   onClick={() => setShowSettings(false)}
@@ -322,7 +325,7 @@ export default function BinderPageContent() {
               <div className="space-y-4">
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-400">
-                    Binder Name
+                    {t('page.binder.binderName')}
                   </label>
                   <input
                     type="text"
@@ -334,7 +337,7 @@ export default function BinderPageContent() {
 
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-400">
-                    Description
+                    {t('page.binder.description')}
                   </label>
                   <textarea
                     value={editDescription}
@@ -352,7 +355,7 @@ export default function BinderPageContent() {
                     className="h-5 w-5 rounded border-slate-600 bg-slate-800"
                   />
                   <span className="text-slate-300">
-                    Make binder public (others can view)
+                    {t('page.binder.makePublic')}
                   </span>
                 </label>
               </div>
@@ -362,7 +365,7 @@ export default function BinderPageContent() {
                   onClick={() => setShowSettings(false)}
                   className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 font-medium text-slate-300 hover:bg-slate-700"
                 >
-                  Cancel
+                  {t('cancel')}
                 </button>
                 <button
                   onClick={() =>
@@ -375,7 +378,7 @@ export default function BinderPageContent() {
                   disabled={updateBinder.isPending}
                   className="flex-1 rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
                 >
-                  {updateBinder.isPending ? 'Saving...' : 'Save'}
+                  {updateBinder.isPending ? t('page.binder.saving') : t('save')}
                 </button>
               </div>
             </div>
@@ -410,19 +413,18 @@ export default function BinderPageContent() {
                   <MapPin className="h-6 w-6 text-amber-400" />
                 </div>
                 <h3 className="text-xl font-bold text-amber-400">
-                  Location Required
+                  {t('page.binder.locationRequired')}
                 </h3>
               </div>
               <p className="mb-6 text-slate-300">
-                You need to set your location before you can list cards for
-                sale. This helps buyers find sellers near them.
+                {t('page.binder.locationRequiredDescription')}
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowLocationWarning(false)}
                   className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 font-medium text-slate-300 hover:bg-slate-700"
                 >
-                  Cancel
+                  {t('cancel')}
                 </button>
                 <button
                   onClick={() => {
@@ -431,7 +433,7 @@ export default function BinderPageContent() {
                   }}
                   className="flex-1 rounded-lg bg-amber-600 px-4 py-2 font-semibold text-white hover:bg-amber-700"
                 >
-                  Set Location
+                  {t('page.binder.setLocation')}
                 </button>
               </div>
             </div>
@@ -443,7 +445,7 @@ export default function BinderPageContent() {
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-3xl font-black text-slate-100 md:text-4xl">
-                {binder?.name || 'My Binder'}
+                {binder?.name || t('page.home.myBinder')}
               </h1>
               {binder?.description && (
                 <p className="mt-2 text-slate-400">{binder.description}</p>
@@ -453,20 +455,22 @@ export default function BinderPageContent() {
                   {binder?.is_public ? (
                     <>
                       <Globe className="h-4 w-4" />
-                      Public
+                      {t('page.binder.public')}
                     </>
                   ) : (
                     <>
                       <Lock className="h-4 w-4" />
-                      Private
+                      {t('page.binder.private')}
                     </>
                   )}
                 </span>
                 <span className="text-slate-400">
-                  {binder?.cardCount || 0} cards
+                  {t('cardsCount', { count: binder?.cardCount || 0 })}
                 </span>
                 <span className="font-bold text-blue-400">
-                  ${totalValue.toFixed(2)} total value
+                  {t('page.binder.totalValue', {
+                    value: totalValue.toFixed(2),
+                  })}
                 </span>
               </div>
             </div>
@@ -491,7 +495,7 @@ export default function BinderPageContent() {
                 setShowSearchResults(true);
               }}
               onFocus={() => setShowSearchResults(true)}
-              placeholder="Search cards to add to your binder..."
+              placeholder={t('page.binder.searchPlaceholder')}
               className="w-full rounded-xl border border-slate-700 bg-slate-900/50 py-3 pr-4 pl-12 text-slate-200 placeholder-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
             />
             {isSearching && (
@@ -533,7 +537,9 @@ export default function BinderPageContent() {
                           <span>{card.set_name}</span>
                           {card.printing_count > 1 && (
                             <span className="rounded bg-slate-700 px-1.5 py-0.5 text-slate-300">
-                              {card.printing_count} editions
+                              {t('page.binder.editions', {
+                                count: card.printing_count,
+                              })}
                             </span>
                           )}
                         </div>
@@ -544,7 +550,7 @@ export default function BinderPageContent() {
                 </div>
               ) : (
                 <div className="p-4 text-center text-slate-400">
-                  No cards found for &quot;{debouncedSearch}&quot;
+                  {t('noResults')} &quot;{debouncedSearch}&quot;
                 </div>
               )}
             </div>
@@ -567,7 +573,7 @@ export default function BinderPageContent() {
               type="text"
               value={filterQuery}
               onChange={e => setFilterQuery(e.target.value)}
-              placeholder="Filter your binder..."
+              placeholder={t('page.binder.filterPlaceholder')}
               className="w-full rounded-lg border border-slate-700 bg-slate-900/50 py-2 pr-4 pl-10 text-sm text-slate-200 placeholder-slate-500 focus:border-blue-500 focus:outline-none"
             />
           </div>
@@ -603,7 +609,7 @@ export default function BinderPageContent() {
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center text-slate-500">
-                      No Image
+                      {t('noImage')}
                     </div>
                   )}
 
@@ -629,7 +635,7 @@ export default function BinderPageContent() {
                   {/* Foil badge */}
                   {card.is_foil && (
                     <div className="absolute bottom-2 left-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-0.5 text-[9px] font-black text-white uppercase">
-                      Foil
+                      {t('foil')}
                     </div>
                   )}
                 </div>
@@ -682,12 +688,12 @@ export default function BinderPageContent() {
                     {card.listing_id ? (
                       <>
                         <X className="h-3 w-3" />
-                        Cancel Listing
+                        {t('page.binder.cancelListing')}
                       </>
                     ) : (
                       <>
                         <DollarSign className="h-3 w-3" />
-                        Sell Card
+                        {t('page.binder.sellCard')}
                       </>
                     )}
                   </button>
@@ -699,13 +705,13 @@ export default function BinderPageContent() {
           <div className="rounded-xl border border-dashed border-slate-700 bg-slate-900/30 p-12 text-center">
             <p className="mb-2 text-lg font-bold text-slate-400">
               {filterQuery
-                ? 'No cards match your filter'
-                : 'Your binder is empty'}
+                ? t('page.binder.noCardsMatchFilter')
+                : t('page.binder.binderEmpty')}
             </p>
             <p className="text-sm text-slate-500">
               {filterQuery
-                ? 'Try a different search term'
-                : 'Use the search bar above to find and add cards'}
+                ? t('page.binder.tryDifferentSearch')
+                : t('page.binder.useSearchBar')}
             </p>
           </div>
         )}

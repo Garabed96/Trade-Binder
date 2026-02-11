@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRef } from 'react';
 import { useParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 import { trpc } from '@/src/utils/trpc';
 import {
   Library,
@@ -24,6 +25,7 @@ export default function HomePage() {
   const params = useParams();
   const locale = (params?.locale as string) || 'en';
   const carouselRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   // Fetch latest set for hero background
   const { data: latestSet } = trpc.card.getLatestSetWithHero.useQuery();
@@ -83,25 +85,26 @@ export default function HomePage() {
                   className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-sm font-bold text-amber-700 transition-all hover:border-amber-500/50 hover:bg-amber-500/20 dark:text-amber-400"
                 >
                   <Zap className="h-4 w-4" />
-                  <span>NEW: {latestSet.name}</span>
+                  <span>
+                    {t('page.home.newSet', { setName: latestSet.name })}
+                  </span>
                   <span className="text-amber-600/60 dark:text-amber-500/60">
-                    {latestSet.card_count} cards
+                    {t('cardsCount', { count: latestSet.card_count })}
                   </span>
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               )}
 
               <h1 className="mb-6 text-5xl leading-tight font-black tracking-tight text-slate-900 md:text-6xl lg:text-7xl dark:text-white">
-                Your Cards
+                {t('page.home.yourCards')}
                 <br />
                 <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-amber-500 bg-clip-text text-transparent">
-                  Your Market
+                  {t('page.home.yourMarket')}
                 </span>
               </h1>
 
               <p className="mb-8 max-w-lg text-lg text-slate-600 md:text-xl dark:text-slate-400">
-                Buy, sell, and trade Magic: The Gathering cards. Organize your
-                collection in digital binders and connect with collectors.
+                {t('page.home.heroDescription')}
               </p>
 
               <div className="flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
@@ -109,7 +112,7 @@ export default function HomePage() {
                   href={`/${locale}/search`}
                   className="group inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5 hover:bg-blue-500 hover:shadow-blue-500/40 active:scale-95"
                 >
-                  Browse Cards
+                  {t('page.marketplace.browseCards')}
                   <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Link>
                 <Link
@@ -117,7 +120,7 @@ export default function HomePage() {
                   className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-slate-300 bg-white/80 px-8 py-4 text-lg font-bold text-slate-900 backdrop-blur-sm transition-all hover:border-slate-400 hover:bg-white active:scale-95 dark:border-slate-700 dark:bg-slate-800/80 dark:text-white dark:hover:border-slate-600 dark:hover:bg-slate-800"
                 >
                   <Library className="h-5 w-5" />
-                  My Binder
+                  {t('page.home.myBinder')}
                 </Link>
               </div>
             </div>
@@ -158,10 +161,10 @@ export default function HomePage() {
             </div>
             <div>
               <h3 className="mb-1 text-lg font-bold text-slate-900 dark:text-white">
-                Buy & Sell
+                {t('page.home.featureBuySell')}
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                List cards for sale or browse listings from collectors
+                {t('page.home.featureBuySellDesc')}
               </p>
             </div>
           </div>
@@ -172,10 +175,10 @@ export default function HomePage() {
             </div>
             <div>
               <h3 className="mb-1 text-lg font-bold text-slate-900 dark:text-white">
-                Digital Binders
+                {t('page.home.featureDigitalBinders')}
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Organize your collection and track values
+                {t('page.home.featureDigitalBindersDesc')}
               </p>
             </div>
           </div>
@@ -186,10 +189,10 @@ export default function HomePage() {
             </div>
             <div>
               <h3 className="mb-1 text-lg font-bold text-slate-900 dark:text-white">
-                Advanced Search
+                {t('page.home.featureAdvancedSearch')}
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Filter by color, rarity, set, and price
+                {t('page.home.featureAdvancedSearchDesc')}
               </p>
             </div>
           </div>
@@ -202,7 +205,7 @@ export default function HomePage() {
           <div className="flex items-center gap-3">
             <Sparkles className="h-6 w-6 text-amber-500" />
             <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-              Featured Cards
+              {t('page.home.featuredCards')}
             </h2>
           </div>
           <div className="flex gap-2">
@@ -231,10 +234,10 @@ export default function HomePage() {
           <div className="rounded-2xl border border-slate-200 bg-white/50 p-12 text-center backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/50">
             <Sparkles className="mx-auto mb-4 h-12 w-12 text-slate-400" />
             <h3 className="mb-2 text-lg font-bold text-slate-900 dark:text-white">
-              No featured cards yet
+              {t('page.home.noFeaturedCards')}
             </h3>
             <p className="text-slate-600 dark:text-slate-400">
-              Be the first to add rare cards to your public binder!
+              {t('page.home.noFeaturedCardsDesc')}
             </p>
           </div>
         )}
@@ -262,7 +265,7 @@ export default function HomePage() {
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center text-slate-500">
-                        No Image
+                        {t('noImage')}
                       </div>
                     )}
 
@@ -287,7 +290,7 @@ export default function HomePage() {
                     {/* Foil badge */}
                     {card.is_foil && (
                       <div className="absolute bottom-2 left-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-0.5 text-[9px] font-black text-white uppercase">
-                        Foil
+                        {t('foil')}
                       </div>
                     )}
                   </div>
@@ -329,14 +332,14 @@ export default function HomePage() {
           <div className="flex items-center gap-3">
             <ShoppingCart className="h-6 w-6 text-green-600 dark:text-green-400" />
             <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-              Cards For Sale
+              {t('page.home.featuredCards')}
             </h2>
           </div>
           <Link
             href={`/${locale}/marketplace`}
             className="text-sm font-bold text-blue-600 hover:underline dark:text-blue-400"
           >
-            View All
+            {t('page.home.viewAll')}
             <ArrowRight className="ml-1 inline h-4 w-4" />
           </Link>
         </div>
@@ -351,10 +354,10 @@ export default function HomePage() {
           <div className="rounded-2xl border border-slate-200 bg-white/50 p-12 text-center backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/50">
             <ShoppingCart className="mx-auto mb-4 h-12 w-12 text-slate-400" />
             <h3 className="mb-2 text-lg font-bold text-slate-900 dark:text-white">
-              No listings yet
+              {t('page.home.noListingsYet')}
             </h3>
             <p className="text-slate-600 dark:text-slate-400">
-              Be the first to list a card for sale!
+              {t('page.home.noListingsYetDesc')}
             </p>
           </div>
         )}
@@ -375,7 +378,7 @@ export default function HomePage() {
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center text-slate-500">
-                          No Image
+                          {t('noImage')}
                         </div>
                       )}
 
@@ -387,7 +390,7 @@ export default function HomePage() {
                       {/* Foil badge */}
                       {listing.is_foil && (
                         <div className="absolute bottom-2 left-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-0.5 text-[9px] font-black text-white uppercase">
-                          Foil
+                          {t('foil')}
                         </div>
                       )}
                     </div>
@@ -449,7 +452,7 @@ export default function HomePage() {
         <div className="mb-6 flex items-center gap-3">
           <Users className="h-6 w-6 text-purple-500" />
           <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-            Browse Collections
+            {t('page.home.browseCollections')}
           </h2>
         </div>
 
@@ -463,10 +466,10 @@ export default function HomePage() {
           <div className="rounded-2xl border border-slate-200 bg-white/50 p-12 text-center backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/50">
             <Users className="mx-auto mb-4 h-12 w-12 text-slate-400" />
             <h3 className="mb-2 text-lg font-bold text-slate-900 dark:text-white">
-              No public collections yet
+              {t('page.home.noPublicCollections')}
             </h3>
             <p className="text-slate-600 dark:text-slate-400">
-              Make your binder public to appear here!
+              {t('page.home.noPublicCollectionsDesc')}
             </p>
           </div>
         )}
@@ -517,11 +520,13 @@ export default function HomePage() {
                   </div>
                   <div className="mt-3 flex items-center gap-4 text-sm">
                     <span className="text-slate-600 dark:text-slate-400">
-                      {seller.card_count} cards
+                      {t('cardsCount', { count: seller.card_count })}
                     </span>
                     {seller.total_value && (
                       <span className="font-bold text-blue-600 dark:text-blue-400">
-                        ~${Number(seller.total_value).toFixed(0)} value
+                        {t('page.home.approxValue', {
+                          value: Number(seller.total_value).toFixed(0),
+                        })}
                       </span>
                     )}
                   </div>

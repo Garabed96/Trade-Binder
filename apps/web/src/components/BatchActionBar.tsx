@@ -1,6 +1,7 @@
 'use client';
 
 import { ArrowRight, Loader2, Trash2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface BatchActionBarProps {
   selectedCount: number;
@@ -17,13 +18,14 @@ export function BatchActionBar({
   onDelete,
   isLoading,
 }: BatchActionBarProps) {
+  const { t } = useTranslation();
   if (selectedCount === 0) return null;
 
   return (
     <div className="animate-in slide-in-from-bottom-4 fixed bottom-8 left-1/2 z-40 -translate-x-1/2">
       <div className="flex items-center gap-3 rounded-full border border-blue-500/60 bg-slate-900/90 px-6 py-3 shadow-[0_0_30px_rgba(59,130,246,0.3)] backdrop-blur-xl">
         <span className="text-sm font-semibold text-slate-200">
-          {selectedCount} card{selectedCount !== 1 ? 's' : ''} selected
+          {t('cardsSelected', { count: selectedCount })}
         </span>
 
         <div className="h-6 w-px bg-slate-700" />
@@ -33,7 +35,7 @@ export function BatchActionBar({
           disabled={isLoading}
           className="text-sm font-medium text-slate-400 transition hover:text-slate-200 disabled:opacity-50"
         >
-          Cancel
+          {t('cancel')}
         </button>
 
         <button
@@ -44,11 +46,11 @@ export function BatchActionBar({
           {isLoading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Adding...
+              {t('batchAction.adding')}
             </>
           ) : (
             <>
-              Add to Binder
+              {t('batchAction.addToBinder')}
               <ArrowRight className="h-4 w-4" />
             </>
           )}
@@ -61,7 +63,7 @@ export function BatchActionBar({
             className="flex items-center gap-2 rounded-full bg-gradient-to-r from-red-600 to-red-700 px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110 disabled:opacity-50"
           >
             <Trash2 className="h-4 w-4" />
-            Delete
+            {t('delete')}
           </button>
         )}
       </div>

@@ -4,6 +4,7 @@ import React from 'react';
 import { X, Check, XCircle, CheckCircle } from 'lucide-react';
 import { trpc } from '@/src/utils/trpc';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 interface InquiriesModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export function InquiriesModal({
   listingId,
   viewMode,
 }: InquiriesModalProps) {
+  const { t } = useTranslation();
   const utils = trpc.useUtils();
 
   // Fetch inquiries based on view mode
@@ -70,7 +72,9 @@ export function InquiriesModal({
             <X className="h-5 w-5" />
           </button>
           <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-            {viewMode === 'seller' ? 'Received Inquiries' : 'Your Inquiries'}
+            {viewMode === 'seller'
+              ? t('modal.inquiries.titleReceived')
+              : t('modal.inquiries.titleYours')}
           </h2>
         </div>
 
@@ -89,7 +93,7 @@ export function InquiriesModal({
             (!filteredInquiries || filteredInquiries.length === 0) && (
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-8 text-center dark:border-slate-800 dark:bg-slate-950">
                 <p className="text-slate-600 dark:text-slate-400">
-                  No inquiries yet
+                  {t('modal.inquiries.noInquiries')}
                 </p>
               </div>
             )}
@@ -131,7 +135,7 @@ export function InquiriesModal({
                   {/* User info */}
                   <div className="mb-3 rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900">
                     <p className="mb-1 text-sm font-bold text-slate-700 dark:text-slate-300">
-                      {viewMode === 'seller' ? 'Buyer' : 'Seller'}:{' '}
+                      {viewMode === 'seller' ? t('buyer') : t('seller')}:{' '}
                       {viewMode === 'seller'
                         ? (inquiry as { buyer_username: string }).buyer_username
                         : (inquiry as { seller_username: string })
@@ -142,7 +146,7 @@ export function InquiriesModal({
                       (viewMode === 'buyer' &&
                         inquiry.status === 'accepted')) && (
                       <p className="text-xs text-slate-600 dark:text-slate-400">
-                        Email:{' '}
+                        {t('modal.inquiries.emailLabel')}{' '}
                         {viewMode === 'seller'
                           ? (inquiry as { buyer_email: string }).buyer_email
                           : (inquiry as { seller_email: string | null })
@@ -155,7 +159,7 @@ export function InquiriesModal({
                   {inquiry.message && (
                     <div className="mb-3 rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900">
                       <p className="text-xs font-bold text-slate-500 uppercase dark:text-slate-400">
-                        Message:
+                        {t('modal.inquiries.messageLabel')}
                       </p>
                       <p className="text-sm text-slate-700 dark:text-slate-300">
                         {inquiry.message}
@@ -178,7 +182,7 @@ export function InquiriesModal({
                         className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-green-600 px-3 py-2 text-sm font-bold text-white transition-colors hover:bg-green-700 disabled:opacity-50"
                       >
                         <Check className="h-4 w-4" />
-                        Accept
+                        {t('modal.inquiries.accept')}
                       </button>
                       <button
                         onClick={() =>
@@ -192,7 +196,7 @@ export function InquiriesModal({
                         className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-red-600 px-3 py-2 text-sm font-bold text-white transition-colors hover:bg-red-700 disabled:opacity-50"
                       >
                         <XCircle className="h-4 w-4" />
-                        Decline
+                        {t('modal.inquiries.decline')}
                       </button>
                     </div>
                   )}
@@ -211,7 +215,7 @@ export function InquiriesModal({
                       className="flex w-full items-center justify-center gap-1 rounded-lg bg-blue-600 px-3 py-2 text-sm font-bold text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
                     >
                       <CheckCircle className="h-4 w-4" />
-                      Mark as Completed
+                      {t('modal.inquiries.markCompleted')}
                     </button>
                   )}
                 </div>
