@@ -1,6 +1,7 @@
 'use client';
 
 import { Book } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface Binder {
   id: string;
@@ -21,6 +22,7 @@ export function BinderSidebarCard({
   isSelected,
   onClick,
 }: BinderSidebarCardProps) {
+  const { t } = useTranslation();
   const progressPercent = binder.target_capacity
     ? Math.min((binder.card_count / binder.target_capacity) * 100, 100)
     : 0;
@@ -64,10 +66,13 @@ export function BinderSidebarCard({
           <div className="mt-2 text-xs text-slate-400">
             {binder.target_capacity ? (
               <>
-                {binder.card_count} / {binder.target_capacity} cards
+                {t('binderProgress.cardsOfTarget', {
+                  current: binder.card_count,
+                  target: binder.target_capacity,
+                })}
               </>
             ) : (
-              <>{binder.card_count} cards</>
+              <>{t('cardsCount', { count: binder.card_count })}</>
             )}
           </div>
         </div>

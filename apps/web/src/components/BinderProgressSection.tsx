@@ -2,6 +2,7 @@
 
 import { Trash2 } from 'lucide-react';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 import { MilestoneBadges } from './MilestoneBadges';
 
 interface Card {
@@ -31,6 +32,7 @@ export function BinderProgressSection({
   cardCount,
   onRemoveCard,
 }: BinderProgressSectionProps) {
+  const { t } = useTranslation();
   const progressPercent = binder.target_capacity
     ? Math.min((cardCount / binder.target_capacity) * 100, 100)
     : 0;
@@ -49,9 +51,14 @@ export function BinderProgressSection({
       {binder.target_capacity ? (
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-400">Progress</span>
+            <span className="text-slate-400">
+              {t('binderProgress.progress')}
+            </span>
             <span className="font-semibold text-slate-200">
-              {cardCount} / {binder.target_capacity} cards
+              {t('binderProgress.cardsOfTarget', {
+                current: cardCount,
+                target: binder.target_capacity,
+              })}
             </span>
           </div>
           <div className="h-4 w-full overflow-hidden rounded-full bg-slate-800/50">
@@ -61,13 +68,15 @@ export function BinderProgressSection({
             />
           </div>
           <div className="text-center text-xs text-slate-500">
-            {progressPercent.toFixed(0)}% complete
+            {t('binderProgress.percentComplete', {
+              percent: progressPercent.toFixed(0),
+            })}
           </div>
         </div>
       ) : (
         <div className="rounded-lg border border-slate-700/60 bg-slate-900/40 p-3 text-center">
           <p className="text-sm text-slate-400">
-            Unlimited capacity • {cardCount} cards
+            {t('binderProgress.unlimitedCapacity', { count: cardCount })}
           </p>
         </div>
       )}
@@ -82,7 +91,7 @@ export function BinderProgressSection({
       {recentCards.length > 0 && (
         <div className="space-y-2">
           <h4 className="text-sm font-semibold text-slate-300">
-            Recently Added
+            {t('binderProgress.recentlyAdded')}
           </h4>
           <div className="grid grid-cols-3 gap-2">
             {recentCards.slice(0, 6).map(card => (
@@ -100,7 +109,9 @@ export function BinderProgressSection({
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center">
-                    <span className="text-xs text-slate-500">No Image</span>
+                    <span className="text-xs text-slate-500">
+                      {t('noImage')}
+                    </span>
                   </div>
                 )}
 
@@ -108,7 +119,7 @@ export function BinderProgressSection({
                 <button
                   onClick={() => onRemoveCard(card.id)}
                   className="absolute inset-0 flex items-center justify-center bg-black/70 opacity-0 transition group-hover:opacity-100"
-                  title={`Remove ${card.name}`}
+                  title={t('binderProgress.remove', { cardName: card.name })}
                 >
                   <Trash2 className="h-6 w-6 text-red-400" />
                 </button>
@@ -122,7 +133,7 @@ export function BinderProgressSection({
       {recentCards.length === 0 && (
         <div className="rounded-lg border border-dashed border-slate-700 bg-slate-900/40 p-6 text-center">
           <p className="text-sm text-slate-500">
-            No cards in this binder yet. Start adding cards to begin!
+            {t('binderProgress.emptyState')}
           </p>
         </div>
       )}

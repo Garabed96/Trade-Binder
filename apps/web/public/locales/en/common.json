@@ -45,5 +45,213 @@
   "username": "Username",
   "registrationSuccess": "Registration successful! Please sign in.",
   "signedInAs": "Signed in as",
-  "signOut": "Sign out"
+  "signOut": "Sign out",
+
+  "cancel": "Cancel",
+  "save": "Save",
+  "edit": "Edit",
+  "delete": "Delete",
+  "loading": "Loading...",
+  "error": "Error",
+  "success": "Success",
+  "add": "Add",
+  "remove": "Remove",
+  "back": "Back",
+  "close": "Close",
+  "noImage": "No Image",
+  "foil": "Foil",
+  "by": "by",
+  "seller": "Seller",
+  "buyer": "Buyer",
+  "price": "Price",
+  "set": "Set",
+  "condition": "Condition",
+  "message": "Message",
+  "status": "Status",
+
+  "cardsSelected_one": "{{count}} card selected",
+  "cardsSelected_other": "{{count}} cards selected",
+  "cardsCount_one": "{{count}} card",
+  "cardsCount_other": "{{count}} cards",
+  "inquiryCount_one": "{{count}} inquiry",
+  "inquiryCount_other": "{{count}} inquiries",
+
+  "modal": {
+    "createListing": {
+      "title": "Create Listing",
+      "description": "This card will be listed on the marketplace",
+      "marketPrice": "Market price: ${{price}}",
+      "listingPrice": "Listing Price",
+      "creating": "Creating...",
+      "create": "Create Listing",
+      "errorInvalidPrice": "Please enter a valid price greater than $0"
+    },
+    "sendInquiry": {
+      "title": "Send Inquiry",
+      "sellerLabel": "Seller:",
+      "howItWorks": "How it works: The seller will be notified of your inquiry and can contact you to complete the transaction off-platform.",
+      "messageLabel": "Message (Optional)",
+      "messagePlaceholder": "Ask about condition, shipping, etc...",
+      "sending": "Sending...",
+      "send": "Send Inquiry"
+    },
+    "inquiries": {
+      "titleReceived": "Received Inquiries",
+      "titleYours": "Your Inquiries",
+      "noInquiries": "No inquiries yet",
+      "emailLabel": "Email:",
+      "messageLabel": "Message:",
+      "accept": "Accept",
+      "decline": "Decline",
+      "markCompleted": "Mark as Completed"
+    },
+    "editionPicker": {
+      "title": "Select Edition",
+      "chooseEdition": "Choose which printing of {{cardName}} you want to add",
+      "sortNewest": "Newest First",
+      "sortPrice": "Price",
+      "sortSetName": "Set Name",
+      "noPrintings": "No printings found",
+      "addToBinder": "Add to Binder"
+    }
+  },
+
+  "batchAction": {
+    "addToBinder": "Add to Binder",
+    "adding": "Adding..."
+  },
+
+  "binderProgress": {
+    "progress": "Progress",
+    "cardsOfTarget": "{{current}} / {{target}} cards",
+    "percentComplete": "{{percent}}% complete",
+    "unlimitedCapacity": "Unlimited capacity • {{count}} cards",
+    "recentlyAdded": "Recently Added",
+    "remove": "Remove {{cardName}}",
+    "emptyState": "No cards in this binder yet. Start adding cards to begin!"
+  },
+
+  "unassignedCards": {
+    "searchPlaceholder": "Search Binder cards by name...",
+    "showingCount": "Showing {{filtered}} of {{total}} cards",
+    "clearFilters": "Clear filters",
+    "noCardsMatchFilter": "No cards match your filters",
+    "noCardsAvailable": "No unassigned cards available"
+  },
+
+  "listingBadge": {
+    "sold": "Sold",
+    "cancelled": "Cancelled",
+    "listed": "Listed ${{price}}"
+  },
+
+  "cardSelection": {
+    "quickAdd": "Quick add to binder",
+    "deleteFromCollection": "Delete card from collection"
+  },
+
+  "page": {
+    "binder": {
+      "checkingMultiverse": "Checking the multiverse...",
+      "accessRestricted": "Access Restricted",
+      "mustSignIn": "You must be signed in to access your binders and manage your collection.",
+      "binderNotFound": "Binder Not Found",
+      "binderNotExist": "This binder doesn't exist or is set to private.",
+      "goBack": "Go Back",
+      "totalValue": "${{value}} total value",
+      "filterPlaceholder": "Filter cards...",
+      "noCardsMatchFilter": "No cards match your filter",
+      "binderEmpty": "This binder is empty",
+      "searchPlaceholder": "Search cards to add to your binder...",
+      "remove": "Remove Card",
+      "removeConfirmation": "Are you sure you want to remove this card from your binder? This action cannot be undone.",
+      "removing": "Removing...",
+      "settings": "Binder Settings",
+      "binderName": "Binder Name",
+      "description": "Description",
+      "makePublic": "Make binder public (others can view)",
+      "saving": "Saving...",
+      "locationRequired": "Location Required",
+      "locationRequiredDescription": "You need to set your location before you can list cards for sale. This helps buyers find sellers near them.",
+      "setLocation": "Set Location",
+      "public": "Public",
+      "private": "Private",
+      "editions_one": "{{count}} edition",
+      "editions_other": "{{count}} editions",
+      "cancelListing": "Cancel Listing",
+      "sellCard": "Sell Card",
+      "tryDifferentSearch": "Try a different search term",
+      "useSearchBar": "Use the search bar above to find and add cards"
+    },
+    "card": {
+      "signInToAdd": "Please sign in to add cards to your binder",
+      "createBinderFirst": "Please create a binder first",
+      "cardNotFound": "Card not found",
+      "backToSearch": "Back to Search",
+      "noImageAvailable": "No Image Available",
+      "currentPrice": "Current Price",
+      "adding": "Adding...",
+      "addToBinder": "Add to Binder",
+      "addToDeck": "Add to Deck",
+      "wishlist": "Wishlist"
+    },
+    "marketplace": {
+      "heroTitle": "Trade Binder",
+      "heroDescription": "Buy, sell, and trade Magic: The Gathering cards with collectors worldwide. Organize your collection in digital binders and discover the cards you need.",
+      "browseCards": "Browse Cards",
+      "learnMore": "Learn More",
+      "whyTradeBinder": "Why Trade Binder?",
+      "featureBuySell": "Buy & Sell Cards",
+      "featureBuySellDesc": "List your cards for sale or browse thousands of listings from collectors worldwide.",
+      "featureDigitalBinders": "Digital Binders",
+      "featureDigitalBindersDesc": "Organize your collection in customizable binders. Track values, rarities, and sets.",
+      "featureAdvancedSearch": "Advanced Search",
+      "featureAdvancedSearchDesc": "Filter by color, rarity, set, and price. Find exactly the cards you're looking for.",
+      "cardsForSale": "Cards For Sale",
+      "availableFromSellers": "{{count}} cards available from sellers",
+      "searchPlaceholder": "Search cards for sale...",
+      "noListings": "No listings found",
+      "tryAdjustingSearch": "Try adjusting your search",
+      "beFirstToList": "Be the first to list a card!",
+      "shipsFrom": "Ships From"
+    },
+    "listings": {
+      "myListings": "My Listings",
+      "tabActive": "Active",
+      "tabSold": "Sold",
+      "tabCancelled": "Cancelled",
+      "noListings": "No {{tab}} listings",
+      "emptyActiveDesc": "You don't have any active listings. Visit your binder to create a listing.",
+      "emptySoldDesc": "You haven't sold any cards yet.",
+      "emptyCancelledDesc": "You don't have any cancelled listings.",
+      "goToBinder": "Go to Binder",
+      "relist": "Re-list",
+      "confirmCancelListing": "Cancel listing for {{cardName}}?",
+      "confirmRelistListing": "Re-list {{cardName}} on the marketplace?",
+      "invalidPrice": "Please enter a valid price"
+    },
+    "home": {
+      "newSet": "NEW: {{setName}}",
+      "yourCards": "Your Cards",
+      "yourMarket": "Your Market",
+      "heroDescription": "Buy, sell, and trade Magic: The Gathering cards with collectors worldwide. Organize your collection in digital binders and discover the cards you need.",
+      "myBinder": "My Binder",
+      "featureBuySell": "Buy & Sell",
+      "featureBuySellDesc": "List cards for sale or browse listings from collectors",
+      "featureDigitalBinders": "Digital Binders",
+      "featureDigitalBindersDesc": "Organize your collection and track values",
+      "featureAdvancedSearch": "Advanced Search",
+      "featureAdvancedSearchDesc": "Filter by color, rarity, set, and price",
+      "featuredCards": "Featured Cards",
+      "noFeaturedCards": "No featured cards yet",
+      "noFeaturedCardsDesc": "Be the first to add rare cards to your public binder!",
+      "viewAll": "View All",
+      "noListingsYet": "No listings yet",
+      "noListingsYetDesc": "Be the first to list a card for sale!",
+      "browseCollections": "Browse Collections",
+      "noPublicCollections": "No public collections yet",
+      "noPublicCollectionsDesc": "Make your binder public to appear here!",
+      "approxValue": "~${{value}} value"
+    }
+  }
 }

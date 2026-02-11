@@ -69,7 +69,7 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
                     <NavLink
                       href={`/${locale}/listings`}
                       icon={<Tag className="h-4 w-4" />}
-                      label="My Listings"
+                      label={t('page.listings.myListings')}
                     />
                   </>
                 )}

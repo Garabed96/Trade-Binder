@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { trpc } from '@/src/utils/trpc';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 interface CreateListingModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export function CreateListingModal({
   defaultPrice,
   onSuccess,
 }: CreateListingModalProps) {
+  const { t } = useTranslation();
   const [price, setPrice] = useState('');
   const [error, setError] = useState('');
 
@@ -45,7 +47,7 @@ export function CreateListingModal({
 
     const priceNum = parseFloat(price);
     if (isNaN(priceNum) || priceNum <= 0) {
-      setError('Please enter a valid price greater than $0');
+      setError(t('modal.createListing.errorInvalidPrice'));
       return;
     }
 
@@ -70,7 +72,7 @@ export function CreateListingModal({
 
         {/* Header */}
         <h2 className="mb-4 text-2xl font-black text-slate-900 dark:text-white">
-          Create Listing
+          {t('modal.createListing.title')}
         </h2>
 
         {/* Card preview */}
@@ -89,11 +91,13 @@ export function CreateListingModal({
               {cardName}
             </p>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              This card will be listed on the marketplace
+              {t('modal.createListing.description')}
             </p>
             {defaultPrice && defaultPrice > 0 && (
               <p className="mt-1 text-xs font-medium text-blue-600 dark:text-blue-400">
-                Market price: ${defaultPrice.toFixed(2)}
+                {t('modal.createListing.marketPrice', {
+                  price: defaultPrice.toFixed(2),
+                })}
               </p>
             )}
           </div>
@@ -106,7 +110,7 @@ export function CreateListingModal({
               htmlFor="price"
               className="mb-2 block text-sm font-bold text-slate-700 dark:text-slate-300"
             >
-              Listing Price
+              {t('modal.createListing.listingPrice')}
             </label>
             <div className="relative">
               <span className="absolute top-1/2 left-4 -translate-y-1/2 text-lg font-bold text-slate-500">
@@ -144,14 +148,16 @@ export function CreateListingModal({
               disabled={createListing.isPending}
               className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 font-bold text-slate-700 transition-all hover:bg-slate-50 active:scale-95 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               type="submit"
               disabled={createListing.isPending}
               className="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 font-bold text-white shadow-lg transition-all hover:shadow-blue-500/40 active:scale-95 disabled:opacity-50"
             >
-              {createListing.isPending ? 'Creating...' : 'Create Listing'}
+              {createListing.isPending
+                ? t('modal.createListing.creating')
+                : t('modal.createListing.create')}
             </button>
           </div>
         </form>

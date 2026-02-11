@@ -2,6 +2,7 @@
 
 import { use, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'react-i18next';
 import { trpc } from '@/src/utils/trpc';
 import Image from 'next/image';
 import { ChevronLeft, Library, Layers, Star } from 'lucide-react';
@@ -15,6 +16,7 @@ export default function CardDetailPage({
   const { id } = use(params);
   const router = useRouter();
   const { status } = useSession();
+  const { t } = useTranslation();
   const [message, setMessage] = useState<string | null>(null);
 
   const { data: card, isLoading } = trpc.card.getById.useQuery({ id });
@@ -43,12 +45,12 @@ export default function CardDetailPage({
 
   const handleAddToBinder = () => {
     if (status !== 'authenticated') {
-      showMessage('Please sign in to add cards to your binder');
+      showMessage(t('page.card.signInToAdd'));
       return;
     }
 
     if (!binderList?.defaultBinderId) {
-      showMessage('Please create a binder first');
+      showMessage(t('page.card.createBinderFirst'));
       router.push('/binders');
       return;
     }
@@ -72,7 +74,9 @@ export default function CardDetailPage({
   }
 
   if (!card) {
-    return <div className="p-12 text-center">Card not found</div>;
+    return (
+      <div className="p-12 text-center">{t('page.card.cardNotFound')}</div>
+    );
   }
 
   return (
@@ -90,7 +94,7 @@ export default function CardDetailPage({
           className="mb-8 flex items-center gap-2 text-xs font-bold tracking-widest text-slate-500 uppercase transition-colors hover:text-blue-500"
         >
           <ChevronLeft className="h-4 w-4" />
-          Back to Search
+          {t('page.card.backToSearch')}
         </button>
 
         <div className="grid items-start gap-12 md:grid-cols-2">
@@ -106,7 +110,7 @@ export default function CardDetailPage({
               />
             ) : (
               <div className="flex h-full items-center justify-center bg-slate-100 text-slate-400 dark:bg-slate-900">
-                No Image Available
+                {t('page.card.noImageAvailable')}
               </div>
             )}
           </div>
@@ -141,7 +145,7 @@ export default function CardDetailPage({
             <div className="flex items-center justify-between border-y border-slate-100 py-6 dark:border-slate-800">
               <div>
                 <p className="mb-1 text-[10px] font-black text-slate-400 uppercase">
-                  Current Price
+                  {t('page.card.currentPrice')}
                 </p>
                 <span className="text-3xl font-black text-blue-600 dark:text-blue-400">
                   {card.price_usd ? `$${card.price_usd.toFixed(2)}` : 'N/A'}
@@ -149,7 +153,7 @@ export default function CardDetailPage({
               </div>
               <div className="text-right">
                 <p className="mb-1 text-[10px] font-black text-slate-400 uppercase">
-                  Set
+                  {t('set')}
                 </p>
                 <p className="font-bold text-slate-900 dark:text-white">
                   {card.set_name}
@@ -165,19 +169,21 @@ export default function CardDetailPage({
               >
                 <Library className="h-5 w-5" />
                 <span className="text-[10px] font-black uppercase">
-                  {addToBinder.isPending ? 'Adding...' : 'Add to Binder'}
+                  {addToBinder.isPending
+                    ? t('page.card.adding')
+                    : t('page.card.addToBinder')}
                 </span>
               </button>
               <button className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200/50 bg-slate-100 p-4 text-slate-600 transition-all hover:bg-slate-200 dark:border-slate-700/50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">
                 <Layers className="h-5 w-5" />
                 <span className="text-[10px] font-black uppercase">
-                  Add to Deck
+                  {t('page.card.addToDeck')}
                 </span>
               </button>
               <button className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-slate-200/50 bg-slate-100 p-4 text-slate-600 transition-all hover:bg-slate-200 dark:border-slate-700/50 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">
                 <Star className="h-5 w-5 fill-yellow-500 text-yellow-500" />
                 <span className="text-[10px] font-black uppercase">
-                  Wishlist
+                  {t('page.card.wishlist')}
                 </span>
               </button>
             </div>

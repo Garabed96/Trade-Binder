@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { CardSelectionItem } from './CardSelectionItem';
 
 interface Card {
@@ -34,6 +35,7 @@ export function UnassignedCardGrid({
   onQuickAdd,
   onDelete,
 }: UnassignedCardGridProps) {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterSet, setFilterSet] = useState('');
   const [filterRarity, setFilterRarity] = useState('');
@@ -70,7 +72,7 @@ export function UnassignedCardGrid({
         {/* Search */}
         <input
           type="text"
-          placeholder="Search Binder cards by name..."
+          placeholder={t('unassignedCards.searchPlaceholder')}
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           className="w-full rounded-md border border-slate-700 bg-black/40 px-3 py-2 text-slate-200 placeholder-slate-500 transition outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
@@ -83,7 +85,7 @@ export function UnassignedCardGrid({
             onChange={e => setFilterSet(e.target.value)}
             className="rounded-md border border-slate-700 bg-black/40 px-3 py-2 text-sm text-slate-200 transition outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
           >
-            <option value="">All Sets</option>
+            <option value="">{t('allSets')}</option>
             {sets.map(set => (
               <option key={set.code} value={set.code}>
                 {set.name}
@@ -96,11 +98,11 @@ export function UnassignedCardGrid({
             onChange={e => setFilterRarity(e.target.value)}
             className="rounded-md border border-slate-700 bg-black/40 px-3 py-2 text-sm text-slate-200 transition outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50"
           >
-            <option value="">All Rarities</option>
-            <option value="common">Common</option>
-            <option value="uncommon">Uncommon</option>
-            <option value="rare">Rare</option>
-            <option value="mythic">Mythic</option>
+            <option value="">{t('allRarities')}</option>
+            <option value="common">{t('rarityCommon')}</option>
+            <option value="uncommon">{t('rarityUncommon')}</option>
+            <option value="rare">{t('rarityRare')}</option>
+            <option value="mythic">{t('rarityMythic')}</option>
           </select>
         </div>
       </div>
@@ -108,7 +110,10 @@ export function UnassignedCardGrid({
       {/* Results Count */}
       <div className="flex items-center justify-between border-b border-slate-700/60 pb-2">
         <p className="text-sm text-slate-400">
-          Showing {filteredCards.length} of {cards.length} cards
+          {t('unassignedCards.showingCount', {
+            filtered: filteredCards.length,
+            total: cards.length,
+          })}
         </p>
         {(searchQuery || filterSet || filterRarity) && (
           <button
@@ -119,7 +124,7 @@ export function UnassignedCardGrid({
             }}
             className="text-xs text-blue-400 hover:text-blue-300"
           >
-            Clear filters
+            {t('unassignedCards.clearFilters')}
           </button>
         )}
       </div>
@@ -142,8 +147,8 @@ export function UnassignedCardGrid({
         <div className="rounded-lg border border-dashed border-slate-700 bg-slate-900/40 p-8 text-center">
           <p className="text-slate-400">
             {searchQuery || filterSet || filterRarity
-              ? 'No cards match your filters'
-              : 'No unassigned cards available'}
+              ? t('unassignedCards.noCardsMatchFilter')
+              : t('unassignedCards.noCardsAvailable')}
           </p>
           {(searchQuery || filterSet || filterRarity) && (
             <button
@@ -154,7 +159,7 @@ export function UnassignedCardGrid({
               }}
               className="mt-2 text-sm text-blue-400 hover:text-blue-300"
             >
-              Clear filters
+              {t('unassignedCards.clearFilters')}
             </button>
           )}
         </div>

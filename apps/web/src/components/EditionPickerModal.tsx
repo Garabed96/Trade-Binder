@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { X, Check } from 'lucide-react';
 import { trpc } from '@/src/utils/trpc';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 interface EditionPickerModalProps {
   isOpen: boolean;
@@ -27,6 +28,7 @@ export function EditionPickerModal({
   cardName,
   onSelectPrinting,
 }: EditionPickerModalProps) {
+  const { t } = useTranslation();
   const [selectedPrintingId, setSelectedPrintingId] = useState<string | null>(
     null
   );
@@ -63,11 +65,10 @@ export function EditionPickerModal({
           </button>
 
           <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-            Select Edition
+            {t('modal.editionPicker.title')}
           </h2>
           <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-            Choose which printing of{' '}
-            <span className="font-bold">{cardName}</span> you want to add
+            {t('modal.editionPicker.chooseEdition', { cardName })}
           </p>
 
           {/* Sort options */}
@@ -80,7 +81,7 @@ export function EditionPickerModal({
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
               }`}
             >
-              Newest First
+              {t('modal.editionPicker.sortNewest')}
             </button>
             <button
               onClick={() => setSortBy('price_usd')}
@@ -90,7 +91,7 @@ export function EditionPickerModal({
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
               }`}
             >
-              Price
+              {t('modal.editionPicker.sortPrice')}
             </button>
             <button
               onClick={() => setSortBy('set_name')}
@@ -100,7 +101,7 @@ export function EditionPickerModal({
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
               }`}
             >
-              Set Name
+              {t('modal.editionPicker.sortSetName')}
             </button>
           </div>
         </div>
@@ -187,7 +188,7 @@ export function EditionPickerModal({
           ) : (
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-8 text-center dark:border-slate-800 dark:bg-slate-950">
               <p className="text-slate-600 dark:text-slate-400">
-                No printings found
+                {t('modal.editionPicker.noPrintings')}
               </p>
             </div>
           )}
@@ -201,7 +202,7 @@ export function EditionPickerModal({
               onClick={onClose}
               className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 font-bold text-slate-700 transition-all hover:bg-slate-50 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               type="button"
@@ -209,7 +210,7 @@ export function EditionPickerModal({
               disabled={!selectedPrintingId}
               className="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 font-bold text-white shadow-lg transition-all hover:shadow-blue-500/40 active:scale-95 disabled:opacity-50"
             >
-              Add to Binder
+              {t('modal.editionPicker.addToBinder')}
             </button>
           </div>
         </div>

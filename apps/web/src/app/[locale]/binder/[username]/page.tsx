@@ -1,6 +1,7 @@
 'use client';
 
 import { use, useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { trpc } from '@/src/utils/trpc';
 import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
@@ -11,6 +12,7 @@ export default function PublicBinderPage({
 }: {
   params: Promise<{ username: string }>;
 }) {
+  const { t } = useTranslation();
   const { username } = use(params);
   const router = useRouter();
   const routeParams = useParams();
@@ -58,17 +60,17 @@ export default function PublicBinderPage({
       <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black py-12 text-slate-100">
         <div className="container-default text-center">
           <h1 className="mb-4 text-3xl font-black text-slate-200">
-            Binder Not Found
+            {t('page.binder.binderNotFound')}
           </h1>
           <p className="mb-8 text-slate-400">
-            This binder doesn&apos;t exist or is set to private.
+            {t('page.binder.binderNotExist')}
           </p>
           <button
             onClick={() => router.back()}
             className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2 font-bold text-white hover:bg-blue-700"
           >
             <ChevronLeft className="h-4 w-4" />
-            Go Back
+            {t('page.binder.goBack')}
           </button>
         </div>
       </div>
@@ -84,7 +86,7 @@ export default function PublicBinderPage({
           className="mb-6 flex items-center gap-2 text-sm font-bold text-slate-400 hover:text-slate-200"
         >
           <ChevronLeft className="h-4 w-4" />
-          Back
+          {t('back')}
         </button>
 
         {/* Header */}
@@ -98,7 +100,7 @@ export default function PublicBinderPage({
                 {binder.name}
               </h1>
               <p className="mt-1 text-slate-400">
-                by{' '}
+                {t('by')}{' '}
                 <span className="font-bold text-blue-400">
                   {binder.username}
                 </span>
@@ -111,9 +113,11 @@ export default function PublicBinderPage({
           )}
 
           <div className="mt-4 flex items-center gap-4 text-sm">
-            <span className="text-slate-400">{binder.cardCount} cards</span>
+            <span className="text-slate-400">
+              {t('cardsCount', { count: binder.cardCount })}
+            </span>
             <span className="font-bold text-blue-400">
-              ${totalValue.toFixed(2)} total value
+              {t('page.binder.totalValue', { value: totalValue.toFixed(2) })}
             </span>
           </div>
         </header>
@@ -126,7 +130,7 @@ export default function PublicBinderPage({
               type="text"
               value={filterQuery}
               onChange={e => setFilterQuery(e.target.value)}
-              placeholder="Filter cards..."
+              placeholder={t('page.binder.filterPlaceholder')}
               className="w-full rounded-lg border border-slate-700 bg-slate-900/50 py-2 pr-4 pl-10 text-sm text-slate-200 placeholder-slate-500 focus:border-blue-500 focus:outline-none"
             />
           </div>
@@ -154,14 +158,14 @@ export default function PublicBinderPage({
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center text-slate-500">
-                      No Image
+                      {t('noImage')}
                     </div>
                   )}
 
                   {/* Foil badge */}
                   {card.is_foil && (
                     <div className="absolute top-2 left-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-0.5 text-[9px] font-black text-white uppercase">
-                      Foil
+                      {t('foil')}
                     </div>
                   )}
                 </div>
@@ -188,12 +192,12 @@ export default function PublicBinderPage({
                     </span>
                     {card.rarity === 'mythic' && (
                       <span className="rounded-full bg-orange-500/20 px-2 py-0.5 text-[9px] font-bold text-orange-400 uppercase">
-                        Mythic
+                        {t('rarityMythic')}
                       </span>
                     )}
                     {card.rarity === 'rare' && (
                       <span className="rounded-full bg-yellow-500/20 px-2 py-0.5 text-[9px] font-bold text-yellow-400 uppercase">
-                        Rare
+                        {t('rarityRare')}
                       </span>
                     )}
                   </div>
@@ -205,8 +209,8 @@ export default function PublicBinderPage({
           <div className="rounded-xl border border-dashed border-slate-700 bg-slate-900/30 p-12 text-center">
             <p className="text-lg font-bold text-slate-400">
               {filterQuery
-                ? 'No cards match your filter'
-                : 'This binder is empty'}
+                ? t('page.binder.noCardsMatchFilter')
+                : t('page.binder.binderEmpty')}
             </p>
           </div>
         )}
