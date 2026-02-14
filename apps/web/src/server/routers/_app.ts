@@ -8,6 +8,8 @@ import { marketplaceRouter } from './marketplace';
 import { profileRouter } from './profile';
 import { listingRouter } from './listing';
 import { inquiryRouter } from './inquiry';
+import { notificationRouter } from './notification';
+import { messageRouter } from './message';
 
 export const appRouter = router({
   user: userRouter,
@@ -18,6 +20,8 @@ export const appRouter = router({
   profile: profileRouter,
   listing: listingRouter,
   inquiry: inquiryRouter,
+  notification: notificationRouter,
+  message: messageRouter,
 });
 
 export type AppRouter = typeof appRouter;

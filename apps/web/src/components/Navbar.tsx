@@ -5,9 +5,10 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { LoginButton } from './LoginButton';
 import { ThemeToggle } from './ThemeToggle';
 import { FuzzySearchBar } from './FuzzySearchBar';
+import { NotificationBell } from './NotificationBell';
 import { useParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Library, Palette, Tag } from 'lucide-react';
+import { Library, Palette, Tag, MessageCircle } from 'lucide-react';
 import { useSearch } from '@/src/context/SearchContext';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
@@ -71,6 +72,11 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
                       icon={<Tag className="h-4 w-4" />}
                       label={t('page.listings.myListings')}
                     />
+                    <NavLink
+                      href={`/${locale}/messages`}
+                      icon={<MessageCircle className="h-4 w-4" />}
+                      label="Messages"
+                    />
                   </>
                 )}
                 {process.env.NODE_ENV === 'development' && (
@@ -98,6 +104,7 @@ export function Navbar({ minimal = false }: { minimal?: boolean }) {
 
           {/* Desktop Toggles */}
           <div className="hidden items-center gap-3 md:flex">
+            {session && !minimal && <NotificationBell />}
             <LanguageSwitcher compact={false} />
             <ThemeToggle />
             {!minimal && <LoginButton />}
