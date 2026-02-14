@@ -362,4 +362,43 @@ export const messageRouter = router({
 
       return conversation;
     }),
+
+  /**
+   * Mark a conversation as read
+   */
+  markAsRead: protectedProcedure
+    .input(z.object({ conversationId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = (ctx.session.user as { id: string }).id;
+      const { conversationId } = input;
+
+      // Verify user is a participant
+      const participant = await pool.maybeOne(sql.type(
+        z.object({
+          id: z.string(),
+        })
+      )`
+        SELECT id
+        FROM conversation_participants
+        WHERE conversation_id = ${conversationId}
+          AND user_id = ${userId}
+      `);
+
+      if (!participant) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          message: 'Not a participant in this conversation',
+        });
+      }
+
+      // Update last_read_at to mark all messages as read
+      await pool.query(sql.type(z.object({}))`
+        UPDATE conversation_participants
+        SET last_read_at = NOW()
+        WHERE conversation_id = ${conversationId}
+          AND user_id = ${userId}
+      `);
+
+      return { success: true };
+    }),
 });

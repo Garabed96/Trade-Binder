@@ -3,7 +3,8 @@ import { useSession } from 'next-auth/react';
 import { trpc } from '@/src/utils/trpc';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Check, Volume2, VolumeX } from 'lucide-react';
+import { useSoundAlerts } from './useSoundAlerts';
 
 /**
  * Hook that shows toast notifications when new messages arrive
@@ -12,6 +13,16 @@ export function useMessageToast() {
   const { data: session } = useSession();
   const previousCountRef = useRef<number>(0);
   const isFirstLoadRef = useRef(true);
+  const utils = trpc.useUtils();
+  const { soundEnabled, toggleSound, playNotificationSound } = useSoundAlerts();
+
+  // Mark as read mutation
+  const markAsReadMutation = trpc.message.markAsRead.useMutation({
+    onSuccess: () => {
+      // Invalidate conversations to update unread counts
+      utils.message.getConversations.invalidate();
+    },
+  });
 
   // Get unread message count from all conversations
   const { data: conversations = [] } = trpc.message.getConversations.useQuery(
@@ -52,29 +63,86 @@ export function useMessageToast() {
       if (conversationsWithNewMessages.length > 0) {
         const firstConv = conversationsWithNewMessages[0];
 
+        // Truncate message preview to 50 characters
+        const messagePreview = firstConv.last_message
+          ? firstConv.last_message.length > 50
+            ? `${firstConv.last_message.substring(0, 50)}...`
+            : firstConv.last_message
+          : 'New message';
+
+        // Play notification sound
+        playNotificationSound();
+
         toast(
           t => (
-            <Link
-              href={`/en/messages`}
-              onClick={() => toast.dismiss(t.id)}
+            <div
               className="flex items-center gap-3"
+              data-testid="message-toast"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500">
-                <MessageCircle className="h-5 w-5 text-white" />
+              <Link
+                href={`/en/messages`}
+                onClick={() => toast.dismiss(t.id)}
+                className="flex flex-1 items-center gap-3"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500">
+                  <MessageCircle className="h-5 w-5 text-white" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold">
+                    {newMessages === 1
+                      ? 'New message'
+                      : `${newMessages} new messages`}
+                  </p>
+                  <p className="text-sm opacity-70">
+                    from {firstConv.other_user_name}
+                    {conversationsWithNewMessages.length > 1 &&
+                      ` and ${conversationsWithNewMessages.length - 1} other${conversationsWithNewMessages.length > 2 ? 's' : ''}`}
+                  </p>
+                  {/* Message preview */}
+                  <p
+                    className="mt-1 text-sm text-gray-600 dark:text-gray-400"
+                    data-testid="message-preview"
+                  >
+                    {messagePreview}
+                  </p>
+                </div>
+              </Link>
+
+              <div className="flex items-center gap-1">
+                {/* Mute/Unmute button */}
+                <button
+                  onClick={e => {
+                    e.stopPropagation();
+                    toggleSound();
+                  }}
+                  className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  data-testid="toast-mute-button"
+                  title={soundEnabled ? 'Mute sounds' : 'Unmute sounds'}
+                >
+                  {soundEnabled ? (
+                    <Volume2 className="h-5 w-5 text-gray-600" />
+                  ) : (
+                    <VolumeX className="h-5 w-5 text-gray-600" />
+                  )}
+                </button>
+
+                {/* Mark as Read button */}
+                <button
+                  onClick={e => {
+                    e.stopPropagation();
+                    markAsReadMutation.mutate({
+                      conversationId: firstConv.id,
+                    });
+                    toast.dismiss(t.id);
+                  }}
+                  className="rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  data-testid="mark-as-read"
+                  title="Mark as read"
+                >
+                  <Check className="h-5 w-5 text-green-600" />
+                </button>
               </div>
-              <div className="flex-1">
-                <p className="font-semibold">
-                  {newMessages === 1
-                    ? 'New message'
-                    : `${newMessages} new messages`}
-                </p>
-                <p className="text-sm opacity-70">
-                  from {firstConv.other_user_name}
-                  {conversationsWithNewMessages.length > 1 &&
-                    ` and ${conversationsWithNewMessages.length - 1} other${conversationsWithNewMessages.length > 2 ? 's' : ''}`}
-                </p>
-              </div>
-            </Link>
+            </div>
           ),
           {
             duration: 5000,
@@ -87,5 +155,12 @@ export function useMessageToast() {
     }
 
     previousCountRef.current = totalUnread;
-  }, [conversations, session]);
+  }, [
+    conversations,
+    session,
+    markAsReadMutation,
+    playNotificationSound,
+    soundEnabled,
+    toggleSound,
+  ]);
 }

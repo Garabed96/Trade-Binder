@@ -11,6 +11,7 @@ import i18n from '@/src/i18n';
 import { trpc } from '@/src/utils/trpc';
 import { SearchProvider } from '@/src/context/SearchContext';
 import { MessageToastProvider } from '@/src/components/MessageToastProvider';
+import { PushNotificationPrompt } from '@/src/components/PushNotificationPrompt';
 
 export default function Providers({
   children,
@@ -71,6 +72,7 @@ export default function Providers({
                   }}
                 />
                 <MessageToastProvider />
+                <PushNotificationPrompt />
                 {children}
               </SearchProvider>
             </I18nextProvider>

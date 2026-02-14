@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { Input } from '@trade-binder/ui';
 import { trpc } from '@/src/utils/trpc';
 import { useSession } from 'next-auth/react';
+import { useSoundAlerts } from '@/src/hooks/useSoundAlerts';
+import { usePushNotifications } from '@/src/hooks/usePushNotifications';
 import {
   MapPin,
   User,
@@ -16,6 +18,7 @@ import {
   ShoppingCart,
   DollarSign,
   Users,
+  Bell,
 } from 'lucide-react';
 
 type MarketStatCard = {
@@ -75,6 +78,8 @@ export default function ProfilePage() {
     enabled: !!session,
   });
   const updateProfile = trpc.user.updateProfile.useMutation();
+  const { soundEnabled, toggleSound } = useSoundAlerts();
+  const { permission, requestPermission } = usePushNotifications();
 
   const marketStatsQuery = trpc.user.getMarketStats.useQuery(undefined, {
     enabled: !!session,
@@ -473,6 +478,114 @@ export default function ProfilePage() {
             </div>
           </div>
         )}
+      </section>
+
+      {/* Notification Preferences */}
+      <section className="mt-10 space-y-6">
+        <div className="flex items-center gap-3">
+          <Bell className="h-7 w-7 text-blue-600" />
+          <div>
+            <h2 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+              {t('notificationPreferencesTitle', 'Notification Preferences')}
+            </h2>
+            <p className="mt-1 font-medium text-slate-500 dark:text-slate-400">
+              {t(
+                'notificationPreferencesSubtitle',
+                'Manage how you receive notifications for new messages.'
+              )}
+            </p>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-700/50 dark:bg-slate-800/50">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-black text-slate-900 dark:text-white">
+                {t('soundAlerts', 'Sound Alerts')}
+              </p>
+              <p className="mt-1 text-sm font-medium text-slate-500 dark:text-slate-400">
+                {t(
+                  'soundAlertsDescription',
+                  'Play a sound when you receive new messages'
+                )}
+              </p>
+            </div>
+            <label className="relative inline-flex cursor-pointer items-center">
+              <input
+                type="checkbox"
+                checked={soundEnabled}
+                onChange={toggleSound}
+                className="peer sr-only"
+                data-testid="sound-alerts-toggle"
+              />
+              <div className="peer h-6 w-11 rounded-full bg-slate-300 peer-checked:bg-blue-600 peer-focus:ring-4 peer-focus:ring-blue-300 peer-focus:outline-none after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-slate-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white dark:border-slate-600 dark:bg-slate-700 dark:peer-focus:ring-blue-800"></div>
+            </label>
+          </div>
+        </div>
+
+        {/* Push Notifications */}
+        <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-700/50 dark:bg-slate-800/50">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-black text-slate-900 dark:text-white">
+                {t('pushNotifications', 'Push Notifications')}
+              </p>
+              <p className="mt-1 text-sm font-medium text-slate-500 dark:text-slate-400">
+                {t(
+                  'pushNotificationsDescription',
+                  'Receive browser notifications for new messages'
+                )}
+              </p>
+            </div>
+            <label className="relative inline-flex cursor-pointer items-center">
+              <input
+                type="checkbox"
+                checked={permission === 'granted'}
+                onChange={requestPermission}
+                disabled={permission === 'denied'}
+                className="peer sr-only"
+                data-testid="push-notifications-toggle"
+              />
+              <div className="peer h-6 w-11 rounded-full bg-slate-300 peer-checked:bg-blue-600 peer-focus:ring-4 peer-focus:ring-blue-300 peer-focus:outline-none peer-disabled:opacity-50 after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-slate-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white dark:border-slate-600 dark:bg-slate-700 dark:peer-focus:ring-blue-800"></div>
+            </label>
+          </div>
+
+          {/* Permission Status */}
+          <div className="flex items-center gap-2 pt-2">
+            <p className="text-xs font-bold text-slate-400 uppercase">
+              Status:
+            </p>
+            <p
+              className="text-xs font-black uppercase"
+              data-testid="notification-permission-status"
+            >
+              <span
+                className={
+                  permission === 'granted'
+                    ? 'text-green-600'
+                    : permission === 'denied'
+                      ? 'text-red-600'
+                      : 'text-slate-600 dark:text-slate-400'
+                }
+              >
+                {permission === 'granted'
+                  ? 'Enabled'
+                  : permission === 'denied'
+                    ? 'Denied'
+                    : 'Default'}
+              </span>
+            </p>
+          </div>
+
+          {permission === 'denied' && (
+            <p className="text-xs text-red-600 dark:text-red-400">
+              {t(
+                'pushNotificationsDenied',
+                'Push notifications are blocked. Please enable them in your browser settings.'
+              )}
+            </p>
+          )}
+        </div>
       </section>
     </div>
   );
