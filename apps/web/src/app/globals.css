@@ -38,6 +38,9 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --toast-bg: #ffffff;
+  --toast-text: #1f2937;
+  --toast-border: #e5e7eb;
 }
 
 .dark {
@@ -80,6 +83,9 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --toast-bg: #1f2937;
+  --toast-text: #f9fafb;
+  --toast-border: #374151;
 }
 
 @theme inline {

@@ -6,9 +6,11 @@ import React, { useState, useEffect } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
+import { Toaster } from 'react-hot-toast';
 import i18n from '@/src/i18n';
 import { trpc } from '@/src/utils/trpc';
 import { SearchProvider } from '@/src/context/SearchContext';
+import { MessageToastProvider } from '@/src/components/MessageToastProvider';
 
 export default function Providers({
   children,
@@ -25,7 +27,7 @@ export default function Providers({
           url: '/api/trpc',
         }),
       ],
-    }),
+    })
   );
 
   // Synchronize i18n with the locale prop
@@ -44,7 +46,33 @@ export default function Providers({
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
             <I18nextProvider i18n={i18n}>
-              <SearchProvider>{children}</SearchProvider>
+              <SearchProvider>
+                <Toaster
+                  position="top-right"
+                  toastOptions={{
+                    duration: 5000,
+                    style: {
+                      background: 'var(--toast-bg)',
+                      color: 'var(--toast-text)',
+                      border: '1px solid var(--toast-border)',
+                    },
+                    success: {
+                      iconTheme: {
+                        primary: '#10b981',
+                        secondary: '#fff',
+                      },
+                    },
+                    error: {
+                      iconTheme: {
+                        primary: '#ef4444',
+                        secondary: '#fff',
+                      },
+                    },
+                  }}
+                />
+                <MessageToastProvider />
+                {children}
+              </SearchProvider>
             </I18nextProvider>
           </QueryClientProvider>
         </trpc.Provider>
