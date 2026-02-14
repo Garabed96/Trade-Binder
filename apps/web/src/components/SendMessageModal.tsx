@@ -24,7 +24,7 @@ export function SendMessageModal({
   const router = useRouter();
 
   const startConversationMutation = trpc.message.startConversation.useMutation({
-    onSuccess: data => {
+    onSuccess: () => {
       toast.success('Message sent!');
       onClose();
       // Optionally navigate to messages page
@@ -51,7 +51,10 @@ export function SendMessageModal({
       <div className="fixed inset-0 z-50 bg-black/50" onClick={onClose} />
 
       {/* Modal */}
-      <div className="fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg border bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+      <div
+        data-testid="send-message-modal"
+        className="fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg border bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+      >
         {/* Header */}
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-bold">Message {sellerName}</h2>

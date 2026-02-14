@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, MessageCircle } from 'lucide-react';
 import { trpc } from '@/src/utils/trpc';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
+import { SendMessageModal } from './SendMessageModal';
 
 interface SendInquiryModalProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ interface SendInquiryModalProps {
   cardImage?: string | null;
   price: number;
   sellerUsername: string;
+  sellerId?: string; // Added for messaging
   onSuccess?: () => void;
 }
 
@@ -25,11 +27,13 @@ export function SendInquiryModal({
   cardImage,
   price,
   sellerUsername,
+  sellerId,
   onSuccess,
 }: SendInquiryModalProps) {
   const { t } = useTranslation();
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [showMessageModal, setShowMessageModal] = useState(false);
 
   const sendInquiry = trpc.listing.sendInquiry.useMutation({
     onSuccess: () => {
@@ -57,7 +61,10 @@ export function SendInquiryModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="relative w-full max-w-lg rounded-2xl border border-white/40 bg-white/95 p-6 shadow-2xl backdrop-blur-xl dark:border-slate-800/60 dark:bg-slate-900/95">
+      <div
+        data-testid="send-inquiry-modal"
+        className="relative w-full max-w-lg rounded-2xl border border-white/40 bg-white/95 p-6 shadow-2xl backdrop-blur-xl dark:border-slate-800/60 dark:bg-slate-900/95"
+      >
         {/* Close button */}
         <button
           onClick={onClose}
@@ -131,26 +138,51 @@ export function SendInquiryModal({
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3">
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={sendInquiry.isPending}
+                className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 font-bold text-slate-700 transition-all hover:bg-slate-50 active:scale-95 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              >
+                {t('cancel')}
+              </button>
+              <button
+                type="submit"
+                disabled={sendInquiry.isPending}
+                className="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 font-bold text-white shadow-lg transition-all hover:shadow-blue-500/40 active:scale-95 disabled:opacity-50"
+              >
+                {sendInquiry.isPending
+                  ? t('modal.sendInquiry.sending')
+                  : 'Send Inquiry'}
+              </button>
+            </div>
+
+            {/* Message Seller Button */}
             <button
               type="button"
-              onClick={onClose}
-              disabled={sendInquiry.isPending}
-              className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 font-bold text-slate-700 transition-all hover:bg-slate-50 active:scale-95 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              onClick={() => {
+                setShowMessageModal(true);
+                onClose(); // Close inquiry modal
+              }}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-purple-500 bg-purple-50 px-4 py-3 font-bold text-purple-700 transition-all hover:bg-purple-100 active:scale-95 dark:border-purple-400 dark:bg-purple-950/30 dark:text-purple-300 dark:hover:bg-purple-900/40"
             >
-              {t('cancel')}
-            </button>
-            <button
-              type="submit"
-              disabled={sendInquiry.isPending}
-              className="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 font-bold text-white shadow-lg transition-all hover:shadow-blue-500/40 active:scale-95 disabled:opacity-50"
-            >
-              {sendInquiry.isPending
-                ? t('modal.sendInquiry.sending')
-                : t('modal.sendInquiry.send')}
+              <MessageCircle className="h-5 w-5" />
+              Message Seller
             </button>
           </div>
         </form>
+
+        {/* SendMessageModal */}
+        {showMessageModal && sellerId && (
+          <SendMessageModal
+            sellerId={sellerId}
+            sellerName={sellerUsername}
+            listingId={listingId}
+            onClose={() => setShowMessageModal(false)}
+          />
+        )}
       </div>
     </div>
   );
